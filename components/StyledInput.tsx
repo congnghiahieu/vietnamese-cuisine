@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const StyledText = () => {
+const StyledInput = () => {
   return (
     <View>
-      <Text>StyledText</Text>
+      <Text>StyledInput</Text>
     </View>
   );
 };
 
-export default StyledText;
+export default StyledInput;
 
 const styles = StyleSheet.create({});

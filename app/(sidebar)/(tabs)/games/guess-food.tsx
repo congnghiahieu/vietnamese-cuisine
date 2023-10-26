@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const StyledText = () => {
+const GuessFood = () => {
   return (
     <View>
-      <Text>StyledText</Text>
+      <Text>GuessFood</Text>
     </View>
   );
 };
 
-export default StyledText;
+export default GuessFood;
 
 const styles = StyleSheet.create({});

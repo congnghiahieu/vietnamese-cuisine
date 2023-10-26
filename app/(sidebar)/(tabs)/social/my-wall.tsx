@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const StyledText = () => {
+const MyWall = () => {
   return (
     <View>
-      <Text>StyledText</Text>
+      <Text>MyWall</Text>
     </View>
   );
 };
 
-export default StyledText;
+export default MyWall;
 
 const styles = StyleSheet.create({});

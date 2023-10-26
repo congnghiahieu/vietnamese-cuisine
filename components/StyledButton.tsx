@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const StyledText = () => {
+const StyledButton = () => {
   return (
     <View>
-      <Text>StyledText</Text>
+      <Text>StyledButton</Text>
     </View>
   );
 };
 
-export default StyledText;
+export default StyledButton;
 
 const styles = StyleSheet.create({});

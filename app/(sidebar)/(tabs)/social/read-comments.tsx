@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const StyledText = () => {
+const ReadComments = () => {
   return (
     <View>
-      <Text>StyledText</Text>
+      <Text>ReadComments</Text>
     </View>
   );
 };
 
-export default StyledText;
+export default ReadComments;
 
 const styles = StyleSheet.create({});
