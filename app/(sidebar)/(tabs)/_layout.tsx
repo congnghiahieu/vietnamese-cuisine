@@ -5,6 +5,9 @@ import { STYLES } from '@/lib/constants';
 
 const TabsLayout = () => {
   const { theme } = useTheme();
+  const dT = theme.mode === 'dark';
+  const activeIconColor = theme.colors.orange;
+  const inactiveIconColor = theme.colors.blackGrey;
 
   return (
     <Tabs
@@ -12,36 +15,45 @@ const TabsLayout = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.colors.background,
+          backgroundColor: dT ? theme.colors.black : theme.colors.white,
         },
+        tabBarLabelPosition: 'below-icon',
+        tabBarHideOnKeyboard: true,
       }}>
       <Tabs.Screen
         name='games'
         options={{
           title: 'Games',
-          tabBarLabel: () => null,
-          tabBarIcon: ({ focused, color }) =>
-            focused ? (
-              <Ionicons name='game-controller' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+          tabBarIcon: ({ focused }) => {
+            return focused ? (
+              <Ionicons
+                name='game-controller'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={activeIconColor}
+              />
             ) : (
               <Ionicons
                 name='game-controller-outline'
                 size={STYLES.ICON_SIZE.ICON_SIZE_24}
-                color={color}
+                color={inactiveIconColor}
               />
-            ),
+            );
+          },
         }}
       />
       <Tabs.Screen
         name='favourites'
         options={{
           title: 'Favourites',
-          tabBarLabel: () => null,
-          tabBarIcon: ({ focused, color }) =>
+          tabBarIcon: ({ focused }) =>
             focused ? (
-              <Ionicons name='heart' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+              <Ionicons name='heart' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={activeIconColor} />
             ) : (
-              <Ionicons name='heart-outline' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+              <Ionicons
+                name='heart-outline'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={inactiveIconColor}
+              />
             ),
         }}
       />
@@ -49,25 +61,35 @@ const TabsLayout = () => {
         name='index'
         options={{
           title: 'Home',
-          tabBarLabel: () => null,
-          tabBarIcon: ({ focused, color }) =>
+          tabBarIcon: ({ focused }) =>
             focused ? (
-              <Ionicons name='home' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+              <Ionicons name='home' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={activeIconColor} />
             ) : (
-              <Ionicons name='home-outline' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+              <Ionicons
+                name='home-outline'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={inactiveIconColor}
+              />
             ),
         }}
       />
       <Tabs.Screen
-        name='social'
+        name='community'
         options={{
-          title: 'Social',
-          tabBarLabel: () => null,
-          tabBarIcon: ({ focused, color }) =>
+          title: 'Community',
+          tabBarIcon: ({ focused }) =>
             focused ? (
-              <Ionicons name='people' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+              <Ionicons
+                name='people'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={activeIconColor}
+              />
             ) : (
-              <Ionicons name='people-outline' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+              <Ionicons
+                name='people-outline'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={inactiveIconColor}
+              />
             ),
         }}
       />
@@ -75,15 +97,18 @@ const TabsLayout = () => {
         name='settings'
         options={{
           title: 'Settings',
-          tabBarLabel: () => null,
-          tabBarIcon: ({ focused, color }) =>
+          tabBarIcon: ({ focused }) =>
             focused ? (
-              <Ionicons name='settings' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+              <Ionicons
+                name='settings'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={activeIconColor}
+              />
             ) : (
               <Ionicons
                 name='settings-outline'
                 size={STYLES.ICON_SIZE.ICON_SIZE_24}
-                color={color}
+                color={inactiveIconColor}
               />
             ),
         }}
