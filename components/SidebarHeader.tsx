@@ -1,9 +1,11 @@
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Header, useTheme } from '@rneui/themed';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { Pressable, View } from 'react-native';
+import { Header, makeStyles, useTheme } from '@rneui/themed';
+import { AntDesign } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { useRouter, useNavigation } from 'expo-router';
 import { STYLES } from '@/lib/constants';
+import { MenuIcon } from '@/components/Icon';
+import StyledPressable from './Styled/StyledPressable';
 
 type SidebarHeaderProps = {
   onMenuPress: () => void;
@@ -29,20 +31,28 @@ const SidebarHeader = () => {
         borderBottomColor: dT ? theme.colors.blackGrey : theme.colors.whiteGrey,
       }}
       leftComponent={
-        <Pressable onPress={onMenuPress} style={styles.iconMenu}>
-          <Ionicons name='menu' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={theme.colors.orange} />
-        </Pressable>
+        <StyledPressable
+          onPress={onMenuPress}
+          style={{
+            paddingVertical: STYLES.PADDING.PADDING_8,
+            paddingLeft: 0,
+            paddingRight: STYLES.PADDING.PADDING_16,
+          }}>
+          <MenuIcon />
+        </StyledPressable>
       }
       rightComponent={
-        <Pressable onPress={onAvatarPress}>
+        <StyledPressable onPress={onAvatarPress} style={{ padding: 0 }}>
           <DefaultAvatar color={theme.colors.orange} />
-        </Pressable>
+        </StyledPressable>
       }
     />
   );
 };
 
 const DefaultAvatar = ({ color }: { color: string }) => {
+  const styles = useStyles();
+
   return (
     <View style={[styles.avatarContainer, { borderColor: color }]}>
       <AntDesign name='user' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
@@ -50,16 +60,13 @@ const DefaultAvatar = ({ color }: { color: string }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles(theme => ({
   avatarContainer: {
     borderWidth: 1,
     borderRadius: 50,
     backgroundColor: 'white',
     padding: 4,
   },
-  iconMenu: {
-    paddingVertical: STYLES.PADDING.PADDING_4,
-  },
-});
+}));
 
 export default SidebarHeader;

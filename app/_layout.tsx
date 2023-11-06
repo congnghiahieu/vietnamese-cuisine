@@ -6,9 +6,10 @@ import {
   Theme as NavigationTheme,
   ThemeProvider as DefaultNavigationThemeProvider,
 } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { theme } from '@/components/Theme/theme';
 import { FontsLoader } from '@/components/Theme/Text';
+import SidebarHeader from '@/components/SidebarHeader';
+import { KeyboardAvoidingView } from 'react-native';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,6 +50,12 @@ const StackLayout = () => {
       }}>
       <Stack.Screen name='(sidebar)' />
       <Stack.Screen
+        name='information'
+        options={{
+          title: 'Information',
+        }}
+      />
+      <Stack.Screen
         name='login'
         options={{
           title: 'Login',
@@ -75,9 +82,7 @@ export default function RootLayout() {
     <FontsLoader onFontsLoaded={SplashScreen.hideAsync}>
       <ThemeProvider theme={theme}>
         <NavigationThemeProvider>
-          <SafeAreaProvider>
-            <StackLayout />
-          </SafeAreaProvider>
+          <StackLayout />
         </NavigationThemeProvider>
       </ThemeProvider>
     </FontsLoader>

@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import { Pressable, View, TouchableOpacity } from 'react-native';
 import { useThemeMode, useTheme, makeStyles, ListItem } from '@rneui/themed';
 import { Entypo, Ionicons } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import StyledSwitch from '@/components/Styled/StyledSwitch';
 import StyledDivider from '@/components/Styled/StyledDivider';
 import StyledText from '@/components/Styled/StyledText';
+import StyledPressable from '@/components/Styled/StyledPressable';
 import StyledHandle from '@/components/Styled/BottomSheet/StyledHandle';
 import StyledBackdrop from '@/components/Styled/BottomSheet/StyledBackdrop';
 import StyledBackground from '@/components/Styled/BottomSheet/StyledBackground';
@@ -21,17 +22,49 @@ const Settings = () => {
   const closeBottomSheet = () => {
     bottomSheetRef.current?.close();
   };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={styles.body}>
+        <View style={styles.settingsContainer}>
+          <LanguageSettingOption onLanguageTitlePress={openBottomSheet} />
+          <StyledDivider />
+          <ThemeSettingOption />
+          <StyledDivider />
+          <NotificationSettingOption />
+        </View>
+      </View>
+      <BottomSheet
+        index={-1}
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        handleComponent={StyledHandle}
+        backdropComponent={StyledBackdrop}
+        backgroundComponent={StyledBackground}>
+        <LanguageSettingBottomSheet closeBottomSheet={closeBottomSheet} />
+      </BottomSheet>
+    </View>
+  );
+};
+
+type LanguageSettingBottomSheetProps = {
+  closeBottomSheet: () => void;
+};
+
+const LanguageSettingBottomSheet = ({ closeBottomSheet }: LanguageSettingBottomSheetProps) => {
+  const styles = useStyles();
+
   const languages = useMemo(() => ['English', 'Vietnamese'], []);
-  const BottomSheetBody = () => (
+  return (
     <BottomSheetView>
       {languages.map((lang, i, arr) => {
         return (
-          <TouchableOpacity
-            activeOpacity={0.5}
+          <StyledPressable
             key={i}
             onPress={() => {
               closeBottomSheet();
-            }}>
+            }}
+            style={{ padding: 0 }}>
             <ListItem
               bottomDivider={i !== arr.length - 1}
               containerStyle={styles.listItemContainer}>
@@ -43,39 +76,18 @@ const Settings = () => {
                 </ListItem.Title>
               </ListItem.Content>
             </ListItem>
-          </TouchableOpacity>
+          </StyledPressable>
         );
       })}
     </BottomSheetView>
   );
-
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.body}>
-        <View style={styles.settingsContainer}>
-          <LanguageSettingsOption onLanguageTitlePress={openBottomSheet} />
-          <StyledDivider />
-          <ThemeSettingsOption />
-        </View>
-      </View>
-      <BottomSheet
-        index={-1}
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        handleComponent={StyledHandle}
-        backdropComponent={StyledBackdrop}
-        backgroundComponent={StyledBackground}>
-        <BottomSheetBody />
-      </BottomSheet>
-    </View>
-  );
 };
 
-type LanguageSettingsOptionProps = {
+type LanguageSettingOptionProps = {
   onLanguageTitlePress: () => void;
 };
 
-const LanguageSettingsOption = (props: LanguageSettingsOptionProps) => {
+const LanguageSettingOption = ({ onLanguageTitlePress }: LanguageSettingOptionProps) => {
   const { theme } = useTheme();
   const styles = useStyles();
 
@@ -87,18 +99,16 @@ const LanguageSettingsOption = (props: LanguageSettingsOptionProps) => {
           Language
         </StyledText>
       </View>
-      <Pressable
-        onPress={props.onLanguageTitlePress}
-        style={{ padding: STYLES.PADDING.PADDING_16 }}>
+      <StyledPressable onPress={onLanguageTitlePress}>
         <StyledText type='Placeholder' color='grey'>
           English
         </StyledText>
-      </Pressable>
+      </StyledPressable>
     </View>
   );
 };
 
-const ThemeSettingsOption = () => {
+const ThemeSettingOption = () => {
   const { theme } = useTheme();
   const { setMode } = useThemeMode();
   const dT = theme.mode === 'dark';
@@ -131,6 +141,38 @@ const ThemeSettingsOption = () => {
   );
 };
 
+const NotificationSettingOption = () => {
+  const { theme } = useTheme();
+  const styles = useStyles();
+  const [noti, setNoti] = useState(false);
+
+  const icon = noti ? (
+    <Ionicons
+      name='notifications'
+      size={STYLES.ICON_SIZE.ICON_SIZE_24}
+      color={theme.colors.orange}
+    />
+  ) : (
+    <Ionicons
+      name='notifications-off'
+      size={STYLES.ICON_SIZE.ICON_SIZE_24}
+      color={theme.colors.orange}
+    />
+  );
+
+  return (
+    <View style={styles.optionContainer}>
+      <View style={styles.labelContainer}>
+        {icon}
+        <StyledText type='Heading_5' color='blackGrey'>
+          Notifications
+        </StyledText>
+      </View>
+      <StyledSwitch active={noti} onChange={value => setNoti(value)} />
+    </View>
+  );
+};
+
 const useStyles = makeStyles(theme => {
   const dT = theme.mode === 'dark';
   const backgroundColor = dT ? theme.colors.black : theme.colors.white;
@@ -142,23 +184,21 @@ const useStyles = makeStyles(theme => {
       marginTop: STYLES.MARGIN.MARGIN_16,
     },
     settingsContainer: {
-      alignItems: 'center',
       gap: STYLES.GAP.GAP_24,
-      paddingHorizontal: STYLES.PADDING.PADDING_32,
-      paddingVertical: STYLES.PADDING.PADDING_32,
+      padding: STYLES.PADDING.PADDING_32,
       borderRadius: STYLES.RADIUS.RADIUS_20,
       backgroundColor,
       ...(dT ? STYLES.SHADOW.SHADOW_WHITE_15 : STYLES.SHADOW.SHADOW_BLACK_15),
+    },
+    optionContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     labelContainer: {
       alignItems: 'center',
       flexDirection: 'row',
       gap: STYLES.GAP.GAP_16,
-    },
-    optionContainer: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      gap: STYLES.GAP.GAP_64,
     },
     sheetContainer: {
       flex: 1,
