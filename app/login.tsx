@@ -8,10 +8,28 @@ import StyledButton, { GoogleButton } from '@/components/Styled/StyledButton';
 import { KeyboardView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ArrowIcon } from '@/components/Icon';
+import { signInWithEmailAndPassword} from 'firebase/auth';
+import { FIREBASE_AUTH}  from 'config/firebase'
+
+
+const auth = FIREBASE_AUTH;
 
 const Login = () => {
   const styles = useStyles();
   const router = useRouter();
+
+  let email = 'congcong@'
+  let password = '123'
+  
+  async function signIn() {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log('sign in success')
+      router.push('/(sidebar)/(tabs)/')
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <KeyboardView style={styles.container}>
@@ -38,7 +56,7 @@ const Login = () => {
         </StyledPressable>
       </View>
       <View style={styles.button}>
-        <StyledButton title='Sign In' icon={<ArrowIcon />} iconPosition='right' />
+        <StyledButton title='Sign In' icon={<ArrowIcon />} iconPosition='right' onPress={signIn}/>
         <ContinueWithText />
         <GoogleButton />
       </View>
