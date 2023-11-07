@@ -1,17 +1,32 @@
 import { View, StatusBar, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { makeStyles, useTheme } from '@rneui/themed';
-import { STYLES } from '@/lib/constants';
+import { makeStyles } from '@rneui/themed';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
 import StyledButton, { GoogleButton } from '@/components/Styled/StyledButton';
 import { KeyboardView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ArrowRightIcon } from '@/components/Icon';
+import { STYLES } from '@/lib/constants';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { FIREBASE_AUTH } from '@/config/firebase';
 
 const Login = () => {
   const styles = useStyles();
   const router = useRouter();
+
+  let email = 'congcong@';
+  let password = '123';
+
+  async function signIn() {
+    try {
+      await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+      console.log('sign in success');
+      router.push('/(sidebar)/(tabs)/');
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <KeyboardView style={styles.container}>
@@ -40,7 +55,12 @@ const Login = () => {
         </StyledPressable>
       </View>
       <View style={styles.button}>
-        <StyledButton title='Sign In' icon={<ArrowRightIcon />} iconPosition='right' />
+        <StyledButton
+          title='Sign In'
+          icon={<ArrowRightIcon />}
+          iconPosition='right'
+          onPress={signIn}
+        />
         <ContinueWithText />
         <GoogleButton />
       </View>

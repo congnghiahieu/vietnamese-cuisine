@@ -1,10 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, Button, View } from 'react-native';
+import { Link } from 'expo-router';
 
 const Profile = () => {
   return (
     <View>
-      <Text>Profile</Text>
+      <Link href='/login' asChild>
+        <Button title='To login' />
+      </Link>
+      <Link href='/register' asChild>
+        <Button title='To register' />
+      </Link>
+      <Link href='/onboard' asChild>
+        <Button title='To onboard' />
+      </Link>
     </View>
   );
 };

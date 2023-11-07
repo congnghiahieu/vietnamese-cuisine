@@ -1,17 +1,35 @@
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
-import { STYLES } from '@/lib/constants';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
 import StyledButton, { GoogleButton } from '@/components/Styled/StyledButton';
 import { KeyboardView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ArrowRightIcon } from '@/components/Icon';
+import { STYLES } from '@/lib/constants';
+import { FIREBASE_AUTH } from '@/config/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const Register = () => {
   const styles = useStyles();
   const router = useRouter();
+
+  let email = 'pjzon1999@gmail.com';
+  let password = '123456';
+
+  async function signUp() {
+    try {
+      await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+      console.log('sign up success');
+      router.push('/login');
+    } catch (error) {
+      console.log(error);
+      // Alert.alert('Register',, undefined, {
+      //   cancelable: true,
+      // });
+    }
+  }
 
   return (
     <KeyboardView style={styles.container}>
@@ -37,7 +55,12 @@ const Register = () => {
         </StyledPressable>
       </View>
       <View style={styles.button}>
-        <StyledButton title='Sign Up' icon={<ArrowRightIcon />} iconPosition='right' />
+        <StyledButton
+          title='Sign Up'
+          icon={<ArrowRightIcon />}
+          iconPosition='right'
+          onPress={signUp}
+        />
         <ContinueWithText />
         <GoogleButton />
       </View>
