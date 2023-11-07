@@ -1,21 +1,51 @@
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
-import StyledPressable from './Styled/StyledPressable';
 
-export const ArrowIcon = () => {
+export const ArrowRightIcon = () => {
   const styles = useStyles();
-  return <Feather name='arrow-right' style={styles.arrowIcon} />;
+  return <Feather name='arrow-right' style={[styles.baseIcon]} />;
+};
+
+export const ChevronLeftIcon = () => {
+  const styles = useStyles();
+  return <MaterialIcons name='chevron-left' style={[styles.baseIcon, styles.blackGrey]} />;
+};
+
+export const ChevronRightIcon = () => {
+  const styles = useStyles();
+  return <MaterialIcons name='chevron-right' style={[styles.baseIcon, styles.orange]} />;
+};
+
+export const PlayCircleIcon = () => {
+  const styles = useStyles();
+  return <AntDesign name='playcircleo' style={[styles.baseIcon]} />;
+};
+
+export const SearchIcon = () => {
+  const styles = useStyles();
+  return <Ionicons name='search' style={[styles.baseIcon, styles.orange]} />;
+};
+
+const Line = ({ width }: { width: number }) => {
+  const styles = useStyles();
+  return (
+    <View
+      style={[
+        {
+          width,
+        },
+        styles.line,
+      ]}
+    />
+  );
 };
 
 export const MenuIcon = () => {
   const styles = useStyles();
-
-  const Line = ({ width }: { width: number }) => <View style={[styles.menuLine, { width }]} />;
-
   return (
-    <View style={styles.menuLineContainer}>
+    <View style={styles.menuIcon}>
       <Line width={20} />
       <Line width={16} />
       <Line width={12} />
@@ -23,47 +53,63 @@ export const MenuIcon = () => {
   );
 };
 
-type EyeIconProps = {
-  onPress: () => void;
-  show: boolean;
+type ActiveIconProps = {
+  active: boolean;
+};
+export const EyeIcon = ({ active }: ActiveIconProps) => {
+  const styles = useStyles();
+  return active ? (
+    <Ionicons style={[styles.baseIcon, styles.blackGrey]} name='eye-outline' />
+  ) : (
+    <Ionicons style={[styles.baseIcon, styles.blackGrey]} name='eye-off-outline' />
+  );
 };
 
-export const EyeIcon = (props: EyeIconProps) => {
+export const HeartIcon = ({ active }: ActiveIconProps) => {
   const styles = useStyles();
-  const icon = props.show ? (
-    <Ionicons style={styles.eyeIcon} name='eye-outline' />
+  return active ? (
+    <AntDesign name='heart' style={[styles.baseIcon, styles.redPink]} />
   ) : (
-    <Ionicons style={styles.eyeIcon} name='eye-off-outline' />
+    <AntDesign name='hearto' style={[styles.baseIcon, styles.redPink]} />
   );
+};
 
-  return (
-    <StyledPressable
-      onPress={props.onPress}
-      style={{
-        paddingHorizontal: STYLES.PADDING.PADDING_8,
-        paddingVertical: STYLES.PADDING.PADDING_4,
-      }}>
-      {icon}
-    </StyledPressable>
+export const AudioControlIcon = ({ active }: ActiveIconProps) => {
+  const styles = useStyles();
+  return active ? (
+    <Ionicons name='pause' style={[styles.baseIcon, styles.orange]} />
+  ) : (
+    <Ionicons name='play' style={[styles.baseIcon, styles.orange]} />
   );
 };
 
 const useStyles = makeStyles(theme => ({
-  arrowIcon: {
+  baseIcon: {
     fontSize: STYLES.ICON_SIZE.ICON_SIZE_24,
     color: theme.colors.white,
   },
-  menuLineContainer: {
-    alignItems: 'flex-start',
-    gap: STYLES.GAP.GAP_4,
+  blackGrey: {
+    color: theme.colors.blackGrey,
   },
-  menuLine: {
+  grey: {
+    color: theme.colors.whiteGrey,
+  },
+  whiteGrey: {
+    color: theme.colors.whiteGrey,
+  },
+  orange: {
+    color: theme.colors.orange,
+  },
+  redPink: {
+    color: theme.colors.redPink,
+  },
+  line: {
     height: 2,
     backgroundColor: theme.colors.orange,
     borderRadius: STYLES.RADIUS.RADIUS_10,
   },
-  eyeIcon: {
-    fontSize: STYLES.ICON_SIZE.ICON_SIZE_24,
-    color: theme.colors.blackGrey,
+  menuIcon: {
+    alignItems: 'flex-start',
+    gap: STYLES.GAP.GAP_4,
   },
 }));

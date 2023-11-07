@@ -8,14 +8,14 @@ import StyledDivider from '@/components/Styled/StyledDivider';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import StyledHandle from '@/components/Styled/BottomSheet/StyledHandle';
-import StyledBackdrop from '@/components/Styled/BottomSheet/StyledBackdrop';
+import { DefaultBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
 import StyledBackground from '@/components/Styled/BottomSheet/StyledBackground';
 import { STYLES } from '@/lib/constants';
 
 const Settings = () => {
   const styles = useStyles();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['30%'], []);
+  const snapPoints = useMemo(() => [150], []);
   const openBottomSheet = () => {
     bottomSheetRef.current?.snapToIndex(0);
   };
@@ -39,7 +39,7 @@ const Settings = () => {
         ref={bottomSheetRef}
         snapPoints={snapPoints}
         handleComponent={StyledHandle}
-        backdropComponent={StyledBackdrop}
+        backdropComponent={DefaultBackdrop}
         backgroundComponent={StyledBackground}>
         <LanguageSettingBottomSheet closeBottomSheet={closeBottomSheet} />
       </BottomSheet>

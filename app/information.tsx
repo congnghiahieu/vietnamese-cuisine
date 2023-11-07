@@ -1,62 +1,22 @@
-import { useRef, useMemo, useCallback, useState } from 'react';
-import { ImageBackground, View, StatusBar, Animated } from 'react-native';
-import { MaterialIcons, AntDesign, Ionicons } from '@expo/vector-icons';
+import { useRef, useMemo, useState } from 'react';
+import { Image, View, StatusBar } from 'react-native';
 import { Slider, ListItem, makeStyles, useTheme } from '@rneui/themed';
-import { STYLES } from '@/lib/constants';
+import { useRouter } from 'expo-router';
 import BottomSheet, {
   useBottomSheetSpringConfigs,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
-import StyledHandle from '@/components/Styled/BottomSheet/StyledHandle';
-import StyledBackdrop, { CustomBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
-import StyledBackground from '@/components/Styled/BottomSheet/StyledBackground';
+import StyledHandle, { StyledHandleProps } from '@/components/Styled/BottomSheet/StyledHandle';
+import StyledBackdrop from '@/components/Styled/BottomSheet/StyledBackdrop';
+import StyledBackground, {
+  StyledBackgroundProps,
+} from '@/components/Styled/BottomSheet/StyledBackground';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import { useRouter } from 'expo-router';
-
-const Information = () => {
-  const styles = useStyles();
-  const router = useRouter();
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['50%', '70%', '90%'], []);
-
-  const animationConfigs = useBottomSheetSpringConfigs({
-    damping: 80,
-    overshootClamping: true,
-    restDisplacementThreshold: 0.1,
-    restSpeedThreshold: 0.1,
-    stiffness: 500,
-  });
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.backgroundContainer}>
-        <View style={styles.backIconContainer}>
-          <StyledPressable onPress={() => router.back()}>
-            <MaterialIcons name='keyboard-arrow-left' style={styles.backIcon} />
-          </StyledPressable>
-        </View>
-        <ImageBackground
-          source={{
-            uri: 'https://file1.dangcongsan.vn/data/0/images/2021/02/08/duongntcd/13-chung-tet-td.jpg?dpi=150&quality=100&w=680',
-          }}
-          style={styles.background}
-        />
-      </View>
-      <BottomSheet
-        index={0}
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        handleComponent={StyledHandle}
-        backdropComponent={CustomBackdrop}
-        backgroundComponent={StyledBackground}
-        animationConfigs={animationConfigs}
-        enablePanDownToClose={false}>
-        <FoodInformationScrollView />
-      </BottomSheet>
-    </View>
-  );
-};
+import StyledButton from '@/components/Styled/StyledButton';
+import { PlayCircleIcon, ChevronLeftIcon, HeartIcon, AudioControlIcon } from '@/components/Icon';
+import { hp } from '@/lib/utils';
+import { STYLES } from '@/lib/constants';
 
 const INGREDIENT_LIST = [
   '1 kg xương ống bò',
@@ -75,32 +35,7 @@ const INGREDIENT_LIST = [
   '1 miếng nhỏ trần bì',
   '10 gram tiêu sọ',
   'Đường cát, muối, giấm, bánh phở',
-] as const;
-
-type IngredientVerticalListProps = {
-  ingredients: string[];
-};
-
-const IngredientVerticalList = ({ ingredients }: IngredientVerticalListProps) => {
-  return (
-    <View style={{ flex: 1 }}>
-      {ingredients.map(ingredient => (
-        <ListItem
-          key={ingredient}
-          containerStyle={{
-            backgroundColor: 'white',
-            paddingVertical: STYLES.PADDING.PADDING_4,
-          }}>
-          <ListItem.Content>
-            <StyledText type='Body' color='grey'>
-              {ingredient}
-            </StyledText>
-          </ListItem.Content>
-        </ListItem>
-      ))}
-    </View>
-  );
-};
+];
 
 const STEPS = [
   {
@@ -108,41 +43,106 @@ const STEPS = [
     content:
       'Ngâm xương ống với nước muối và giấm khoảng 2 tiếng cho sạch và bớt mùi tanh. Sau đó đem xương đi rửa sạch rồi cho vào nồi nước sôi cùng với gừng và 1 muỗng canh muối đun trong khoảng 10 phút thì vớt ra, trần qua nước lạnh. Cách này sẽ loại bỏ được hoàn toàn mùi hôi bò, giúp nước dùng thơm ngon hơn mà không bị tanh.',
   },
+  {
+    title: 'Bước 2: Hầm xương bò',
+    content:
+      'Hầm xương ống hơn 10 tiếng với 5 lít nước để xương ra chất, hầm càng lâu, nước dùng sẽ càng thơm ngon và đậm đà hơn. Sau đó đổ nước lạnh vào tùy mức nấu mà bạn mong muốn nhiều hay ít. Tuy nhiên, lượng nước lạnh cho vào sẽ quyết định nước dùng sắc nhiều hay sắc ít.',
+  },
+  {
+    title: 'Bước 3: Sơ chế các nguyên liệu khác và nấu nước dùng',
+    content:
+      'Hành tây một nửa lột vỏ, rửa sạch và cắt lát mỏng, ngâm vào nước lạnh để hành giòn, trắng, bớt nồng. Cho phần hành tây còn lại cùng gừng, sá sùng để nguyên vỏ lên bếp nướng chín thơm (cố gắng không nên để hành, gừng, sá sùng bị cháy quá). Sau đó đem đi lột vỏ và cho gừng, sá sùng, hành tây vào một túi vải trắng, sạch và bỏ vào nồi nước dùng, hầm trong 4 tiếng đồng hồ cho nước ngọt từ nguyên liệu tiết ra hết. Bỏ đại hồi, quế, thảo quả, hạt ngò, đinh hương, tiêu sọ vào chảo rang cho dậy mùi thơm. Chú ý không rang vàng quá sẽ làm đen màu nước dùng. Sau đó đem ngâm với nước sôi tầm 30 phút đến một tiếng cho gia vị ra bớt màu đen và mùi, giúp nước dùng có hương thoang thoảng nhẹ nhàng, không quá nồng gây khó chịu. Sau đó vớt ra, cho hết vào trong túi vải và bỏ vào nồi nước hầm xương. Sau khi hầm hành tây, gừng, sá sùng được 4 tiếng và đại hồi, quế, hạt ngò, đinh hương được 1 tiếng thì vớt cả hai túi ra kèm xương ống. Cho vào nước dùng các gia vị: 60gram đường phèn, 4 muỗng canh muối, 5 muỗng canh hạt nêm, 5 muỗng canh bột ngọt. Nêm nếm thêm bớt gia vị cho vừa miệng.',
+  },
+  {
+    title: 'Bước 4: Chuẩn bị bánh phở và các loại rau ăn kèm',
+    content:
+      'Ngò gai và rau quế rửa sạch và để ráo. Bánh phở trụng sơ với nước sôi, sau đó cho vào tô, xếp thịt bò lên bề mặt, rắc hành lá, rau mùi, hành đã cắt nhỏ, hành tây ngâm nước đá và chan nước dùng. Vắt thêm tí chanh, thêm vào tí ớt là có ngay một tô phở Việt đậm vị truyền thống với công thức gia truyền.',
+  },
 ];
 
-type StepListProps = {
-  steps: string[];
-};
-
-const StepList = ({ steps }: StepListProps) => {
-  return steps.map((step, index) => (
-    <ListItem key={step}>
-      <ListItem.Content>
-        <StyledText type='Body' color='grey'>
-          {`${index + 1}.`} {step}
-        </StyledText>
-      </ListItem.Content>
-    </ListItem>
-  ));
-};
-
-const FoodInformationScrollView = () => {
+const Information = () => {
   const styles = useStyles();
-  const [like, setLike] = useState(false);
-  const splitPoint = Math.ceil(INGREDIENT_LIST.length / 2);
-  const ingredientList_1 = INGREDIENT_LIST.slice(0, splitPoint);
-  const ingredientList_2 = INGREDIENT_LIST.slice(splitPoint);
-
-  const loveIcon = like ? (
-    <AntDesign name='heart' style={styles.loveIcon} />
-  ) : (
-    <AntDesign name='hearto' style={styles.loveIcon} />
-  );
 
   return (
-    <BottomSheetScrollView contentContainerStyle={styles.content}>
-      <View style={styles.heading}>
-        <View style={styles.headingDesc}>
+    <View style={styles.container}>
+      <ImageSlide />
+      <InformationBottomSheet />
+    </View>
+  );
+};
+
+type ImageSlideProps = {
+  imageUrlList?: string[];
+};
+
+const ImageSlide = (props?: ImageSlideProps) => {
+  const styles = useStyles();
+  const router = useRouter();
+
+  return (
+    <View style={styles.imageSlideContainer}>
+      <StyledPressable onPress={() => router.back()} style={styles.backButton}>
+        <ChevronLeftIcon />
+      </StyledPressable>
+      <Image
+        source={{
+          uri: 'https://file1.dangcongsan.vn/data/0/images/2021/02/08/duongntcd/13-chung-tet-td.jpg?dpi=150&quality=100&w=680',
+        }}
+        style={styles.image}
+      />
+    </View>
+  );
+};
+
+const InformationBottomSheet = () => {
+  const snapPoints = useMemo(() => ['50%', '70%', '90%'] as const, []);
+
+  return (
+    <BottomSheet
+      index={0}
+      snapPoints={snapPoints}
+      handleComponent={InformationBottomSheetHandle}
+      backdropComponent={StyledBackdrop}
+      backgroundComponent={InformationBottomSheetBackground}
+      enablePanDownToClose={false}>
+      <InformationBottomSheetBody />
+    </BottomSheet>
+  );
+};
+
+const InformationBottomSheetHandle = (props: StyledHandleProps) => {
+  const bottomSheetstyles = useBottomSheetStyles();
+  return <StyledHandle {...props} style={bottomSheetstyles.handle} />;
+};
+
+const InformationBottomSheetBackground = ({
+  style: defaultStyle,
+  ...otherProps
+}: StyledBackgroundProps) => {
+  const bottomSheetstyles = useBottomSheetStyles();
+  return <StyledBackground style={[defaultStyle, bottomSheetstyles.background]} {...otherProps} />;
+};
+
+const useBottomSheetStyles = makeStyles(theme => {
+  return {
+    handle: {
+      backgroundColor: theme.colors.background,
+      borderBottomWidth: 0,
+    },
+    background: {
+      backgroundColor: theme.colors.background,
+    },
+  };
+});
+
+const InformationBottomSheetBody = () => {
+  const styles = useStyles();
+  const [like, setLike] = useState(false);
+
+  return (
+    <BottomSheetScrollView contentContainerStyle={styles.body}>
+      <View style={styles.headerContainer}>
+        <View style={styles.header}>
           <StyledText type='Heading_2' color='orange'>
             Phở
           </StyledText>
@@ -150,7 +150,9 @@ const FoodInformationScrollView = () => {
             Vietnamese traditional breakfast
           </StyledText>
         </View>
-        <StyledPressable onPress={() => setLike(prev => !prev)}>{loveIcon}</StyledPressable>
+        <StyledPressable onPress={() => setLike(prev => !prev)}>
+          <HeartIcon active={like} />
+        </StyledPressable>
       </View>
       <View style={styles.story}>
         <StyledText type='Heading_3' color='orange'>
@@ -174,38 +176,114 @@ const FoodInformationScrollView = () => {
         <StyledText type='Heading_3' color='orange'>
           Ingredients
         </StyledText>
-        <View style={styles.ingredientList}>
-          <IngredientVerticalList ingredients={ingredientList_1} />
-          <IngredientVerticalList ingredients={ingredientList_2} />
-        </View>
+        <IngredientList ingredients={INGREDIENT_LIST} />
       </View>
       <View>
         <StyledText type='Heading_3' color='orange'>
           Steps
         </StyledText>
-        <View>{/* <StepList /> */}</View>
+        <StepList steps={STEPS} />
       </View>
+      <StyledButton
+        title='How to make Pho'
+        icon={<PlayCircleIcon />}
+        iconPosition='right'
+        containerStyle={{
+          marginBottom: STYLES.MARGIN.MARGIN_32,
+          borderRadius: STYLES.RADIUS.RADIUS_10,
+        }}
+        buttonStyle={{
+          paddingVertical: STYLES.PADDING.PADDING_16,
+        }}
+      />
     </BottomSheetScrollView>
   );
 };
 
-type AudioControlProps = {
-  playing: boolean;
-  onControlPress: () => void;
+type IngredientListProps = {
+  ingredients: string[];
 };
+
+const IngredientList = ({ ingredients }: IngredientListProps) => {
+  const styles = useStyles();
+  const splitPoint = Math.ceil(ingredients.length / 2);
+  const ingredientList_1 = ingredients.slice(0, splitPoint);
+  const ingredientList_2 = ingredients.slice(splitPoint);
+
+  return (
+    <View style={styles.ingredientList}>
+      <IngredientSubList ingredients={ingredientList_1} />
+      <IngredientSubList ingredients={ingredientList_2} />
+    </View>
+  );
+};
+
+const IngredientSubList = ({ ingredients }: IngredientListProps) => {
+  return (
+    <View style={{ flex: 1 }}>
+      {ingredients.map((ingredient, index) => (
+        <ListItem
+          key={`${ingredient}-${index}`}
+          containerStyle={{
+            paddingVertical: STYLES.PADDING.PADDING_4,
+          }}>
+          <ListItem.Content>
+            <StyledText type='Body' color='grey'>
+              {ingredient}
+            </StyledText>
+          </ListItem.Content>
+        </ListItem>
+      ))}
+    </View>
+  );
+};
+
+type StepListProps = {
+  steps: {
+    title: string;
+    content: string;
+  }[];
+};
+
+const StepList = ({ steps }: StepListProps) => {
+  return (
+    <View>
+      {steps.map(step => (
+        <ListItem key={step.title}>
+          <ListItem.Content>
+            <StyledText type='Heading_4' color='blackGrey'>
+              {step.title}
+            </StyledText>
+            <StyledText type='Body' color='grey'>
+              {step.content}
+            </StyledText>
+          </ListItem.Content>
+        </ListItem>
+      ))}
+    </View>
+  );
+};
+
 const AudioControl = () => {
   const styles = useStyles();
-  const { theme } = useTheme();
   const [playing, setPlaying] = useState(false);
-  const [sliderValue, setSliderValue] = useState(0);
 
-  const controlIcon = playing ? (
-    <Ionicons name='pause' style={styles.audioControlIcon} />
-  ) : (
-    <Ionicons name='play' style={styles.audioControlIcon} />
+  return (
+    <View style={styles.audioControlContainer}>
+      <StyledPressable onPress={() => setPlaying(prev => !prev)}>
+        <AudioControlIcon active={playing} />
+      </StyledPressable>
+      <AudioSlider />
+    </View>
   );
+};
 
-  const audioSlider = (
+const AudioSlider = () => {
+  const [sliderValue, setSliderValue] = useState(0);
+  const { theme } = useTheme();
+  const styles = useStyles();
+
+  return (
     <Slider
       value={sliderValue}
       onValueChange={setSliderValue}
@@ -227,13 +305,6 @@ const AudioControl = () => {
       }}
     />
   );
-
-  return (
-    <View style={styles.audioControlContainer}>
-      <StyledPressable onPress={() => setPlaying(prev => !prev)}>{controlIcon}</StyledPressable>
-      {audioSlider}
-    </View>
-  );
 };
 
 const useStyles = makeStyles(theme => {
@@ -245,42 +316,33 @@ const useStyles = makeStyles(theme => {
       marginTop: StatusBar.currentHeight || 0,
       zIndex: 1,
     },
-    backgroundContainer: {
+    imageSlideContainer: {
       position: 'relative',
     },
-    backIconContainer: {
+    backButton: {
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      opacity: 0.5,
       position: 'absolute',
       top: STYLES.MARGIN.MARGIN_8,
       left: STYLES.MARGIN.MARGIN_8,
       zIndex: 1,
       borderRadius: STYLES.RADIUS.RADIUS_50,
     },
-    backIcon: {
-      color: theme.colors.blackGrey,
-      fontSize: STYLES.ICON_SIZE.ICON_SIZE_24,
-    },
-    background: {
+    image: {
       width: '100%',
-      height: 350,
+      height: hp(55),
     },
-    content: {
+    body: {
       // flex: 1,
       marginHorizontal: STYLES.MARGIN.MARGIN_16,
       // marginTop: STYLES.MARGIN.MARGIN_8,
       gap: STYLES.GAP.GAP_16,
     },
-    heading: {
+    headerContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
     },
-    headingDesc: {},
-    loveIcon: {
-      color: theme.colors.redPink,
-      fontSize: STYLES.ICON_SIZE.ICON_SIZE_24,
-    },
+    header: {},
     story: {
       gap: STYLES.GAP.GAP_16,
     },
@@ -290,13 +352,9 @@ const useStyles = makeStyles(theme => {
       alignItems: 'center',
       paddingHorizontal: STYLES.PADDING.PADDING_8,
       paddingVertical: STYLES.PADDING.PADDING_4,
-      borderRadius: STYLES.RADIUS.RADIUS_20,
+      borderRadius: STYLES.RADIUS.RADIUS_10,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_15 : STYLES.SHADOW.SHADOW_BLACK_15),
-    },
-    audioControlIcon: {
-      color: theme.colors.orange,
-      fontSize: STYLES.ICON_SIZE.ICON_SIZE_24,
+      // ...(dT ? STYLES.SHADOW.SHADOW_WHITE_15 : STYLES.SHADOW.SHADOW_BLACK_15),
     },
     track: {
       height: 2,
@@ -311,8 +369,7 @@ const useStyles = makeStyles(theme => {
     },
     ingredientList: {
       flexDirection: 'row',
-      gap: STYLES.GAP.GAP_8,
-      marginVertical: STYLES.MARGIN.MARGIN_8,
+      justifyContent: 'space-between',
     },
   };
 });

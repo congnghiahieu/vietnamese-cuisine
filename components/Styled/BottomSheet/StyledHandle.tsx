@@ -17,7 +17,7 @@ export const createTransform = ({ x, y }, ...transformations) => {
   return [{ translateX: x }, { translateY: y }, ...transformations];
 };
 
-type StyledHandleProps = BottomSheetHandleProps & {
+export type StyledHandleProps = BottomSheetHandleProps & {
   style?: StyleProp<ViewStyle>;
 };
 

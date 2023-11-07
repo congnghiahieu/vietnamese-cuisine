@@ -1,13 +1,13 @@
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
-import StyledInput from '@/components/Styled/StyledInput';
+import { FormInput } from '@/components/Styled/StyledInput';
 import StyledButton, { GoogleButton } from '@/components/Styled/StyledButton';
 import { KeyboardView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import { ArrowIcon } from '@/components/Icon';
+import { ArrowRightIcon } from '@/components/Icon';
 
 const Login = () => {
   const styles = useStyles();
@@ -15,15 +15,17 @@ const Login = () => {
 
   return (
     <KeyboardView style={styles.container}>
-      <View style={styles.logo} />
+      <View style={{ alignItems: 'center' }}>
+        <Image source={require('../assets/images/new/adaptive-icon.png')} style={styles.icon} />
+      </View>
       <View style={styles.heading}>
         <StyledText type='Heading_3' color='orange'>
           Vietnamese Cuisine
         </StyledText>
       </View>
       <View style={styles.form}>
-        <StyledInput type='normal' placeholder='Email' />
-        <StyledInput type='password' placeholder='Password' />
+        <FormInput type='normal' placeholder='Email' />
+        <FormInput type='password' placeholder='Password' />
       </View>
       <View style={styles.subField}>
         <StyledPressable onPress={() => router.push('/(sidebar)/(tabs)/')}>
@@ -38,7 +40,7 @@ const Login = () => {
         </StyledPressable>
       </View>
       <View style={styles.button}>
-        <StyledButton title='Sign In' icon={<ArrowIcon />} iconPosition='right' />
+        <StyledButton title='Sign In' icon={<ArrowRightIcon />} iconPosition='right' />
         <ContinueWithText />
         <GoogleButton />
       </View>
@@ -62,9 +64,9 @@ const useStyles = makeStyles(theme => ({
     marginHorizontal: STYLES.MARGIN.MARGIN_16,
     marginTop: StatusBar.currentHeight || 0,
   },
-  logo: {
-    height: 180,
-    backgroundColor: 'gray',
+  icon: {
+    width: 200,
+    height: 200,
   },
   heading: {
     marginVertical: STYLES.MARGIN.MARGIN_8,

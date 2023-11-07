@@ -3,7 +3,9 @@ import { BottomSheetBackgroundProps } from '@gorhom/bottom-sheet';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 
-const StyledBackground = ({ style }: BottomSheetBackgroundProps) => {
+export type StyledBackgroundProps = BottomSheetBackgroundProps;
+
+const StyledBackground = ({ style }: StyledBackgroundProps) => {
   const styles = useStyles();
 
   return <View style={[styles.container, style]} />;

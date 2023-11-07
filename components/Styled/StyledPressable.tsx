@@ -11,7 +11,7 @@ const StyledPressable = ({ children, style, ...otherProps }: StyledPressableProp
       style={({ pressed }) => [
         {
           padding: STYLES.PADDING.PADDING_4,
-          opacity: pressed ? 0.5 : 1,
+          opacity: pressed ? 0.7 : 1,
           // backgroundColor: 'red',
         },
         style,

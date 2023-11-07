@@ -1,13 +1,13 @@
-import { View, Pressable, StatusBar } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
-import StyledInput from '@/components/Styled/StyledInput';
+import { FormInput } from '@/components/Styled/StyledInput';
 import StyledButton, { GoogleButton } from '@/components/Styled/StyledButton';
 import { KeyboardView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import { ArrowIcon } from '@/components/Icon';
+import { ArrowRightIcon } from '@/components/Icon';
 
 const Register = () => {
   const styles = useStyles();
@@ -24,10 +24,10 @@ const Register = () => {
         </StyledText>
       </View>
       <View style={styles.form}>
-        <StyledInput type='normal' placeholder='Fullname' />
-        <StyledInput type='normal' placeholder='Email' />
-        <StyledInput type='password' placeholder='Password' />
-        <StyledInput type='password' placeholder='Confirm Password' />
+        <FormInput type='normal' placeholder='Fullname' />
+        <FormInput type='normal' placeholder='Email' />
+        <FormInput type='password' placeholder='Password' />
+        <FormInput type='password' placeholder='Confirm Password' />
       </View>
       <View style={styles.subField}>
         <StyledPressable onPress={() => router.push('/(sidebar)/(tabs)/')}>
@@ -37,7 +37,7 @@ const Register = () => {
         </StyledPressable>
       </View>
       <View style={styles.button}>
-        <StyledButton title='Sign Up' icon={<ArrowIcon />} iconPosition='right' />
+        <StyledButton title='Sign Up' icon={<ArrowRightIcon />} iconPosition='right' />
         <ContinueWithText />
         <GoogleButton />
       </View>
@@ -52,8 +52,6 @@ const Register = () => {
     </KeyboardView>
   );
 };
-
-export default Register;
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -99,3 +97,5 @@ const useStyles = makeStyles(theme => ({
     color: theme.colors.orange,
   },
 }));
+
+export default Register;

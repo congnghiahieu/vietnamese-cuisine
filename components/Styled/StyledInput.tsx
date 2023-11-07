@@ -3,29 +3,41 @@ import { Input, InputProps, makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
 import { EyeIcon } from '@/components/Icon';
+import StyledPressable from './StyledPressable';
 
-type StyledInputType = {
+type FormInputProps = InputProps & {
   type: 'normal' | 'password';
 };
-type StyledInputProps = InputProps & StyledInputType;
 
-const StyledInput = (props: StyledInputProps) => {
-  const styles = useStyles();
+export const FormInput = (props: FormInputProps) => {
+  const styles = useFormInputStyles();
   const [showSecureText, setShowSecureText] = useState(false);
   const secureTextEntry = props.type === 'normal' || showSecureText ? false : true;
 
   const rightIcon =
     props.type === 'normal' ? undefined : (
-      <EyeIcon show={showSecureText} onPress={() => setShowSecureText(prev => !prev)} />
+      <StyledPressable
+        onPress={() => setShowSecureText(prev => !prev)}
+        style={{
+          paddingHorizontal: STYLES.PADDING.PADDING_8,
+          paddingVertical: STYLES.PADDING.PADDING_4,
+        }}>
+        {/* <EyeIcon active={showSecureText} /> */}
+        {EyeIcon({
+          active: showSecureText,
+        })}
+      </StyledPressable>
     );
 
   return (
     <Input
       containerStyle={styles.container}
       inputContainerStyle={styles.inputContainer}
+      placeholderTextColor={styles.input.color}
       inputStyle={styles.input}
       errorStyle={styles.error}
-      rightIconContainerStyle={styles.rightIconContainer}
+      rightIconContainerStyle={styles.iconContainer}
+      leftIconContainerStyle={styles.iconContainer}
       rightIcon={rightIcon}
       secureTextEntry={secureTextEntry}
       {...props}
@@ -33,7 +45,7 @@ const StyledInput = (props: StyledInputProps) => {
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useFormInputStyles = makeStyles(theme => ({
   container: {
     paddingHorizontal: 0,
     margin: 0,
@@ -55,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     marginVertical: 0,
     marginTop: STYLES.MARGIN.MARGIN_4,
   },
-  rightIconContainer: {
+  iconContainer: {
     paddingVertical: 0,
     paddingHorizontal: 0,
     paddingRight: 0,
@@ -64,4 +76,57 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default StyledInput;
+export const SearchInput = (props: InputProps) => {
+  const styles = useSearchInputStyles();
+
+  return (
+    <Input
+      containerStyle={styles.container}
+      inputContainerStyle={styles.inputContainer}
+      placeholderTextColor={styles.input.color}
+      inputStyle={styles.input}
+      errorStyle={styles.error}
+      rightIconContainerStyle={styles.iconContainer}
+      leftIconContainerStyle={styles.iconContainer}
+      {...props}
+    />
+  );
+};
+
+const useSearchInputStyles = makeStyles(theme => {
+  const dT = theme.mode === 'dark';
+
+  return {
+    container: {
+      margin: 0,
+      paddingHorizontal: STYLES.PADDING.PADDING_16,
+      paddingVertical: STYLES.PADDING.PADDING_4,
+      backgroundColor: dT ? theme.colors.black : theme.colors.white,
+      borderRadius: STYLES.RADIUS.RADIUS_10,
+      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_15 : STYLES.SHADOW.SHADOW_BLACK_15),
+    },
+    inputContainer: {
+      padding: 0,
+      margin: 0,
+      borderBottomWidth: 0,
+      // backgroundColor: 'blue',
+    },
+    input: {
+      ...TEXT_STYLE_TYPE_MAP.Placeholder,
+      color: theme.colors.whiteGrey,
+    },
+    error: {
+      marginHorizontal: 0,
+      marginVertical: 0,
+      width: 0,
+      height: 0,
+    },
+    iconContainer: {
+      paddingVertical: 0,
+      paddingHorizontal: 0,
+      paddingRight: 0,
+      marginVertical: 0,
+      height: 'auto',
+    },
+  };
+});
