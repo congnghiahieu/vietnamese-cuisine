@@ -37,10 +37,7 @@ export const Fonts = {
 };
 
 export type TextFontFamily = keyof typeof Fonts;
-export type TextColor = keyof Pick<
-  ExtendedColors,
-  'blackGrey' | 'grey' | 'whiteGrey' | 'white' | 'orange'
->;
+export type TextColor = keyof ExtendedColors;
 export type TextType =
   | 'Heading_2'
   | 'Heading_3'

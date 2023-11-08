@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
-import StyledButton, { GoogleButton } from '@/components/Styled/StyledButton';
+import { SolidButton, GoogleButton } from '@/components/Styled/StyledButton';
 import { KeyboardView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ArrowRightIcon } from '@/components/Icon';
@@ -52,7 +52,7 @@ const Register = () => {
         </StyledPressable>
       </View>
       <View style={styles.button}>
-        <StyledButton
+        <SolidButton
           title='Sign Up'
           icon={<ArrowRightIcon />}
           iconPosition='right'
@@ -102,7 +102,6 @@ const useStyles = makeStyles(theme => ({
     gap: STYLES.GAP.GAP_8,
   },
   button: {
-    alignItems: 'center',
     gap: STYLES.GAP.GAP_8,
   },
   footer: {

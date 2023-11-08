@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { ThemeProvider, useTheme, useThemeMode } from '@rneui/themed';
@@ -79,6 +79,27 @@ const StackLayout = () => {
   );
 };
 
+const DarkThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const firstMount = useRef(false);
+  const { darkMode } = useSettingStates();
+  const { setMode } = useThemeMode();
+
+  useEffect(() => {
+    console.log('First mount');
+    if (firstMount.current) {
+      console.log(darkMode);
+      console.log('Second mount');
+      setMode(darkMode ? 'dark' : 'light');
+    } else {
+      firstMount.current = true;
+    }
+
+    return;
+  }, [firstMount.current]);
+
+  return children;
+};
+
 export default function RootLayout() {
   const { setUser } = useAuthStates();
   useEffect(() => {
@@ -95,9 +116,11 @@ export default function RootLayout() {
   return (
     <FontsLoader onFontsLoaded={SplashScreen.hideAsync}>
       <ThemeProvider theme={theme}>
-        <NavigationThemeProvider>
-          <StackLayout />
-        </NavigationThemeProvider>
+        <DarkThemeProvider>
+          <NavigationThemeProvider>
+            <StackLayout />
+          </NavigationThemeProvider>
+        </DarkThemeProvider>
       </ThemeProvider>
     </FontsLoader>
   );

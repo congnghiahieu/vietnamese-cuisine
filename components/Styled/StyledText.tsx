@@ -23,6 +23,7 @@ export const ContinueWithText = () => {
 
 const useStyles = makeStyles(theme => ({
   continueContainer: {
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     gap: STYLES.GAP.GAP_8,

@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { useRouter, useNavigation } from 'expo-router';
 import { STYLES } from '@/lib/constants';
-import { MenuIcon } from '@/components/Icon';
+import { AvatarIcon, MenuIcon } from '@/components/Icon';
 import StyledPressable from './Styled/StyledPressable';
 
 type SidebarHeaderProps = {
@@ -43,30 +43,13 @@ const SidebarHeader = () => {
       }
       rightComponent={
         <StyledPressable onPress={onAvatarPress} style={{ padding: 0 }}>
-          <DefaultAvatar color={theme.colors.orange} />
+          <AvatarIcon />
         </StyledPressable>
       }
     />
   );
 };
 
-const DefaultAvatar = ({ color }: { color: string }) => {
-  const styles = useStyles();
-
-  return (
-    <View style={[styles.avatarContainer, { borderColor: color }]}>
-      <AntDesign name='user' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
-    </View>
-  );
-};
-
-const useStyles = makeStyles(theme => ({
-  avatarContainer: {
-    borderWidth: 1,
-    borderRadius: 50,
-    backgroundColor: 'white',
-    padding: 4,
-  },
-}));
+const useStyles = makeStyles(theme => ({}));
 
 export default SidebarHeader;

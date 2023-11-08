@@ -13,7 +13,7 @@ import StyledBackground, {
 } from '@/components/Styled/BottomSheet/StyledBackground';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import StyledButton from '@/components/Styled/StyledButton';
+import { SolidButton } from '@/components/Styled/StyledButton';
 import { PlayCircleIcon, ChevronLeftIcon, HeartIcon, AudioControlIcon } from '@/components/Icon';
 import { hp } from '@/lib/utils';
 import { STYLES } from '@/lib/constants';
@@ -184,7 +184,7 @@ const InformationBottomSheetBody = () => {
         </StyledText>
         <StepList steps={STEPS} />
       </View>
-      <StyledButton
+      <SolidButton
         title='How to make Pho'
         icon={<PlayCircleIcon />}
         iconPosition='right'
@@ -354,7 +354,7 @@ const useStyles = makeStyles(theme => {
       paddingVertical: STYLES.PADDING.PADDING_4,
       borderRadius: STYLES.RADIUS.RADIUS_10,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      // ...(dT ? STYLES.SHADOW.SHADOW_WHITE_15 : STYLES.SHADOW.SHADOW_BLACK_15),
+      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_4 : STYLES.SHADOW.SHADOW_BLACK_4),
     },
     track: {
       height: 2,

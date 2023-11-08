@@ -43,6 +43,60 @@ export type ShadowStyle = ShadowStyleIOS & {
 export const SHADOW_BLACK_COLOR = LIGHT_COLORS.black;
 export const SHADOW_WHITE_COLOR = LIGHT_COLORS.white;
 export const SHADOW_ORANGE_COLOR = LIGHT_COLORS.orange;
+export type ShadowDepth = '0' | '4' | '8' | '12' | '16';
+export const SHADOW_PROPS: Record<ShadowDepth, Omit<ShadowStyle, 'shadowColor'>> = {
+  0: {
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
+  },
+  4: {
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
+  8: {
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+  },
+  12: {
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
+  },
+  16: {
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.44,
+    shadowRadius: 10.32,
+    elevation: 16,
+  },
+};
+const createShadowStyle = (depth: ShadowDepth, color: string): ShadowStyle => {
+  return {
+    shadowColor: color,
+    ...SHADOW_PROPS[depth],
+  };
+};
 
 export const STYLES = {
   LINE_HEIGHT: {
@@ -98,66 +152,19 @@ export const STYLES = {
     RADIUS_60: 60,
   },
   SHADOW: {
-    SHADOW_BLACK_15: {
-      shadowColor: SHADOW_BLACK_COLOR,
-      elevation: 15,
-      shadowOpacity: 0.15,
-      shadowRadius: 24,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-    },
-    SHADOW_BLACK_25: {
-      elevation: 25,
-      shadowColor: SHADOW_BLACK_COLOR,
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-    },
-    SHADOW_ORANGE_15: {
-      elevation: 15,
-      shadowColor: SHADOW_ORANGE_COLOR,
-      shadowOpacity: 0.15,
-      shadowRadius: 24,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-    },
-    SHADOW_ORANGE_25: {
-      elevation: 25,
-      shadowColor: SHADOW_ORANGE_COLOR,
-      shadowOpacity: 0.25,
-      shadowRadius: 28,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-    },
-    SHADOW_WHITE_15: {
-      elevation: 15,
-      shadowColor: SHADOW_WHITE_COLOR,
-      shadowOpacity: 0.15,
-      shadowRadius: 12,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-    },
-    SHADOW_WHITE_25: {
-      elevation: 25,
-      shadowColor: SHADOW_WHITE_COLOR,
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-    },
+    NO_SHADOW: createShadowStyle('0', SHADOW_BLACK_COLOR),
+    SHADOW_BLACK_4: createShadowStyle('4', SHADOW_BLACK_COLOR),
+    SHADOW_BLACK_8: createShadowStyle('8', SHADOW_BLACK_COLOR),
+    SHADOW_BLACK_12: createShadowStyle('12', SHADOW_BLACK_COLOR),
+    SHADOW_BLACK_16: createShadowStyle('16', SHADOW_BLACK_COLOR),
+    SHADOW_WHITE_4: createShadowStyle('4', SHADOW_WHITE_COLOR),
+    SHADOW_WHITE_8: createShadowStyle('8', SHADOW_WHITE_COLOR),
+    SHADOW_WHITE_12: createShadowStyle('12', SHADOW_WHITE_COLOR),
+    SHADOW_WHITE_16: createShadowStyle('16', SHADOW_WHITE_COLOR),
+    SHADOW_ORANGE_4: createShadowStyle('4', SHADOW_ORANGE_COLOR),
+    SHADOW_ORANGE_8: createShadowStyle('8', SHADOW_ORANGE_COLOR),
+    SHADOW_ORANGE_12: createShadowStyle('12', SHADOW_ORANGE_COLOR),
+    SHADOW_ORANGE_16: createShadowStyle('16', SHADOW_ORANGE_COLOR),
   },
 } as const;
 
@@ -166,12 +173,6 @@ export type GapType = keyof typeof STYLES.GAP;
 export type PaddingType = keyof typeof STYLES.PADDING;
 export type RadiusType = keyof typeof STYLES.RADIUS;
 export type ShadowType = keyof typeof STYLES.SHADOW;
-
-export const SETTINGS_KEYS = {
-  darkMode: 'Vietnamese Cuisine Dark Mode',
-  language: 'Vietnamese Cuisine Language',
-  notifications: 'Vietnamese Cuisine Notifications',
-};
 
 export const I18N = {
   'English': {},

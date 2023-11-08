@@ -165,7 +165,7 @@ const useStyles = makeStyles(theme => {
       padding: STYLES.PADDING.PADDING_32,
       borderRadius: STYLES.RADIUS.RADIUS_20,
       backgroundColor,
-      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_15 : STYLES.SHADOW.SHADOW_BLACK_15),
+      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_16 : STYLES.SHADOW.SHADOW_BLACK_4),
     },
     optionContainer: {
       flexDirection: 'row',

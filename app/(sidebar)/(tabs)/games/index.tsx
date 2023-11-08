@@ -1,14 +1,118 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { FlatList, Image, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { makeStyles } from '@rneui/themed';
+import { STYLES } from '@/lib/constants';
+import { hp } from '@/lib/utils';
+import StyledText from '@/components/Styled/StyledText';
+import StyledPressable from '@/components/Styled/StyledPressable';
+import { ChevronRightIcon, HeartDislikeIcon } from '@/components/Icon';
+import { SolidButton } from '@/components/Styled/StyledButton';
 
-const GamesList = () => {
+const GAME_LIST = [
+  {
+    title: 'Match Food',
+    imageUrl:
+      'https://cdn.tgdd.vn/Files/2021/07/27/1371175/huong-dan-3-cach-lam-banh-mi-bo-thom-ngon-de-lam-cho-bua-sang-du-chat-202201041019538628.jpg',
+    desc: 'Match Food is a classic memory game. Player takes turns flipping over two tiles at a time. If the two tiles match, they are removed from the board. If the tiles do not match, they are flipped back over.',
+  },
+  {
+    title: 'Pick Ingredients',
+    imageUrl:
+      'https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/filters:quality(95)/https://cms-prod.s3-sgn09.fptcloud.com/1_to_pho_bo_bao_nhieu_calo_9_762e002737.jpg',
+    desc: 'Pick Ingredients is a game challenge your knowledge. You need to find all main ingredients to make a Vietnamese dish in a provided set of ingredients. By dragging & dropping ingredients into a bag, you can win the game.',
+  },
+  {
+    title: 'Guess Food',
+    imageUrl: 'https://beptruong.edu.vn/wp-content/uploads/2018/05/bun-cha.jpg',
+    desc: 'PicQuiz - Guess Pics',
+  },
+];
+
+const Favourites = () => {
+  const styles = useStyles();
   return (
-    <View>
-      <Text>GamesList</Text>
+    <View style={styles.container}>
+      <GameList gameList={GAME_LIST} />
     </View>
   );
 };
 
-export default GamesList;
+type Game = {
+  title: string;
+  imageUrl: string;
+  desc: string;
+};
 
-const styles = StyleSheet.create({});
+const GameCard = ({ title, desc, imageUrl }: Game) => {
+  const styles = useStyles();
+  const router = useRouter();
+
+  return (
+    <View style={styles.card}>
+      <Image
+        source={{
+          uri: imageUrl,
+        }}
+        style={styles.cardImage}
+      />
+      <View style={styles.cardContent}>
+        <View>
+          <StyledText type='Heading_4' color='blackGrey'>
+            {title}
+          </StyledText>
+          <StyledText type='Comment' color='grey'>
+            {desc}
+          </StyledText>
+        </View>
+        <SolidButton title='Play now' />
+      </View>
+    </View>
+  );
+};
+
+type GameListProps = {
+  gameList: Game[];
+};
+
+const GameList = ({ gameList }: GameListProps) => {
+  return (
+    <FlatList
+      keyExtractor={({ title }) => title}
+      horizontal={false}
+      showsVerticalScrollIndicator={false}
+      data={gameList}
+      renderItem={({ item }) => <GameCard {...item} />}
+    />
+  );
+};
+
+const useStyles = makeStyles(theme => {
+  const dT = theme.mode === 'dark';
+  return {
+    container: {
+      flex: 1,
+      marginHorizontal: STYLES.MARGIN.MARGIN_16,
+      gap: STYLES.GAP.GAP_16,
+    },
+    card: {
+      flexDirection: 'column',
+      flexBasis: '100%',
+      borderRadius: STYLES.RADIUS.RADIUS_20,
+      marginBottom: STYLES.MARGIN.MARGIN_16,
+      overflow: 'hidden',
+      backgroundColor: dT ? theme.colors.black : theme.colors.white,
+      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_4),
+    },
+    cardImage: {
+      flex: 1,
+      width: '100%',
+      height: hp(40),
+    },
+    cardContent: {
+      padding: STYLES.PADDING.PADDING_16,
+      gap: STYLES.GAP.GAP_16,
+    },
+  };
+});
+
+export default Favourites;

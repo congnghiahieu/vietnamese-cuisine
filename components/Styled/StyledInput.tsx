@@ -33,7 +33,7 @@ export const FormInput = (props: FormInputProps) => {
     <Input
       containerStyle={styles.container}
       inputContainerStyle={styles.inputContainer}
-      placeholderTextColor={styles.input.color}
+      placeholderTextColor={styles.placeHolder.color}
       inputStyle={styles.input}
       errorStyle={styles.error}
       rightIconContainerStyle={styles.iconContainer}
@@ -55,6 +55,9 @@ const useFormInputStyles = makeStyles(theme => ({
     borderBottomColor: theme.colors.grey,
     borderBottomWidth: 1,
     margin: 0,
+  },
+  placeHolder: {
+    color: theme.colors.whiteGrey,
   },
   input: {
     ...TEXT_STYLE_TYPE_MAP.Placeholder,
@@ -83,7 +86,7 @@ export const SearchInput = (props: InputProps) => {
     <Input
       containerStyle={styles.container}
       inputContainerStyle={styles.inputContainer}
-      placeholderTextColor={styles.input.color}
+      placeholderTextColor={styles.placeHolder.color}
       inputStyle={styles.input}
       errorStyle={styles.error}
       rightIconContainerStyle={styles.iconContainer}
@@ -103,7 +106,10 @@ const useSearchInputStyles = makeStyles(theme => {
       paddingVertical: STYLES.PADDING.PADDING_4,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       borderRadius: STYLES.RADIUS.RADIUS_10,
-      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_15 : STYLES.SHADOW.SHADOW_BLACK_15),
+      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8),
+    },
+    placeHolder: {
+      color: theme.colors.whiteGrey,
     },
     inputContainer: {
       padding: 0,
@@ -113,7 +119,7 @@ const useSearchInputStyles = makeStyles(theme => {
     },
     input: {
       ...TEXT_STYLE_TYPE_MAP.Placeholder,
-      color: theme.colors.whiteGrey,
+      color: theme.colors.grey,
     },
     error: {
       marginHorizontal: 0,
