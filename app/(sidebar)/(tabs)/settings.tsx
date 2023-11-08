@@ -1,7 +1,6 @@
 import { useRef, useMemo, useState } from 'react';
-import { Pressable, View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { useThemeMode, useTheme, makeStyles, ListItem } from '@rneui/themed';
-import { Entypo, Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import StyledSwitch from '@/components/Styled/StyledSwitch';
 import StyledDivider from '@/components/Styled/StyledDivider';
@@ -10,7 +9,9 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import StyledHandle from '@/components/Styled/BottomSheet/StyledHandle';
 import { DefaultBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
 import StyledBackground from '@/components/Styled/BottomSheet/StyledBackground';
-import { STYLES } from '@/lib/constants';
+import { STYLES, LANGUAGE_LIST } from '@/lib/constants';
+import { useSettingStates } from '@/states/setting';
+import { DarkModeIcon, LanguageIcon, NotificationsIcon } from '@/components/Icon';
 
 const Settings = () => {
   const styles = useStyles();
@@ -53,15 +54,16 @@ type LanguageSettingBottomSheetProps = {
 
 const LanguageSettingBottomSheet = ({ closeBottomSheet }: LanguageSettingBottomSheetProps) => {
   const styles = useStyles();
+  const { setLanguage } = useSettingStates();
 
-  const languages = useMemo(() => ['English', 'Vietnamese'], []);
   return (
     <BottomSheetView>
-      {languages.map((lang, i, arr) => {
+      {LANGUAGE_LIST.map((lang, i, arr) => {
         return (
           <StyledPressable
             key={i}
             onPress={() => {
+              setLanguage(lang);
               closeBottomSheet();
             }}
             style={{ padding: 0 }}>
@@ -69,11 +71,9 @@ const LanguageSettingBottomSheet = ({ closeBottomSheet }: LanguageSettingBottomS
               bottomDivider={i !== arr.length - 1}
               containerStyle={styles.listItemContainer}>
               <ListItem.Content>
-                <ListItem.Title>
-                  <StyledText type='Heading_5' color='blackGrey'>
-                    {lang}
-                  </StyledText>
-                </ListItem.Title>
+                <StyledText type='Heading_5' color='blackGrey'>
+                  {lang}
+                </StyledText>
               </ListItem.Content>
             </ListItem>
           </StyledPressable>
@@ -88,20 +88,20 @@ type LanguageSettingOptionProps = {
 };
 
 const LanguageSettingOption = ({ onLanguageTitlePress }: LanguageSettingOptionProps) => {
-  const { theme } = useTheme();
   const styles = useStyles();
+  const { language } = useSettingStates();
 
   return (
     <View style={styles.optionContainer}>
       <View style={styles.labelContainer}>
-        <Entypo name='language' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={theme.colors.orange} />
+        <LanguageIcon />
         <StyledText type='Heading_5' color='blackGrey'>
           Language
         </StyledText>
       </View>
       <StyledPressable onPress={onLanguageTitlePress}>
         <StyledText type='Placeholder' color='grey'>
-          English
+          {language}
         </StyledText>
       </StyledPressable>
     </View>
@@ -109,66 +109,43 @@ const LanguageSettingOption = ({ onLanguageTitlePress }: LanguageSettingOptionPr
 };
 
 const ThemeSettingOption = () => {
-  const { theme } = useTheme();
-  const { setMode } = useThemeMode();
-  const dT = theme.mode === 'dark';
   const styles = useStyles();
-
-  const icon = dT ? (
-    <Ionicons
-      name='ios-cloudy-night-outline'
-      size={STYLES.ICON_SIZE.ICON_SIZE_24}
-      color={theme.colors.orange}
-    />
-  ) : (
-    <Ionicons
-      name='sunny-outline'
-      size={STYLES.ICON_SIZE.ICON_SIZE_24}
-      color={theme.colors.orange}
-    />
-  );
+  const { setDarkMode } = useSettingStates();
+  const { setMode, mode } = useThemeMode();
+  const dT = mode === 'dark';
 
   return (
     <View style={styles.optionContainer}>
       <View style={styles.labelContainer}>
-        {icon}
+        <DarkModeIcon active={dT} />
         <StyledText type='Heading_5' color='blackGrey'>
           Dark mode
         </StyledText>
       </View>
-      <StyledSwitch active={dT} onChange={isDarkMode => setMode(isDarkMode ? 'dark' : 'light')} />
+      <StyledSwitch
+        active={dT}
+        onChange={isDarkMode => {
+          setDarkMode(isDarkMode);
+          setMode(isDarkMode ? 'dark' : 'light');
+        }}
+      />
     </View>
   );
 };
 
 const NotificationSettingOption = () => {
-  const { theme } = useTheme();
   const styles = useStyles();
-  const [noti, setNoti] = useState(false);
-
-  const icon = noti ? (
-    <Ionicons
-      name='notifications'
-      size={STYLES.ICON_SIZE.ICON_SIZE_24}
-      color={theme.colors.orange}
-    />
-  ) : (
-    <Ionicons
-      name='notifications-off'
-      size={STYLES.ICON_SIZE.ICON_SIZE_24}
-      color={theme.colors.orange}
-    />
-  );
+  const { notifications, setNotifications } = useSettingStates();
 
   return (
     <View style={styles.optionContainer}>
       <View style={styles.labelContainer}>
-        {icon}
+        <NotificationsIcon active={notifications} />
         <StyledText type='Heading_5' color='blackGrey'>
           Notifications
         </StyledText>
       </View>
-      <StyledSwitch active={noti} onChange={value => setNoti(value)} />
+      <StyledSwitch active={notifications} onChange={active => setNotifications(active)} />
     </View>
   );
 };

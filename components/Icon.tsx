@@ -1,4 +1,4 @@
-import { Feather, Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, AntDesign, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
@@ -26,6 +26,11 @@ export const PlayCircleIcon = () => {
 export const SearchIcon = () => {
   const styles = useStyles();
   return <Ionicons name='search' style={[styles.baseIcon, styles.orange]} />;
+};
+
+export const LanguageIcon = () => {
+  const styles = useStyles();
+  return <Entypo name='language' style={[styles.baseIcon, styles.orange]} />;
 };
 
 const Line = ({ width }: { width: number }) => {
@@ -80,6 +85,24 @@ export const AudioControlIcon = ({ active }: ActiveIconProps) => {
     <Ionicons name='pause' style={[styles.baseIcon, styles.orange]} />
   ) : (
     <Ionicons name='play' style={[styles.baseIcon, styles.orange]} />
+  );
+};
+
+export const DarkModeIcon = ({ active }: ActiveIconProps) => {
+  const styles = useStyles();
+  return active ? (
+    <Ionicons name='ios-cloudy-night-outline' style={[styles.baseIcon, styles.orange]} />
+  ) : (
+    <Ionicons name='sunny-outline' style={[styles.baseIcon, styles.orange]} />
+  );
+};
+
+export const NotificationsIcon = ({ active }: ActiveIconProps) => {
+  const styles = useStyles();
+  return active ? (
+    <Ionicons name='notifications' style={[styles.baseIcon, styles.orange]} />
+  ) : (
+    <Ionicons name='notifications-off' style={[styles.baseIcon, styles.orange]} />
   );
 };
 

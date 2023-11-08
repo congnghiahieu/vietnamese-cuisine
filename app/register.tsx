@@ -1,4 +1,4 @@
-import { View, StatusBar, Alert } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
@@ -23,11 +23,8 @@ const Register = () => {
       await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
       console.log('sign up success');
       router.push('/login');
-    } catch (error) {
-      console.log(error);
-      // Alert.alert('Register',, undefined, {
-      //   cancelable: true,
-      // });
+    } catch (error: any) {
+      alert(error.message);
     }
   }
 

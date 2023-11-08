@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, Image, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
 import StyledText from '@/components/Styled/StyledText';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ChevronRightIcon, HeartIcon, SearchIcon } from '@/components/Icon';
 import { STYLES } from '@/lib/constants';
 import { hp } from '@/lib/utils';
+import { useAuthStates } from '@/states/auth';
+import { useSettingStates } from '@/states/setting';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FOOD_LIST = [
   {
@@ -50,6 +53,35 @@ const FOOD_LIST = [
 
 const Home = () => {
   const styles = useStyles();
+  const { user } = useAuthStates();
+  // console.log(user);
+  const { setMode, mode } = useThemeMode();
+  const { darkMode } = useSettingStates();
+  const { theme } = useTheme();
+  const dT = mode === 'dark';
+
+  useEffect(() => {
+    console.log('53: Run useEffect');
+    console.log('54: ', darkMode);
+    if (darkMode) {
+      setMode('dark');
+    } else {
+      setMode('light');
+    }
+
+    const fetch = async () => {
+      const keys = await AsyncStorage.getAllKeys();
+      const value = await AsyncStorage.getItem(keys[0]);
+      console.log(value);
+    };
+
+    fetch();
+  }, []);
+
+  useEffect(() => {
+    console.log(mode);
+    console.log('63: Mode change');
+  }, [mode]);
 
   return (
     <View style={styles.container}>

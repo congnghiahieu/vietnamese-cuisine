@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
-import { ThemeProvider, useTheme } from '@rneui/themed';
+import { ThemeProvider, useTheme, useThemeMode } from '@rneui/themed';
 import {
   Theme as NavigationTheme,
   ThemeProvider as DefaultNavigationThemeProvider,
 } from '@react-navigation/native';
 import { theme } from '@/components/Theme/theme';
 import { FontsLoader } from '@/components/Theme/Text';
-import SidebarHeader from '@/components/SidebarHeader';
-import { KeyboardAvoidingView } from 'react-native';
+import { onAuthStateChanged } from 'firebase/auth';
+import { FIREBASE_AUTH } from '@/config/firebase';
+import { useAuthStates } from '@/states/auth';
+import { useSettingStates } from '@/states/setting';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -78,6 +80,18 @@ const StackLayout = () => {
 };
 
 export default function RootLayout() {
+  const { setUser } = useAuthStates();
+  useEffect(() => {
+    const unsubscribeFromAuthStatusChanged = onAuthStateChanged(FIREBASE_AUTH, user => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return unsubscribeFromAuthStatusChanged;
+  }, []);
+
   return (
     <FontsLoader onFontsLoaded={SplashScreen.hideAsync}>
       <ThemeProvider theme={theme}>

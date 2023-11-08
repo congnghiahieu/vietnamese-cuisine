@@ -167,15 +167,16 @@ export type PaddingType = keyof typeof STYLES.PADDING;
 export type RadiusType = keyof typeof STYLES.RADIUS;
 export type ShadowType = keyof typeof STYLES.SHADOW;
 
+export const SETTINGS_KEYS = {
+  darkMode: 'Vietnamese Cuisine Dark Mode',
+  language: 'Vietnamese Cuisine Language',
+  notifications: 'Vietnamese Cuisine Notifications',
+};
+
 export const I18N = {
-  TABBAR: {
-    GAMES: {
-      'English': 'Games',
-      'Vietnamese': 'Trò chơi',
-    },
-    FAVOURITES: {
-      'English': 'Home',
-      'Vietnamese': 'Trang chủ',
-    },
-  },
+  'English': {},
+  'Vietnamese': {},
 } as const;
+
+export const LANGUAGE_LIST = Object.keys(I18N) as Array<Language>;
+export type Language = keyof typeof I18N;
