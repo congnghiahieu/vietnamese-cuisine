@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { FlatList, View, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Divider, makeStyles, useTheme } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import { SolidButton, OutlineButton } from '@/components/Styled/StyledButton';
 import { STYLES } from '@/lib/constants';
 import StyledPressable from '@/components/Styled/StyledPressable';
@@ -9,6 +9,8 @@ import { AvatarIcon, CommentIcon, HeartIcon, PostIcon } from '@/components/Icon'
 import StyledText from '@/components/Styled/StyledText';
 import StyledDivider from '@/components/Styled/StyledDivider';
 import { hp } from '@/lib/utils';
+import { StyledFlatList } from '@/components/Styled/StyledList';
+import StyledImage from '@/components/Styled/StyledImage';
 
 const POST_LIST = [
   {
@@ -42,6 +44,7 @@ const MyFeed = () => {
         <WannaPost />
       </View>
       <PostList postList={POST_LIST} />
+      {/* <PostList postList={[]} /> */}
     </View>
   );
 };
@@ -89,7 +92,7 @@ const WannaPost = () => {
   return (
     <StyledPressable
       style={styles.createPostButton}
-      onPress={() => router.push('/(sidebar)/(tabs)/community/create-post')}>
+      onPress={() => router.push('/(sidebar)/community/post')}>
       <StyledText type='Placeholder' color='whiteGrey'>
         Wanna post somethings?
       </StyledText>
@@ -129,7 +132,7 @@ const PostCard = ({ name, time, desc, imageUrl }: Post) => {
           {desc}
         </StyledText>
       </View>
-      <Image
+      <StyledImage
         source={{
           uri: imageUrl,
         }}
@@ -145,7 +148,9 @@ const PostCard = ({ name, time, desc, imageUrl }: Post) => {
           ) : null}
         </StyledPressable>
         <StyledDivider orientation='vertical' />
-        <StyledPressable style={styles.button}>
+        <StyledPressable
+          style={styles.button}
+          onPress={() => router.push('/(sidebar)/community/comments')}>
           <CommentIcon />
           <StyledText>Comments</StyledText>
         </StyledPressable>
@@ -160,12 +165,14 @@ type PostListProps = {
 
 const PostList = ({ postList }: PostListProps) => {
   return (
-    <FlatList
+    <StyledFlatList
+      emptyTitle='No post available!'
       keyExtractor={({ id }) => id}
-      horizontal={false}
-      showsVerticalScrollIndicator={false}
       data={postList}
       renderItem={({ item }) => <PostCard {...item} />}
+      contentContainerStyle={{
+        paddingHorizontal: 0,
+      }}
     />
   );
 };
@@ -175,7 +182,8 @@ const useStyles = makeStyles(theme => {
 
   return {
     header: {
-      margin: STYLES.MARGIN.MARGIN_16,
+      marginHorizontal: STYLES.MARGIN.MARGIN_16,
+      marginVertical: STYLES.MARGIN.MARGIN_8,
       gap: STYLES.GAP.GAP_16,
     },
     navigate: {
@@ -185,6 +193,7 @@ const useStyles = makeStyles(theme => {
     },
     navigateButton: {
       borderRadius: STYLES.RADIUS.RADIUS_10,
+      flex: 1,
     },
     createPostButton: {
       flexDirection: 'row',
@@ -207,7 +216,6 @@ const useCardStyles = makeStyles(theme => {
       overflow: 'hidden',
       borderRadius: STYLES.RADIUS.RADIUS_20,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      marginBottom: STYLES.MARGIN.MARGIN_16,
       ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8),
     },
     header: {

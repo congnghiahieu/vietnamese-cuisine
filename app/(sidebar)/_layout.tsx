@@ -8,22 +8,30 @@ const SidebarLayout = () => {
 
   return (
     <Sidebar
-      initialRouteName='(tabs)'
+      initialRouteName='(home)'
       screenOptions={{
-        header: () => <SidebarHeader />,
-        drawerStyle: {
-          backgroundColor: dT ? theme.colors.black : theme.colors.white,
-        },
-        drawerItemStyle: {},
-        drawerLabelStyle: {
-          color: theme.colors.orange,
-        },
         swipeEnabled: true,
+        header: ({ options }) => <SidebarHeader title={options.title} />,
+        // drawerStyle: {
+        //   backgroundColor: dT ? theme.colors.black : theme.colors.white,
+        // },
+        // drawerItemStyle: {},
+        // drawerLabelStyle: {
+        //   color: theme.colors.orange,
+        // },
       }}>
       <Sidebar.Screen
-        name='(tabs)'
+        name='community'
         options={{
-          title: 'Home',
+          headerShown: false,
+          title: 'Community',
+        }}
+      />
+      <Sidebar.Screen
+        name='games'
+        options={{
+          headerShown: false,
+          title: 'Games',
         }}
       />
       <Sidebar.Screen
@@ -33,15 +41,34 @@ const SidebarLayout = () => {
         }}
       />
       <Sidebar.Screen
-        name='support'
+        name='favourites'
         options={{
-          title: 'Support Us',
+          title: 'Favourites',
+        }}
+      />
+      <Sidebar.Screen
+        name='(home)'
+        options={{
+          headerShown: false,
+          title: 'Home',
         }}
       />
       <Sidebar.Screen
         name='profile'
         options={{
           title: 'My Profile',
+        }}
+      />
+      <Sidebar.Screen
+        name='settings'
+        options={{
+          title: 'Settings',
+        }}
+      />
+      <Sidebar.Screen
+        name='support'
+        options={{
+          title: 'Support Us',
         }}
       />
     </Sidebar>

@@ -157,7 +157,7 @@ const useStyles = makeStyles(theme => {
   return {
     body: {
       flex: 1,
-      marginHorizontal: STYLES.MARGIN.MARGIN_16,
+      paddingHorizontal: STYLES.PADDING.PADDING_16,
       marginTop: STYLES.MARGIN.MARGIN_16,
     },
     settingsContainer: {

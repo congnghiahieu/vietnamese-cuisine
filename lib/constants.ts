@@ -114,7 +114,8 @@ export const STYLES = {
     FONT_SIZE_16: 16,
     FONT_SIZE_18: 18,
     FONT_SIZE_24: 24,
-    FONT_SIZE_40: 40,
+    FONT_SIZE_30: 30,
+    FONT_SIZE_36: 36,
   },
   MARGIN: {
     MARGIN_4: 4,

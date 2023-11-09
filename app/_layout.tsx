@@ -52,12 +52,6 @@ const StackLayout = () => {
       }}>
       <Stack.Screen name='(sidebar)' />
       <Stack.Screen
-        name='information'
-        options={{
-          title: 'Information',
-        }}
-      />
-      <Stack.Screen
         name='login'
         options={{
           title: 'Login',

@@ -1,7 +1,7 @@
 import { Button, ButtonProps, makeStyles, useTheme } from '@rneui/themed';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
 import { STYLES } from '@/lib/constants';
-import { GoogleIcon } from '@/components/Icon';
+import { FacebookIcon, GithubIcon, GoogleIcon, TwitterIcon } from '@/components/Icon';
 
 type StyledButtonProps = ButtonProps;
 
@@ -34,7 +34,6 @@ export const SolidButton = (props: StyledButtonProps) => {
 
 const useSolidStyles = makeStyles(theme => ({
   container: {
-    flex: 1,
     borderRadius: STYLES.RADIUS.RADIUS_20,
     ...STYLES.SHADOW.SHADOW_ORANGE_4,
   },
@@ -91,7 +90,6 @@ const useOutlineStyles = makeStyles(theme => {
 
   return {
     container: {
-      flex: 1,
       borderRadius: STYLES.RADIUS.RADIUS_20,
       backgroundColor: 'transparent',
       ...STYLES.SHADOW.NO_SHADOW,
@@ -129,13 +127,68 @@ export const GoogleButton = (props: StyledButtonProps) => {
     <OutlineButton
       icon={<GoogleIcon />}
       title='Google'
-      {...props}
       buttonStyle={{
         borderColor: color,
       }}
       titleStyle={{
         color,
       }}
+      {...props}
+    />
+  );
+};
+
+export const FaceBookButton = (props: StyledButtonProps) => {
+  const color = '#1877F2';
+
+  return (
+    <OutlineButton
+      icon={<FacebookIcon />}
+      title='Facebook'
+      buttonStyle={{
+        borderColor: color,
+      }}
+      titleStyle={{
+        color,
+      }}
+      {...props}
+    />
+  );
+};
+
+export const GithubButton = (props: StyledButtonProps) => {
+  const { theme } = useTheme();
+  const dT = theme.mode === 'dark';
+  const color = dT ? theme.colors.white : theme.colors.black;
+
+  return (
+    <OutlineButton
+      icon={<GithubIcon />}
+      title='Github'
+      buttonStyle={{
+        borderColor: color,
+      }}
+      titleStyle={{
+        color,
+      }}
+      {...props}
+    />
+  );
+};
+export const TwitterButton = (props: StyledButtonProps) => {
+  const color = '#1D9BF0';
+
+  return (
+    <OutlineButton
+      icon={<TwitterIcon />}
+      title='X'
+      buttonStyle={{
+        borderColor: color,
+      }}
+      titleStyle={{
+        color,
+      }}
+      {...props}
     />
   );
 };

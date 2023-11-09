@@ -10,6 +10,15 @@ type FormInputProps = InputProps & {
 };
 
 export const FormInput = (props: FormInputProps) => {
+  const {
+    containerStyle,
+    inputContainerStyle,
+    inputStyle,
+    errorStyle,
+    rightIconContainerStyle,
+    leftIconContainerStyle,
+    ...otherProps
+  } = props;
   const styles = useFormInputStyles();
   const [showSecureText, setShowSecureText] = useState(false);
   const secureTextEntry = props.type === 'normal' || showSecureText ? false : true;
@@ -22,25 +31,22 @@ export const FormInput = (props: FormInputProps) => {
           paddingHorizontal: STYLES.PADDING.PADDING_8,
           paddingVertical: STYLES.PADDING.PADDING_4,
         }}>
-        {/* <EyeIcon active={showSecureText} /> */}
-        {EyeIcon({
-          active: showSecureText,
-        })}
+        <EyeIcon active={showSecureText} />
       </StyledPressable>
     );
 
   return (
     <Input
-      containerStyle={styles.container}
-      inputContainerStyle={styles.inputContainer}
+      containerStyle={[styles.container, containerStyle]}
+      inputContainerStyle={[styles.inputContainer, inputContainerStyle]}
       placeholderTextColor={styles.placeHolder.color}
-      inputStyle={styles.input}
-      errorStyle={styles.error}
-      rightIconContainerStyle={styles.iconContainer}
-      leftIconContainerStyle={styles.iconContainer}
+      inputStyle={[styles.input, inputStyle]}
+      errorStyle={[styles.error, errorStyle]}
+      rightIconContainerStyle={[styles.iconContainer, rightIconContainerStyle]}
+      leftIconContainerStyle={[styles.iconContainer, leftIconContainerStyle]}
       rightIcon={rightIcon}
       secureTextEntry={secureTextEntry}
-      {...props}
+      {...otherProps}
     />
   );
 };
@@ -80,18 +86,27 @@ const useFormInputStyles = makeStyles(theme => ({
 }));
 
 export const SearchInput = (props: InputProps) => {
+  const {
+    containerStyle,
+    inputContainerStyle,
+    inputStyle,
+    errorStyle,
+    rightIconContainerStyle,
+    leftIconContainerStyle,
+    ...otherProps
+  } = props;
   const styles = useSearchInputStyles();
 
   return (
     <Input
-      containerStyle={styles.container}
-      inputContainerStyle={styles.inputContainer}
+      containerStyle={[styles.container, containerStyle]}
+      inputContainerStyle={[styles.inputContainer, inputContainerStyle]}
       placeholderTextColor={styles.placeHolder.color}
-      inputStyle={styles.input}
-      errorStyle={styles.error}
-      rightIconContainerStyle={styles.iconContainer}
-      leftIconContainerStyle={styles.iconContainer}
-      {...props}
+      inputStyle={[styles.input, inputStyle]}
+      errorStyle={[styles.error, errorStyle]}
+      rightIconContainerStyle={[styles.iconContainer, rightIconContainerStyle]}
+      leftIconContainerStyle={[styles.iconContainer, leftIconContainerStyle]}
+      {...otherProps}
     />
   );
 };

@@ -1,12 +1,13 @@
-import { FlatList, Image, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { hp } from '@/lib/utils';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import { ChevronRightIcon, HeartDislikeIcon } from '@/components/Icon';
 import { SolidButton } from '@/components/Styled/StyledButton';
+import { StyledFlatList } from '@/components/Styled/StyledList';
+import StyledImage from '@/components/Styled/StyledImage';
 
 const GAME_LIST = [
   {
@@ -29,12 +30,7 @@ const GAME_LIST = [
 ];
 
 const Favourites = () => {
-  const styles = useStyles();
-  return (
-    <View style={styles.container}>
-      <GameList gameList={GAME_LIST} />
-    </View>
-  );
+  return <GameList gameList={GAME_LIST} />;
 };
 
 type Game = {
@@ -49,7 +45,7 @@ const GameCard = ({ title, desc, imageUrl }: Game) => {
 
   return (
     <View style={styles.card}>
-      <Image
+      <StyledImage
         source={{
           uri: imageUrl,
         }}
@@ -76,7 +72,8 @@ type GameListProps = {
 
 const GameList = ({ gameList }: GameListProps) => {
   return (
-    <FlatList
+    <StyledFlatList
+      emptyTitle='No game available!'
       keyExtractor={({ title }) => title}
       horizontal={false}
       showsVerticalScrollIndicator={false}
@@ -89,17 +86,10 @@ const GameList = ({ gameList }: GameListProps) => {
 const useStyles = makeStyles(theme => {
   const dT = theme.mode === 'dark';
   return {
-    container: {
-      flex: 1,
-      marginHorizontal: STYLES.MARGIN.MARGIN_16,
-      gap: STYLES.GAP.GAP_16,
-    },
     card: {
       flexDirection: 'column',
       flexBasis: '100%',
       borderRadius: STYLES.RADIUS.RADIUS_20,
-      marginBottom: STYLES.MARGIN.MARGIN_16,
-      overflow: 'hidden',
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_4),
     },
@@ -107,6 +97,8 @@ const useStyles = makeStyles(theme => {
       flex: 1,
       width: '100%',
       height: hp(40),
+      borderTopLeftRadius: STYLES.RADIUS.RADIUS_20,
+      borderTopRightRadius: STYLES.RADIUS.RADIUS_20,
     },
     cardContent: {
       padding: STYLES.PADDING.PADDING_16,

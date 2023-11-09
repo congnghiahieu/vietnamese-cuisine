@@ -66,8 +66,8 @@ export type TextTypeStyleMapping = Record<TextType, TextTypeStyle>;
 export const TEXT_STYLE_TYPE_MAP: TextTypeStyleMapping = {
   Heading_2: {
     fontFamily: 'Montserrat_700Bold',
-    fontSize: STYLES.FONT_SIZE.FONT_SIZE_40,
-    lineHeight: STYLES.LINE_HEIGHT.LINE_HEIGHT_11(STYLES.FONT_SIZE.FONT_SIZE_40),
+    fontSize: STYLES.FONT_SIZE.FONT_SIZE_30,
+    lineHeight: STYLES.LINE_HEIGHT.LINE_HEIGHT_11(STYLES.FONT_SIZE.FONT_SIZE_30),
   },
   Heading_3: {
     fontFamily: 'Montserrat_700Bold',

@@ -5,15 +5,22 @@ import {
   MaterialIcons,
   Entypo,
   FontAwesome5,
+  FontAwesome,
+  MaterialCommunityIcons,
 } from '@expo/vector-icons';
 import { View } from 'react-native';
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import Svg, { SvgProps, Path, G } from 'react-native-svg';
 
 export const ArrowRightIcon = () => {
   const styles = useStyles();
   return <Feather name='arrow-right' style={[styles.baseIcon]} />;
+};
+
+export const ArrowLeftIcon = () => {
+  const styles = useStyles();
+  return <Feather name='arrow-left' style={[styles.baseIcon, styles.blackGrey]} />;
 };
 
 export const ChevronLeftIcon = () => {
@@ -39,6 +46,11 @@ export const SearchIcon = () => {
 export const LanguageIcon = () => {
   const styles = useStyles();
   return <Entypo name='language' style={[styles.baseIcon, styles.orange]} />;
+};
+
+export const GiftIcon = () => {
+  const styles = useStyles();
+  return <MaterialCommunityIcons name='gift' style={styles.baseIcon} />;
 };
 
 export const HeartDislikeIcon = (props: SvgProps) => (
@@ -82,6 +94,54 @@ export const GoogleIcon = (props: SvgProps) => (
   </Svg>
 );
 
+export const TwitterIcon = () => {
+  const styles = useStyles();
+  return (
+    <FontAwesome5
+      name='twitter'
+      style={[
+        styles.baseIcon,
+        {
+          color: '#1D9BF0',
+        },
+      ]}
+    />
+  );
+};
+
+export const GithubIcon = () => {
+  const styles = useStyles();
+  const { theme } = useTheme();
+  const dT = theme.mode === 'dark';
+  const color = dT ? theme.colors.white : theme.colors.black;
+  return (
+    <AntDesign
+      name='github'
+      style={[
+        styles.baseIcon,
+        {
+          color,
+        },
+      ]}
+    />
+  );
+};
+
+export const FacebookIcon = () => {
+  const styles = useStyles();
+  return (
+    <FontAwesome5
+      name='facebook'
+      style={[
+        styles.baseIcon,
+        {
+          color: '#1877F2',
+        },
+      ]}
+    />
+  );
+};
+
 export const PostIcon = (props: SvgProps) => {
   const styles = useStyles();
 
@@ -103,6 +163,43 @@ export const PostIcon = (props: SvgProps) => {
   );
 };
 
+export const SendIcon = (props: SvgProps) => {
+  const styles = useStyles();
+  return (
+    <Svg
+      width={STYLES.ICON_SIZE.ICON_SIZE_24}
+      height={STYLES.ICON_SIZE.ICON_SIZE_24}
+      color={styles.baseIcon.color}
+      {...props}
+      viewBox='0 0 24 24'>
+      <G fill='none'>
+        <Path d='M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z' />
+        <Path
+          fill='currentColor'
+          d='M20.235 5.686c.432-1.195-.726-2.353-1.921-1.92L3.709 9.048c-1.199.434-1.344 2.07-.241 2.709l4.662 2.699l4.163-4.163a1 1 0 0 1 1.414 1.414L9.544 15.87l2.7 4.662c.638 1.103 2.274.957 2.708-.241l5.283-14.605Z'
+        />
+      </G>
+    </Svg>
+  );
+};
+
+export const SignOutIcon = (props: SvgProps) => {
+  const { theme } = useTheme();
+  return (
+    <Svg
+      width={STYLES.ICON_SIZE.ICON_SIZE_24}
+      height={STYLES.ICON_SIZE.ICON_SIZE_24}
+      color={theme.colors.white}
+      viewBox='0 0 24 24'
+      {...props}>
+      <Path
+        fill='currentColor'
+        d='M17 2H7C5.3 2 4 3.3 4 5v6h8.6l-2.3-2.3c-.4-.4-.4-1 0-1.4c.4-.4 1-.4 1.4 0l4 4c.4.4.4 1 0 1.4l-4 4c-.4.4-1 .4-1.4 0c-.4-.4-.4-1 0-1.4l2.3-2.3H4v6c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3z'
+      />
+    </Svg>
+  );
+};
+
 export const AvatarIcon = () => {
   const styles = useStyles();
   return (
@@ -110,6 +207,58 @@ export const AvatarIcon = () => {
       <AntDesign name='user' style={[styles.baseIcon, styles.orange]} />
     </View>
   );
+};
+
+export const AvatarIconWithCamera = () => {
+  const styles = useStyles();
+  return (
+    <View style={styles.avatarWithCameraContainer}>
+      <View style={[styles.avatarIcon, { position: 'relative' }]}>
+        <AntDesign
+          name='user'
+          style={[
+            styles.baseIcon,
+            styles.orange,
+            {
+              fontSize: STYLES.ICON_SIZE.ICON_SIZE_36 * 2,
+            },
+          ]}
+        />
+        <View style={[styles.avatarIcon, styles.cameraIcon]}>
+          <AntDesign
+            name='camera'
+            style={[
+              styles.baseIcon,
+              styles.orange,
+              {
+                fontSize: (STYLES.ICON_SIZE.ICON_SIZE_24 / 6) * 3,
+              },
+            ]}
+          />
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export const ImageIcon = () => {
+  const styles = useStyles();
+  return <Ionicons name='images-outline' style={[styles.baseIcon, styles.green]} />;
+};
+
+export const PencilPostIcon = () => {
+  const styles = useStyles();
+  return <Feather name='edit' style={[styles.baseIcon]} />;
+};
+
+export const PencilEditIcon = () => {
+  const styles = useStyles();
+  return <MaterialCommunityIcons name='pencil' style={[styles.baseIcon, styles.green]} />;
+};
+
+export const LockIcon = () => {
+  const styles = useStyles();
+  return <Entypo name='lock' style={[styles.baseIcon, styles.green]} />;
 };
 
 export const CommentIcon = () => {
@@ -210,6 +359,15 @@ const useStyles = makeStyles(theme => ({
   redPink: {
     color: theme.colors.redPink,
   },
+  green: {
+    color: theme.colors.green,
+  },
+  white: {
+    color: theme.colors.white,
+  },
+  black: {
+    color: theme.colors.black,
+  },
   line: {
     height: 2,
     backgroundColor: theme.colors.orange,
@@ -225,5 +383,15 @@ const useStyles = makeStyles(theme => ({
     borderWidth: 1,
     backgroundColor: 'white',
     padding: STYLES.PADDING.PADDING_4,
+  },
+  avatarWithCameraContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+  },
+  cameraIcon: {
+    position: 'absolute',
+    bottom: 4,
+    right: 0,
+    zIndex: 1,
   },
 }));

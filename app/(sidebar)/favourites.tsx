@@ -1,11 +1,13 @@
-import { FlatList, Image, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { hp } from '@/lib/utils';
 import StyledText from '@/components/Styled/StyledText';
+import { EmptyList, StyledFlatList } from '@/components/Styled/StyledList';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ChevronRightIcon, HeartDislikeIcon } from '@/components/Icon';
+import StyledImage from '@/components/Styled/StyledImage';
 
 const FAVOURITE_LIST = [
   {
@@ -47,11 +49,9 @@ const FAVOURITE_LIST = [
 ];
 
 const Favourites = () => {
-  const styles = useStyles();
   return (
-    <View style={styles.container}>
-      <FavouriteList favouriteList={FAVOURITE_LIST} />
-    </View>
+    <FavouriteList favouriteList={FAVOURITE_LIST} />
+    // <FavouriteList favouriteList={[]} />
   );
 };
 
@@ -66,7 +66,7 @@ const FavouriteCard = ({ title, imageUrl }: Favourite) => {
 
   return (
     <View style={styles.card}>
-      <Image
+      <StyledImage
         source={{
           uri: imageUrl,
         }}
@@ -93,24 +93,40 @@ type FavouriteListProps = {
 
 const FavouriteList = ({ favouriteList }: FavouriteListProps) => {
   return (
-    <FlatList
+    <StyledFlatList
+      emptyTitle=''
       keyExtractor={({ title }) => title}
-      horizontal={false}
-      showsVerticalScrollIndicator={false}
       data={favouriteList}
       renderItem={({ item }) => <FavouriteCard {...item} />}
+      ListEmptyComponent={FavouriteEmpty}
     />
   );
+};
+
+const FavouriteEmptySubField = () => {
+  const router = useRouter();
+
+  return (
+    <StyledPressable onPress={() => router.push('/(sidebar)/')}>
+      <StyledText
+        type='SubInputField'
+        color='orange'
+        style={{
+          textDecorationLine: 'underline',
+        }}>
+        Explore more Vietnamese food
+      </StyledText>
+    </StyledPressable>
+  );
+};
+
+const FavouriteEmpty = () => {
+  return <EmptyList title='No favourite dish' subField={<FavouriteEmptySubField />} />;
 };
 
 const useStyles = makeStyles(theme => {
   const dT = theme.mode === 'dark';
   return {
-    container: {
-      flex: 1,
-      marginHorizontal: STYLES.MARGIN.MARGIN_16,
-      gap: STYLES.GAP.GAP_16,
-    },
     redirectButton: {
       backgroundColor: theme.colors.white,
       borderRadius: STYLES.RADIUS.RADIUS_50,
@@ -120,7 +136,6 @@ const useStyles = makeStyles(theme => {
       height: hp(40),
       position: 'relative',
       borderRadius: STYLES.RADIUS.RADIUS_10,
-      marginBottom: STYLES.MARGIN.MARGIN_16,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       ...STYLES.SHADOW.SHADOW_ORANGE_8,
     },

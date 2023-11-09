@@ -10,6 +10,7 @@ import { ArrowRightIcon } from '@/components/Icon';
 import { STYLES } from '@/lib/constants';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH } from '@/config/firebase';
+import StyledImage from '@/components/Styled/StyledImage';
 
 const Login = () => {
   const styles = useStyles();
@@ -22,7 +23,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
       console.log('sign in success');
-      router.push('/(sidebar)/(tabs)/');
+      router.push('/(sidebar)/');
     } catch (error: any) {
       // console.log(Object.keys(error));
       // console.log(error.code);
@@ -36,7 +37,10 @@ const Login = () => {
   return (
     <KeyboardView style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <Image source={require('../assets/images/new/adaptive-icon.png')} style={styles.icon} />
+        <StyledImage
+          source={require('../assets/images/new/adaptive-icon.png')}
+          style={styles.icon}
+        />
       </View>
       <View style={styles.heading}>
         <StyledText type='Heading_3' color='orange'>
@@ -48,7 +52,7 @@ const Login = () => {
         <FormInput type='password' placeholder='Password' />
       </View>
       <View style={styles.subField}>
-        <StyledPressable onPress={() => router.push('/(sidebar)/(tabs)/')}>
+        <StyledPressable onPress={() => router.push('/(sidebar)/')}>
           <StyledText type='SubInputField' color='orange'>
             Back to home
           </StyledText>

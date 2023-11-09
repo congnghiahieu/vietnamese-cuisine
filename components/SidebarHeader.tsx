@@ -6,13 +6,13 @@ import { useRouter, useNavigation } from 'expo-router';
 import { STYLES } from '@/lib/constants';
 import { AvatarIcon, MenuIcon } from '@/components/Icon';
 import StyledPressable from './Styled/StyledPressable';
+import StyledText from './Styled/StyledText';
 
 type SidebarHeaderProps = {
-  onMenuPress: () => void;
-  onAvatarPress: () => void;
+  title: string | undefined;
 };
 
-const SidebarHeader = () => {
+const SidebarHeader = ({ title }: SidebarHeaderProps) => {
   const navigation = useNavigation();
   const router = useRouter();
   const { theme } = useTheme();
@@ -28,6 +28,7 @@ const SidebarHeader = () => {
       containerStyle={{
         paddingHorizontal: STYLES.PADDING.PADDING_16,
         paddingVertical: STYLES.PADDING.PADDING_8,
+        borderBottomWidth: 0,
         borderBottomColor: dT ? theme.colors.blackGrey : theme.colors.whiteGrey,
       }}
       leftComponent={
@@ -40,6 +41,11 @@ const SidebarHeader = () => {
           }}>
           <MenuIcon />
         </StyledPressable>
+      }
+      centerComponent={
+        <StyledText type='Heading_2' color='orange'>
+          {title || 'Home'}
+        </StyledText>
       }
       rightComponent={
         <StyledPressable onPress={onAvatarPress} style={{ padding: 0 }}>

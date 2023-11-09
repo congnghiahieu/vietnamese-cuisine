@@ -1,14 +1,108 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { ScrollView, View } from 'react-native';
+import { makeStyles } from '@rneui/themed';
+import { STYLES } from '@/lib/constants';
+import StyledText from '@/components/Styled/StyledText';
+import StyledDivider from '@/components/Styled/StyledDivider';
+import {
+  FaceBookButton,
+  GithubButton,
+  TwitterButton,
+  OutlineButton,
+  SolidButton,
+} from '@/components/Styled/StyledButton';
 
 const About = () => {
+  const styles = useStyles();
   return (
-    <View>
-      <Text>About</Text>
-    </View>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+      <View style={styles.block}>
+        <StyledText type='Heading_3' color='orange' style={styles.header}>
+          Vietnamese Cuisine
+        </StyledText>
+        <StyledDivider orientation='horizontal' />
+        <View style={styles.body}>
+          <StyledText type='Heading_2' color='grey' style={{ textAlign: 'center' }}>
+            V1.0
+          </StyledText>
+          <View style={styles.versionButtonContainer}>
+            <SolidButton title={'Change log'} containerStyle={styles.versionButton} />
+            <OutlineButton
+              title={'License'}
+              containerStyle={styles.versionButton}
+              buttonStyle={styles.versionButton}
+            />
+          </View>
+        </View>
+      </View>
+      <View style={styles.block}>
+        <StyledText type='Heading_3' color='orange' style={styles.header}>
+          Social Media
+        </StyledText>
+        <StyledDivider orientation='horizontal' />
+        <View style={[styles.body, { gap: STYLES.GAP.GAP_24 }]}>
+          <FaceBookButton title={'Like us on Facebook'} />
+          <GithubButton title={'Star us on Github'} />
+          <TwitterButton title={'Follow us on X'} />
+        </View>
+      </View>
+
+      <View style={styles.block}>
+        <StyledText type='Heading_3' color='orange' style={styles.header}>
+          Disclaimer
+        </StyledText>
+        <StyledDivider orientation='horizontal' />
+        <View style={styles.body}>
+          <StyledText
+            type='Body'
+            color='grey'
+            style={{
+              textAlign: 'justify',
+            }}>
+            Vietnamese Cuisine is unofficial, made by a small group of developer and is NOT
+            affiliated to any organization. {'\n'} Some images used in this app are not copyrighted.
+          </StyledText>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
-export default About;
+const useStyles = makeStyles(theme => {
+  const dT = theme.mode === 'dark';
+  const shadow = dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8;
+  const backgroundColor = dT ? theme.colors.black : theme.colors.white;
 
-const styles = StyleSheet.create({});
+  return {
+    container: {
+      justifyContent: 'center',
+      gap: STYLES.GAP.GAP_16,
+      padding: STYLES.PADDING.PADDING_16,
+    },
+    block: {
+      paddingVertical: STYLES.PADDING.PADDING_8,
+      borderRadius: STYLES.RADIUS.RADIUS_20,
+      backgroundColor,
+      ...shadow,
+    },
+    header: {
+      paddingVertical: STYLES.PADDING.PADDING_8,
+      textAlign: 'center',
+    },
+    body: {
+      padding: STYLES.PADDING.PADDING_16,
+      paddingBottom: STYLES.PADDING.PADDING_8,
+      gap: STYLES.GAP.GAP_8,
+    },
+    versionButtonContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: STYLES.GAP.GAP_16,
+    },
+    versionButton: {
+      flex: 1,
+      borderRadius: STYLES.RADIUS.RADIUS_10,
+    },
+  };
+});
+
+export default About;

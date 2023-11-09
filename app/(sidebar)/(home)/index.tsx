@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, Image, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
 import StyledText from '@/components/Styled/StyledText';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import StyledPressable from '@/components/Styled/StyledPressable';
+import { StyledFlatList } from '@/components/Styled/StyledList';
 import { ChevronRightIcon, HeartIcon, SearchIcon } from '@/components/Icon';
 import { STYLES } from '@/lib/constants';
 import { hp } from '@/lib/utils';
+import StyledImage from '@/components/Styled/StyledImage';
 
 const FOOD_LIST = [
   {
@@ -68,6 +70,7 @@ const Home = () => {
         }
       />
       <FoodList foodList={FOOD_LIST} />
+      {/* <FoodList foodList={[]} /> */}
     </View>
   );
 };
@@ -84,7 +87,7 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
 
   return (
     <View style={styles.card}>
-      <Image
+      <StyledImage
         source={{
           uri: imageUrl,
         }}
@@ -112,12 +115,14 @@ type FoodListProps = {
 const FoodList = ({ foodList }: FoodListProps) => {
   const styles = useStyles();
   return (
-    <FlatList
+    <StyledFlatList
+      emptyTitle='No dish available!'
       keyExtractor={({ title }) => title}
       numColumns={2}
-      horizontal={false}
-      showsVerticalScrollIndicator={false}
       columnWrapperStyle={styles.foodListColumn}
+      contentContainerStyle={{
+        paddingHorizontal: 0,
+      }}
       data={foodList}
       renderItem={({ item }) => <FoodCard {...item} />}
     />
@@ -129,7 +134,7 @@ const useStyles = makeStyles(theme => {
   return {
     container: {
       flex: 1,
-      marginHorizontal: STYLES.MARGIN.MARGIN_16,
+      paddingHorizontal: STYLES.PADDING.PADDING_16,
       gap: STYLES.GAP.GAP_16,
     },
     searchButton: {
@@ -150,9 +155,8 @@ const useStyles = makeStyles(theme => {
       height: hp(35),
       position: 'relative',
       borderRadius: STYLES.RADIUS.RADIUS_10,
-      marginBottom: STYLES.MARGIN.MARGIN_16,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      ...STYLES.SHADOW.SHADOW_ORANGE_8,
+      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8),
     },
     cardImage: {
       zIndex: 0,

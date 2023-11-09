@@ -17,6 +17,7 @@ import { SolidButton } from '@/components/Styled/StyledButton';
 import { PlayCircleIcon, ChevronLeftIcon, HeartIcon, AudioControlIcon } from '@/components/Icon';
 import { hp } from '@/lib/utils';
 import { STYLES } from '@/lib/constants';
+import StyledImage from '@/components/Styled/StyledImage';
 
 const INGREDIENT_LIST = [
   '1 kg xương ống bò',
@@ -84,7 +85,7 @@ const ImageSlide = (props?: ImageSlideProps) => {
       <StyledPressable onPress={() => router.back()} style={styles.backButton}>
         <ChevronLeftIcon />
       </StyledPressable>
-      <Image
+      <StyledImage
         source={{
           uri: 'https://file1.dangcongsan.vn/data/0/images/2021/02/08/duongntcd/13-chung-tet-td.jpg?dpi=150&quality=100&w=680',
         }}
@@ -159,7 +160,7 @@ const InformationBottomSheetBody = () => {
           Story
         </StyledText>
         <AudioControl />
-        <StyledText type='Body' color='grey'>
+        <StyledText type='Body' color='grey' style={{ textAlign: 'justify' }}>
           Phở nổi tiếng nhất vẫn là phở Hà Nội. Không biết tự bao giờ, phở đã trở thành món ăn vô
           cùng hấp dẫn mỗi khi đến Hà Nội. Với hương vị độc đáo không có một nơi nào có được, phở Hà
           Nội đã in sâu vào tiềm thức con người, mặc định nó là món ăn ngon nhất. Muốn ăn phở phải
@@ -254,7 +255,7 @@ const StepList = ({ steps }: StepListProps) => {
             <StyledText type='Heading_4' color='blackGrey'>
               {step.title}
             </StyledText>
-            <StyledText type='Body' color='grey'>
+            <StyledText type='Body' color='grey' style={{ textAlign: 'justify' }}>
               {step.content}
             </StyledText>
           </ListItem.Content>
@@ -333,7 +334,7 @@ const useStyles = makeStyles(theme => {
     },
     body: {
       // flex: 1,
-      marginHorizontal: STYLES.MARGIN.MARGIN_16,
+      paddingHorizontal: STYLES.PADDING.PADDING_16,
       // marginTop: STYLES.MARGIN.MARGIN_8,
       gap: STYLES.GAP.GAP_16,
     },

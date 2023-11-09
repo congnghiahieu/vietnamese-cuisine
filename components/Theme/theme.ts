@@ -21,10 +21,13 @@ export const theme = createTheme({
 
       return {
         children: props.children,
-        style: {
-          ...textTypeStyle,
-          color,
-        },
+        style: [
+          {
+            ...textTypeStyle,
+            color,
+          },
+          props.style,
+        ],
       };
     },
   },
