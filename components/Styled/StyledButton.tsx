@@ -156,7 +156,7 @@ export const FaceBookButton = (props: StyledButtonProps) => {
   );
 };
 
-export const GithubButton = (props: StyledButtonProps) => {
+export const GithubButton = ({ titleStyle, buttonStyle, ...otherProps }: StyledButtonProps) => {
   const { theme } = useTheme();
   const dT = theme.mode === 'dark';
   const color = dT ? theme.colors.white : theme.colors.black;
@@ -165,13 +165,19 @@ export const GithubButton = (props: StyledButtonProps) => {
     <OutlineButton
       icon={<GithubIcon />}
       title='Github'
-      buttonStyle={{
-        borderColor: color,
-      }}
-      titleStyle={{
-        color,
-      }}
-      {...props}
+      buttonStyle={[
+        {
+          borderColor: color,
+        },
+        buttonStyle,
+      ]}
+      titleStyle={[
+        {
+          color,
+        },
+        titleStyle,
+      ]}
+      {...otherProps}
     />
   );
 };

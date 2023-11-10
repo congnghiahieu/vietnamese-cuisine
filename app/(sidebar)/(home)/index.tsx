@@ -153,6 +153,7 @@ const useStyles = makeStyles(theme => {
     card: {
       flexBasis: '49%',
       height: hp(35),
+      maxHeightheight: 300,
       position: 'relative',
       borderRadius: STYLES.RADIUS.RADIUS_10,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,

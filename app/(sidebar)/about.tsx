@@ -41,8 +41,13 @@ const About = () => {
         <StyledDivider orientation='horizontal' />
         <View style={[styles.body, { gap: STYLES.GAP.GAP_24 }]}>
           <FaceBookButton title={'Like us on Facebook'} />
-          <GithubButton title={'Star us on Github'} />
-          <TwitterButton title={'Follow us on X'} />
+          <GithubButton
+            title={'Star us on Github'}
+            titleStyle={{
+              marginHorizontal: STYLES.MARGIN.MARGIN_16,
+            }}
+          />
+          <TwitterButton title={'Follow us on Twitter'} />
         </View>
       </View>
 

@@ -1,4 +1,4 @@
-import { View, StatusBar, Image } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
@@ -11,6 +11,7 @@ import { STYLES } from '@/lib/constants';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH } from '@/config/firebase';
 import StyledImage from '@/components/Styled/StyledImage';
+import { wp, hp } from '@/lib/utils';
 
 const Login = () => {
   const styles = useStyles();
@@ -23,7 +24,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
       console.log('sign in success');
-      router.push('/(sidebar)/');
+      router.push('/(sidebar)/(home)/');
     } catch (error: any) {
       // console.log(Object.keys(error));
       // console.log(error.code);
@@ -52,7 +53,7 @@ const Login = () => {
         <FormInput type='password' placeholder='Password' />
       </View>
       <View style={styles.subField}>
-        <StyledPressable onPress={() => router.push('/(sidebar)/')}>
+        <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
           <StyledText type='SubInputField' color='orange'>
             Back to home
           </StyledText>

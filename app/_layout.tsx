@@ -79,13 +79,13 @@ const DarkThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const { setMode } = useThemeMode();
 
   useEffect(() => {
-    console.log('First mount');
+    console.log(darkMode);
+    setMode(darkMode ? 'dark' : 'light');
     if (firstMount.current) {
-      console.log(darkMode);
       console.log('Second mount');
-      setMode(darkMode ? 'dark' : 'light');
     } else {
       firstMount.current = true;
+      console.log('First mount');
     }
 
     return;

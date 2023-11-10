@@ -5,14 +5,14 @@ import { DrawerActions } from '@react-navigation/native';
 import { useRouter, useNavigation } from 'expo-router';
 import { STYLES } from '@/lib/constants';
 import { AvatarIcon, MenuIcon } from '@/components/Icon';
-import StyledPressable from './Styled/StyledPressable';
-import StyledText from './Styled/StyledText';
+import StyledPressable from './StyledPressable';
+import StyledText from './StyledText';
 
 type SidebarHeaderProps = {
   title: string | undefined;
 };
 
-const SidebarHeader = ({ title }: SidebarHeaderProps) => {
+const StyledHeader = ({ title }: SidebarHeaderProps) => {
   const navigation = useNavigation();
   const router = useRouter();
   const { theme } = useTheme();
@@ -36,8 +36,8 @@ const SidebarHeader = ({ title }: SidebarHeaderProps) => {
           onPress={onMenuPress}
           style={{
             paddingVertical: STYLES.PADDING.PADDING_8,
+            paddingRight: STYLES.PADDING.PADDING_32,
             paddingLeft: 0,
-            paddingRight: STYLES.PADDING.PADDING_16,
           }}>
           <MenuIcon />
         </StyledPressable>
@@ -58,4 +58,4 @@ const SidebarHeader = ({ title }: SidebarHeaderProps) => {
 
 const useStyles = makeStyles(theme => ({}));
 
-export default SidebarHeader;
+export default StyledHeader;

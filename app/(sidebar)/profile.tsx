@@ -97,7 +97,10 @@ const useStyles = makeStyles(theme => {
       alignItems: 'center',
     },
     label: {
-      flexBasis: 100,
+      // flexBasis: 100,
+      width: wp(30),
+      // width: 110,
+      maxWidth: 110,
       // flexBasis: wp(28),
     },
     value: {

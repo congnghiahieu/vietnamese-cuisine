@@ -1,4 +1,12 @@
-import { View, TextInput, Image, KeyboardAvoidingView, ScrollView, FlatList } from 'react-native';
+import {
+  View,
+  TextInput,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  FlatList,
+  StatusBar,
+} from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import {
@@ -181,6 +189,7 @@ const useStyles = makeStyles(theme => {
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       borderTopLeftRadius: STYLES.RADIUS.RADIUS_30,
       borderTopRightRadius: STYLES.RADIUS.RADIUS_30,
+      marginTop: StatusBar.currentHeight || 0,
     },
     header: {
       marginHorizontal: STYLES.MARGIN.MARGIN_16,

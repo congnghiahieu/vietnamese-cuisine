@@ -97,6 +97,8 @@ const useStyles = makeStyles(theme => {
       flex: 1,
       width: '100%',
       height: hp(40),
+      // height: 300,
+      maxHeight: 300,
       borderTopLeftRadius: STYLES.RADIUS.RADIUS_20,
       borderTopRightRadius: STYLES.RADIUS.RADIUS_20,
     },

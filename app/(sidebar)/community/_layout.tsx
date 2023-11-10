@@ -1,4 +1,4 @@
-import SidebarHeader from '@/components/SidebarHeader';
+import StyledHeader from '@/components/Styled/StyledHeader';
 import { Stack } from 'expo-router';
 
 const CommunityLayout = () => {
@@ -6,7 +6,7 @@ const CommunityLayout = () => {
     <Stack
       initialRouteName='index'
       screenOptions={{
-        header: ({ options }) => <SidebarHeader title={options.title} />,
+        header: ({ options }) => <StyledHeader title={options.title} />,
       }}>
       <Stack.Screen
         name='index'

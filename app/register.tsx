@@ -45,7 +45,7 @@ const Register = () => {
         <FormInput type='password' placeholder='Confirm Password' />
       </View>
       <View style={styles.subField}>
-        <StyledPressable onPress={() => router.push('/(sidebar)/')}>
+        <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
           <StyledText type='SubInputField' color='orange'>
             Back to home
           </StyledText>

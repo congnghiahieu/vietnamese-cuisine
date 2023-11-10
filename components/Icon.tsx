@@ -13,6 +13,10 @@ import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import Svg, { SvgProps, Path, G } from 'react-native-svg';
 
+export const SidebarHomeIcon = () => {
+  const styles = useStyles();
+  return <Ionicons name='home' style={[styles.baseIcon]} />;
+};
 export const ArrowRightIcon = () => {
   const styles = useStyles();
   return <Feather name='arrow-right' style={[styles.baseIcon]} />;

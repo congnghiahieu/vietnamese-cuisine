@@ -107,7 +107,7 @@ const FavouriteEmptySubField = () => {
   const router = useRouter();
 
   return (
-    <StyledPressable onPress={() => router.push('/(sidebar)/')}>
+    <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
       <StyledText
         type='SubInputField'
         color='orange'
@@ -134,6 +134,7 @@ const useStyles = makeStyles(theme => {
     card: {
       flexBasis: '100%',
       height: hp(40),
+      maxHeight: 400,
       position: 'relative',
       borderRadius: STYLES.RADIUS.RADIUS_10,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,

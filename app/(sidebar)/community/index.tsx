@@ -150,7 +150,7 @@ const PostCard = ({ name, time, desc, imageUrl }: Post) => {
         <StyledDivider orientation='vertical' />
         <StyledPressable
           style={styles.button}
-          onPress={() => router.push('/(sidebar)/community/comments')}>
+          onPress={() => router.push('/(sidebar)/community/comment')}>
           <CommentIcon />
           <StyledText>Comments</StyledText>
         </StyledPressable>
@@ -233,6 +233,8 @@ const useCardStyles = makeStyles(theme => {
     image: {
       width: '100%',
       height: hp(45),
+      // height: 350,
+      maxHeight: 350,
     },
     footer: {
       flexDirection: 'row',

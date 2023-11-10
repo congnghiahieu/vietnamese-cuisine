@@ -1,4 +1,4 @@
-import { View, TextInput, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, TextInput, Image, KeyboardAvoidingView, ScrollView, StatusBar } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { ArrowLeftIcon, AvatarIcon, ImageIcon, PencilPostIcon } from '@/components/Icon';
@@ -83,7 +83,7 @@ const CreatePost = () => {
           iconPosition='left'
           containerStyle={{
             borderRadius: STYLES.RADIUS.RADIUS_10,
-            marginTop: STYLES.MARGIN.MARGIN_8,
+            marginTop: STYLES.MARGIN.MARGIN_16,
           }}
         />
       </View>
@@ -101,6 +101,7 @@ const useStyles = makeStyles(theme => {
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       borderTopLeftRadius: STYLES.RADIUS.RADIUS_30,
       borderTopRightRadius: STYLES.RADIUS.RADIUS_30,
+      marginTop: StatusBar.currentHeight || 0,
     },
     header: {
       marginHorizontal: STYLES.MARGIN.MARGIN_16,
@@ -141,7 +142,9 @@ const useStyles = makeStyles(theme => {
       // backgroundColor: 'red',
     },
     imageContainer: {
-      height: hp(48),
+      height: hp(55),
+      // height: 450,
+      maxHeight: 450,
     },
     imagePlaceholder: {
       flex: 1,
@@ -151,10 +154,12 @@ const useStyles = makeStyles(theme => {
       borderStyle: 'dashed',
       borderColor: theme.colors.blackGrey,
       borderWidth: 2,
+      borderRadius: STYLES.RADIUS.RADIUS_10,
     },
     image: {
       width: '100%',
       height: '100%',
+      borderRadius: STYLES.RADIUS.RADIUS_10,
     },
   };
 });
