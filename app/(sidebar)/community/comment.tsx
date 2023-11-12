@@ -6,6 +6,7 @@ import {
   ScrollView,
   FlatList,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
@@ -78,7 +79,7 @@ const Comment = () => {
   return (
     // <KeyboardAvoidingView contentContainerStyle={}>
     // <ScrollView style={styles.container}>
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <StyledText type='Heading_3' color='blackGrey'>
           Comments
@@ -135,7 +136,7 @@ const Comment = () => {
         </View>
       </View>
       {/* </ScrollView> */}
-    </View>
+    </SafeAreaView>
     // </KeyboardAvoidingView>
   );
 };

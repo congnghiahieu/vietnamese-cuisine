@@ -1,4 +1,4 @@
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
@@ -29,47 +29,52 @@ const Register = () => {
   }
 
   return (
-    <KeyboardView style={styles.container}>
-      <View style={styles.heading}>
-        <StyledText type='Heading_2' color='blackGrey'>
-          Welcome 👋
-        </StyledText>
-        <StyledText type='Body' color='blackGrey'>
-          Pleases fill out information to create an account
-        </StyledText>
-      </View>
-      <View style={styles.form}>
-        <FormInput type='normal' placeholder='Fullname' />
-        <FormInput type='normal' placeholder='Email' />
-        <FormInput type='password' placeholder='Password' />
-        <FormInput type='password' placeholder='Confirm Password' />
-      </View>
-      <View style={styles.subField}>
-        <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
-          <StyledText type='SubInputField' color='orange'>
-            Back to home
+    <SafeAreaView
+      style={{
+        marginTop: StatusBar.currentHeight || 0,
+      }}>
+      <KeyboardView style={styles.container}>
+        <View style={styles.heading}>
+          <StyledText type='Heading_2' color='blackGrey'>
+            Welcome 👋
           </StyledText>
-        </StyledPressable>
-      </View>
-      <View style={styles.button}>
-        <SolidButton
-          title='Sign Up'
-          icon={<ArrowRightIcon />}
-          iconPosition='right'
-          onPress={signUp}
-        />
-        <ContinueWithText />
-        <GoogleButton />
-      </View>
-      <View style={styles.footer}>
-        <StyledText type='SubInputField' color='blackGrey'>
-          Already have an account?
-        </StyledText>
-        <StyledPressable onPress={() => router.push('/login')}>
-          <StyledText style={styles.redirectText}>SIGN IN</StyledText>
-        </StyledPressable>
-      </View>
-    </KeyboardView>
+          <StyledText type='Body' color='blackGrey'>
+            Pleases fill out information to create an account
+          </StyledText>
+        </View>
+        <View style={styles.form}>
+          <FormInput type='normal' placeholder='Fullname' />
+          <FormInput type='normal' placeholder='Email' />
+          <FormInput type='password' placeholder='Password' />
+          <FormInput type='password' placeholder='Confirm Password' />
+        </View>
+        <View style={styles.subField}>
+          <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
+            <StyledText type='SubInputField' color='orange'>
+              Back to home
+            </StyledText>
+          </StyledPressable>
+        </View>
+        <View style={styles.button}>
+          <SolidButton
+            title='Sign Up'
+            icon={<ArrowRightIcon />}
+            iconPosition='right'
+            onPress={signUp}
+          />
+          <ContinueWithText />
+          <GoogleButton />
+        </View>
+        <View style={styles.footer}>
+          <StyledText type='SubInputField' color='blackGrey'>
+            Already have an account?
+          </StyledText>
+          <StyledPressable onPress={() => router.push('/login')}>
+            <StyledText style={styles.redirectText}>SIGN IN</StyledText>
+          </StyledPressable>
+        </View>
+      </KeyboardView>
+    </SafeAreaView>
   );
 };
 
@@ -77,7 +82,6 @@ const useStyles = makeStyles(theme => ({
   container: {
     flex: 1,
     marginHorizontal: STYLES.MARGIN.MARGIN_16,
-    marginTop: StatusBar.currentHeight || 0,
   },
   heading: {
     alignItems: 'flex-start',

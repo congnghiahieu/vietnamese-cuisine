@@ -1,5 +1,5 @@
 import { useRef, useMemo, useState } from 'react';
-import { Image, View, StatusBar } from 'react-native';
+import { Image, View, StatusBar, SafeAreaView } from 'react-native';
 import { Slider, ListItem, makeStyles, useTheme } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import BottomSheet, {
@@ -65,10 +65,10 @@ const Information = () => {
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ImageSlide />
       <InformationBottomSheet />
-    </View>
+    </SafeAreaView>
   );
 };
 

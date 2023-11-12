@@ -1,4 +1,12 @@
-import { View, TextInput, Image, KeyboardAvoidingView, ScrollView, StatusBar } from 'react-native';
+import {
+  View,
+  TextInput,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { ArrowLeftIcon, AvatarIcon, ImageIcon, PencilPostIcon } from '@/components/Icon';
@@ -26,68 +34,70 @@ const CreatePost = () => {
 
   return (
     // <KeyboardAvoidingView contentContainerStyle={}>
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <StyledText type='Heading_3' color='blackGrey'>
-          Make a Post
-        </StyledText>
-        <StyledPressable style={styles.backButton} onPress={() => router.back()}>
-          <ArrowLeftIcon />
-        </StyledPressable>
-      </View>
-      <StyledDivider orientation='horizontal' />
-      <View style={styles.content}>
-        <View style={styles.contentHeader}>
-          <AvatarIcon />
-          <StyledText type='Heading_4' color='orange'>
-            Cong Nghia Hieu
+    <SafeAreaView style={{ marginTop: StatusBar.currentHeight || 0 }}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <StyledText type='Heading_3' color='blackGrey'>
+            Make a Post
           </StyledText>
-          <StyledPressable style={styles.imageButton} onPress={pickImages}>
-            <ImageIcon />
+          <StyledPressable style={styles.backButton} onPress={() => router.back()}>
+            <ArrowLeftIcon />
           </StyledPressable>
         </View>
-        <View style={styles.writeThought}>
-          <StyledText type='Placeholder' color={theme.mode === 'dark' ? 'white' : 'black'}>
-            {thought.length} / {WORD_LIMIT}
-          </StyledText>
-          <TextInput
-            placeholder='Write your thought'
-            placeholderTextColor={theme.colors.whiteGrey}
-            multiline
-            maxLength={WORD_LIMIT}
-            numberOfLines={DEFAULT_LINE}
-            style={styles.input}
-            value={thought}
-            onChangeText={setThought}
+        <StyledDivider orientation='horizontal' />
+        <View style={styles.content}>
+          <View style={styles.contentHeader}>
+            <AvatarIcon />
+            <StyledText type='Heading_4' color='orange'>
+              Cong Nghia Hieu
+            </StyledText>
+            <StyledPressable style={styles.imageButton} onPress={pickImages}>
+              <ImageIcon />
+            </StyledPressable>
+          </View>
+          <View style={styles.writeThought}>
+            <StyledText type='Placeholder' color={theme.mode === 'dark' ? 'white' : 'black'}>
+              {thought.length} / {WORD_LIMIT}
+            </StyledText>
+            <TextInput
+              placeholder='Write your thought'
+              placeholderTextColor={theme.colors.whiteGrey}
+              multiline
+              maxLength={WORD_LIMIT}
+              numberOfLines={DEFAULT_LINE}
+              style={styles.input}
+              value={thought}
+              onChangeText={setThought}
+            />
+          </View>
+          <View style={styles.imageContainer}>
+            {images ? (
+              <StyledImage
+                source={{
+                  uri: 'https://bepxua.vn/wp-content/uploads/2022/08/cach-lam-bun-cha.jpg',
+                }}
+                style={styles.image}
+              />
+            ) : (
+              <StyledPressable style={styles.imagePlaceholder} onPress={pickImages}>
+                <StyledText type='Heading_2' color='blackGrey'>
+                  Pick some images
+                </StyledText>
+              </StyledPressable>
+            )}
+          </View>
+          <SolidButton
+            title='Publish this post'
+            icon={<PencilPostIcon />}
+            iconPosition='left'
+            containerStyle={{
+              borderRadius: STYLES.RADIUS.RADIUS_10,
+              marginTop: STYLES.MARGIN.MARGIN_16,
+            }}
           />
         </View>
-        <View style={styles.imageContainer}>
-          {images ? (
-            <StyledImage
-              source={{
-                uri: 'https://bepxua.vn/wp-content/uploads/2022/08/cach-lam-bun-cha.jpg',
-              }}
-              style={styles.image}
-            />
-          ) : (
-            <StyledPressable style={styles.imagePlaceholder} onPress={pickImages}>
-              <StyledText type='Heading_2' color='blackGrey'>
-                Pick some images
-              </StyledText>
-            </StyledPressable>
-          )}
-        </View>
-        <SolidButton
-          title='Publish this post'
-          icon={<PencilPostIcon />}
-          iconPosition='left'
-          containerStyle={{
-            borderRadius: STYLES.RADIUS.RADIUS_10,
-            marginTop: STYLES.MARGIN.MARGIN_16,
-          }}
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
     // </KeyboardAvoidingView>
   );
 };
@@ -101,7 +111,6 @@ const useStyles = makeStyles(theme => {
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       borderTopLeftRadius: STYLES.RADIUS.RADIUS_30,
       borderTopRightRadius: STYLES.RADIUS.RADIUS_30,
-      marginTop: StatusBar.currentHeight || 0,
     },
     header: {
       marginHorizontal: STYLES.MARGIN.MARGIN_16,
