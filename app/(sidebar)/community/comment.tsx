@@ -1,13 +1,4 @@
-import {
-  View,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  ScrollView,
-  FlatList,
-  StatusBar,
-  SafeAreaView,
-} from 'react-native';
+import { View, TextInput, Image, KeyboardAvoidingView, ScrollView, FlatList } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import {
@@ -29,6 +20,7 @@ import { hp } from '@/lib/utils';
 import { useRouter } from 'expo-router';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import { StyledFlatList } from '@/components/Styled/StyledList';
+import { SafeView } from '@/components/Styled/StyledView';
 
 const WORD_LIMIT = 100;
 const COMMENT_LIST = [
@@ -79,7 +71,7 @@ const Comment = () => {
   return (
     // <KeyboardAvoidingView contentContainerStyle={}>
     // <ScrollView style={styles.container}>
-    <SafeAreaView style={styles.container}>
+    <SafeView style={styles.container}>
       <View style={styles.header}>
         <StyledText type='Heading_3' color='blackGrey'>
           Comments
@@ -136,7 +128,7 @@ const Comment = () => {
         </View>
       </View>
       {/* </ScrollView> */}
-    </SafeAreaView>
+    </SafeView>
     // </KeyboardAvoidingView>
   );
 };
@@ -190,7 +182,6 @@ const useStyles = makeStyles(theme => {
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       borderTopLeftRadius: STYLES.RADIUS.RADIUS_30,
       borderTopRightRadius: STYLES.RADIUS.RADIUS_30,
-      marginTop: StatusBar.currentHeight || 0,
     },
     header: {
       marginHorizontal: STYLES.MARGIN.MARGIN_16,

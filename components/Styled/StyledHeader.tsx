@@ -23,13 +23,20 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
 
   return (
     <Header
+      statusBarProps={{
+        animated: true,
+        hidden: true,
+      }}
       backgroundColor={theme.colors.background}
       barStyle={dT ? 'light-content' : 'dark-content'}
       containerStyle={{
-        paddingHorizontal: STYLES.PADDING.PADDING_16,
-        paddingVertical: STYLES.PADDING.PADDING_8,
+        // paddingHorizontal: STYLES.PADDING.PADDING_16,
+        // paddingTop: STYLES.PADDING.PADDING_16,
+        // paddingBottom: STYLES.PADDING.PADDING_8,
+        padding: STYLES.PADDING.PADDING_16,
         borderBottomWidth: 0,
         borderBottomColor: dT ? theme.colors.blackGrey : theme.colors.whiteGrey,
+        // backgroundColor: 'red',
       }}
       leftComponent={
         <StyledPressable

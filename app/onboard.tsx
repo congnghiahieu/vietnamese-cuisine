@@ -1,16 +1,14 @@
-import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { SafeView } from '@/components/Styled/StyledView';
 
 const OnBoard = () => {
   return (
-    <SafeAreaView
-      style={{
-        marginTop: StatusBar.currentHeight || 0,
-      }}>
+    <SafeView>
       <View>
         <Text>OnBoard</Text>
       </View>
-    </SafeAreaView>
+    </SafeView>
   );
 };
 

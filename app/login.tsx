@@ -1,10 +1,10 @@
-import { View, StatusBar, SafeAreaView } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
 import { SolidButton, GoogleButton } from '@/components/Styled/StyledButton';
-import { KeyboardView } from '@/components/Styled/StyledView';
+import { KeyboardView, SafeView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ArrowRightIcon } from '@/components/Icon';
 import { STYLES } from '@/lib/constants';
@@ -36,10 +36,7 @@ const Login = () => {
   }
 
   return (
-    <SafeAreaView
-      style={{
-        marginTop: StatusBar.currentHeight || 0,
-      }}>
+    <SafeView>
       <KeyboardView style={styles.container}>
         <View style={{ alignItems: 'center' }}>
           <StyledImage
@@ -87,7 +84,7 @@ const Login = () => {
           </StyledPressable>
         </View>
       </KeyboardView>
-    </SafeAreaView>
+    </SafeView>
   );
 };
 

@@ -1,12 +1,4 @@
-import {
-  View,
-  TextInput,
-  Image,
-  KeyboardAvoidingView,
-  ScrollView,
-  StatusBar,
-  SafeAreaView,
-} from 'react-native';
+import { View, TextInput, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { ArrowLeftIcon, AvatarIcon, ImageIcon, PencilPostIcon } from '@/components/Icon';
@@ -19,6 +11,7 @@ import { SolidButton } from '@/components/Styled/StyledButton';
 import { hp } from '@/lib/utils';
 import { useRouter } from 'expo-router';
 import StyledImage from '@/components/Styled/StyledImage';
+import { SafeView } from '@/components/Styled/StyledView';
 
 const WORD_LIMIT = 500;
 const DEFAULT_LINE = 4;
@@ -34,7 +27,7 @@ const CreatePost = () => {
 
   return (
     // <KeyboardAvoidingView contentContainerStyle={}>
-    <SafeAreaView style={{ marginTop: StatusBar.currentHeight || 0 }}>
+    <SafeView>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <StyledText type='Heading_3' color='blackGrey'>
@@ -97,7 +90,7 @@ const CreatePost = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeView>
     // </KeyboardAvoidingView>
   );
 };
