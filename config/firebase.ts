@@ -2,7 +2,7 @@
 import { initializeApp, FirebaseOptions } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "@firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query } from "firebase/firestore";
 import Constants from "expo-constants";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -27,4 +27,4 @@ const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
 });
 const FIREBASE_DB = getFirestore(FIREBASE_APP);
 
-export { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB, collection, getDocs };
+export { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB};

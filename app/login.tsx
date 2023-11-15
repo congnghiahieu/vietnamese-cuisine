@@ -17,7 +17,7 @@ const Login = () => {
   const styles = useStyles();
   const router = useRouter();
 
-  let email = 'pjzon1999@gmail.com';
+  let email = 'trantran@gmail.com';
   let password = '123456';
 
   async function signIn() {

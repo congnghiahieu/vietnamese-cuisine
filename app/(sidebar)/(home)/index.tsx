@@ -10,21 +10,19 @@ import { ChevronRightIcon, HeartIcon, SearchIcon } from "@/components/Icon";
 import { STYLES } from "@/lib/constants";
 import { hp } from "@/lib/utils";
 import StyledImage from "@/components/Styled/StyledImage";
-import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB, getDocs, collection } from "@/config/firebase";
+import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from "@/config/firebase";
+import * as firestore from "firebase/firestore";
 
+import { DocumentData } from "firebase/firestore";
+import { setParams } from "expo-router/src/global-state/routing";
 
-const currentUser = FIREBASE_AUTH.currentUser
-// get entire food data
-const getFoodList = async () => {
-    const querySnapshot = await getDocs(collection(FIREBASE_DB, "foods"));
-    querySnapshot.forEach((doc) => {
-        console.log(doc.id, doc.data());
-    });
-};
+interface Food {
+    title: string;
+    imageUrl: string;
+    // just for this page, actually more fields
+}
 
-
-
-const FOOD_LIST = [
+const FAKE_FOOD_LIST = [
     {
         title: "Bánh mì",
         imageUrl:
@@ -67,7 +65,30 @@ const FOOD_LIST = [
 ];
 
 const Home = () => {
-    console.log(currentUser)
+    const [foodList, setFoodList] = useState<Food[]>([]);
+    const getFoodList = async () => {
+        try {
+            const querySnapshot = await firestore.getDocs(
+                firestore.collection(FIREBASE_DB, "foods")
+            );
+            const fetchedFoodList = querySnapshot.docs.map((doc) => {
+                const { title, imageUrl } = doc.data();
+                return { title, imageUrl } as Food;
+            });
+            setFoodList(fetchedFoodList);
+            console.log(fetchedFoodList);
+        } catch (error) {
+            console.error(
+                "Error fetching food list data from FIRESTORE:",
+                error
+            );
+        }
+    };
+
+    useEffect(() => {
+        getFoodList();
+    }, []);
+
     const styles = useStyles();
     return (
         <View style={styles.container}>
@@ -85,7 +106,7 @@ const Home = () => {
                     </StyledPressable>
                 }
             />
-            <FoodList foodList={FOOD_LIST} />
+            <FoodList foodList={foodList} />
             {/* <FoodList foodList={[]} /> */}
         </View>
     );
@@ -121,7 +142,12 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
                 </StyledText>
                 <StyledPressable
                     style={styles.redirectButton}
-                    onPress={() => router.push("/information")}
+                    onPress={() =>
+                        router.push({
+                            pathname: "/information",
+                            params: { id: title },
+                        })
+                    }
                 >
                     <ChevronRightIcon />
                 </StyledPressable>
