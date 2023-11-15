@@ -27,72 +27,18 @@ import { STYLES } from "@/lib/constants";
 import StyledImage from "@/components/Styled/StyledImage";
 import { SafeView } from "@/components/Styled/StyledView";
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from "@/config/firebase";
-import * as firestore from "firebase/firestore";
-
-const INGREDIENT_LIST = [
-    "1 kg xương ống bò",
-    "800 gram gù bò",
-    "80 gram gừng",
-    "2 thảo quả",
-    "1 gram hạt ngò",
-    "5 nụ đinhh hương",
-    "Rượu mai quế lộ",
-    "Hành tây, đường phèn, hạt nêm, bột ngọt",
-    "500 gram bắp bò hoa",
-    "Ngò gai, rau quế",
-    "2 tai đại hồi",
-    "1 nhánh nhỏ quế",
-    "1 gram tiểu hồi",
-    "1 miếng nhỏ trần bì",
-    "10 gram tiêu sọ",
-    "Đường cát, muối, giấm, bánh phở",
-];
-
-const STEPS = [
-    {
-        title: "Bước 1: Sơ chế xương bò, bắp bò, gù bò",
-        content:
-            "Ngâm xương ống với nước muối và giấm khoảng 2 tiếng cho sạch và bớt mùi tanh. Sau đó đem xương đi rửa sạch rồi cho vào nồi nước sôi cùng với gừng và 1 muỗng canh muối đun trong khoảng 10 phút thì vớt ra, trần qua nước lạnh. Cách này sẽ loại bỏ được hoàn toàn mùi hôi bò, giúp nước dùng thơm ngon hơn mà không bị tanh.",
-    },
-    {
-        title: "Bước 2: Hầm xương bò",
-        content:
-            "Hầm xương ống hơn 10 tiếng với 5 lít nước để xương ra chất, hầm càng lâu, nước dùng sẽ càng thơm ngon và đậm đà hơn. Sau đó đổ nước lạnh vào tùy mức nấu mà bạn mong muốn nhiều hay ít. Tuy nhiên, lượng nước lạnh cho vào sẽ quyết định nước dùng sắc nhiều hay sắc ít.",
-    },
-    {
-        title: "Bước 3: Sơ chế các nguyên liệu khác và nấu nước dùng",
-        content:
-            "Hành tây một nửa lột vỏ, rửa sạch và cắt lát mỏng, ngâm vào nước lạnh để hành giòn, trắng, bớt nồng. Cho phần hành tây còn lại cùng gừng, sá sùng để nguyên vỏ lên bếp nướng chín thơm (cố gắng không nên để hành, gừng, sá sùng bị cháy quá). Sau đó đem đi lột vỏ và cho gừng, sá sùng, hành tây vào một túi vải trắng, sạch và bỏ vào nồi nước dùng, hầm trong 4 tiếng đồng hồ cho nước ngọt từ nguyên liệu tiết ra hết. Bỏ đại hồi, quế, thảo quả, hạt ngò, đinh hương, tiêu sọ vào chảo rang cho dậy mùi thơm. Chú ý không rang vàng quá sẽ làm đen màu nước dùng. Sau đó đem ngâm với nước sôi tầm 30 phút đến một tiếng cho gia vị ra bớt màu đen và mùi, giúp nước dùng có hương thoang thoảng nhẹ nhàng, không quá nồng gây khó chịu. Sau đó vớt ra, cho hết vào trong túi vải và bỏ vào nồi nước hầm xương. Sau khi hầm hành tây, gừng, sá sùng được 4 tiếng và đại hồi, quế, hạt ngò, đinh hương được 1 tiếng thì vớt cả hai túi ra kèm xương ống. Cho vào nước dùng các gia vị: 60gram đường phèn, 4 muỗng canh muối, 5 muỗng canh hạt nêm, 5 muỗng canh bột ngọt. Nêm nếm thêm bớt gia vị cho vừa miệng.",
-    },
-    {
-        title: "Bước 4: Chuẩn bị bánh phở và các loại rau ăn kèm",
-        content:
-            "Ngò gai và rau quế rửa sạch và để ráo. Bánh phở trụng sơ với nước sôi, sau đó cho vào tô, xếp thịt bò lên bề mặt, rắc hành lá, rau mùi, hành đã cắt nhỏ, hành tây ngâm nước đá và chan nước dùng. Vắt thêm tí chanh, thêm vào tí ớt là có ngay một tô phở Việt đậm vị truyền thống với công thức gia truyền.",
-    },
-];
+import {
+    query,
+    collection,
+    where,
+    getDocs,
+    doc,
+    getDoc,
+    setDoc,
+} from "firebase/firestore";
 
 const Information = () => {
     const styles = useStyles();
-    const params = useLocalSearchParams();
-    const { foodId } = params
-    const [ingredientList, setIngredientList] = useState<Object[]>([]);
-    const [steps, setSteps] = useState<Object[]>([]);
-    const getFoodData = async () => {
-        try {
-            const foodDocRef = firestore.doc(FIREBASE_DB, 'foods', foodId);
-            const foodDocSnap = await firestore.getDoc(foodDocRef);
-
-            
-            setIngredientList(fetchedIngredientList);
-            setSteps(fetchedSteps);
-        } catch (error) {
-            console.error("Error fetching food  data from FIRESTORE:", error);
-        }
-    };
-
-    useEffect(() => {
-        getFoodData();
-    }, []);
 
     return (
         <SafeView>
@@ -178,6 +124,37 @@ const useBottomSheetStyles = makeStyles((theme) => {
 const InformationBottomSheetBody = () => {
     const styles = useStyles();
     const [like, setLike] = useState(false);
+    const params = useLocalSearchParams();
+    const foodId = params.id.toString();
+    const [ingredientList, setIngredientList] = useState<string[]>([]);
+    const [steps, setSteps] = useState<{ title: string; content: string }[]>(
+        []
+    );
+    const [introduce, setIntroduce] = useState<string>("");
+    const [videoLink, setVideoLink] = useState<string>("");
+    const getFoodData = async () => {
+        try {
+            const docRef = doc(FIREBASE_DB, "foods", foodId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const fetchedIngredientList =
+                    docSnap.data()?.ingredientList || [];
+                const fetchedSteps = docSnap?.data()?.steps || [];
+                const fetchedIntro = docSnap?.data()?.introduce || "";
+                const fetchedVideoLink = docSnap?.data()?.videoLink || "";
+                setIngredientList(fetchedIngredientList);
+                setSteps(fetchedSteps);
+                setIntroduce(fetchedIntro);
+                setVideoLink(fetchedVideoLink);
+            }
+        } catch (error) {
+            console.error("Error fetching food data from FIRESTORE:", error);
+        }
+    };
+
+    useEffect(() => {
+        getFoodData();
+    }, []);
 
     return (
         <BottomSheetScrollView contentContainerStyle={styles.body}>
@@ -224,13 +201,13 @@ const InformationBottomSheetBody = () => {
                 <StyledText type="Heading_3" color="orange">
                     Ingredients
                 </StyledText>
-                <IngredientList ingredients={INGREDIENT_LIST} />
+                <IngredientList ingredients={ingredientList} />
             </View>
             <View>
                 <StyledText type="Heading_3" color="orange">
                     Steps
                 </StyledText>
-                <StepList steps={STEPS} />
+                <StepList steps={steps} />
             </View>
             <SolidButton
                 title="How to make Pho"
