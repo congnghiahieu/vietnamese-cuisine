@@ -11,7 +11,18 @@ import { STYLES } from "@/lib/constants";
 import { hp } from "@/lib/utils";
 import StyledImage from "@/components/Styled/StyledImage";
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from "@/config/firebase";
-import { query, collection, where, getDocs } from "firebase/firestore";
+import {
+    query,
+    collection,
+    where,
+    getDocs,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    arrayRemove,
+    arrayUnion,
+} from "firebase/firestore";
 
 import { DocumentData } from "firebase/firestore";
 import { setParams } from "expo-router/src/global-state/routing";
@@ -78,6 +89,31 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
     const [love, setLove] = useState(false);
     const router = useRouter();
 
+    async function loveFood() {
+        const user = FIREBASE_AUTH.currentUser;
+        console.log(user?.email);
+        try {
+            if (!user) {
+                router.push("/login");
+            }
+            if (user?.email) {
+                setLove((prev) => !prev);
+                const docRef = doc(FIREBASE_DB, "users", user.email);
+                if (love) {
+                    await updateDoc(docRef, {
+                        favoriteFoods: arrayRemove(title),
+                    });
+                } else {
+                    await updateDoc(docRef, {
+                        favoriteFoods: arrayUnion(title),
+                    });
+                }
+            }
+        } catch (error: any) {
+            alert(error.message);
+        }
+    }
+
     return (
         <View style={styles.card}>
             <StyledImage
@@ -86,10 +122,7 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
                 }}
                 style={styles.cardImage}
             />
-            <StyledPressable
-                onPress={() => setLove((prev) => !prev)}
-                style={styles.cardLoveButton}
-            >
+            <StyledPressable onPress={loveFood} style={styles.cardLoveButton}>
                 <HeartIcon active={love} />
             </StyledPressable>
             <View style={styles.cardFooter}>

@@ -20,47 +20,6 @@ import {
     setDoc,
 } from "firebase/firestore";
 
-const FAVORITE_LIST = [
-    {
-        title: "Bánh mì",
-        imageUrl:
-            "https://cdn.tgdd.vn/Files/2021/07/27/1371175/huong-dan-3-cach-lam-banh-mi-bo-thom-ngon-de-lam-cho-bua-sang-du-chat-202201041019538628.jpg",
-    },
-    {
-        title: "Phở",
-        imageUrl:
-            "https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/filters:quality(95)/https://cms-prod.s3-sgn09.fptcloud.com/1_to_pho_bo_bao_nhieu_calo_9_762e002737.jpg",
-    },
-    {
-        title: "Bún chả",
-        imageUrl:
-            "https://beptruong.edu.vn/wp-content/uploads/2018/05/bun-cha.jpg",
-    },
-    {
-        title: "Bánh cuốn",
-        imageUrl:
-            "https://img-global.cpcdn.com/recipes/b235f5db0142062d/1360x964cq70/banh-cu%E1%BB%91n-trang-ch%E1%BA%A3o-nhan-th%E1%BB%8Bt-bam-n%E1%BA%A5m-meo-recipe-main-photo.webp",
-    },
-    {
-        title: "Gỏi cuốn",
-        imageUrl:
-            "https://themiquanghouse.com/watermark/product/500x300x1/upload/product/goi-4600.jpg",
-    },
-    {
-        title: "Nem",
-        imageUrl:
-            "https://image.vietnamnews.vn/uploadvnnews/Article/2018/9/17/nem281042039PM.jpg",
-    },
-    {
-        title: "Bánh Khọt",
-        imageUrl:
-            "https://images.squarespace-cdn.com/content/v1/52d3fafee4b03c7eaedee15f/6b5cb0c1-96cc-49e3-85ba-fe4a62ab43d3/EOS+M50_9482.jpg?format=2500w",
-    },
-    {
-        title: "Bánh Chưng",
-        imageUrl: "https://statics.vinpearl.com/banh-chung-1_1668262682.jpg",
-    },
-];
 
 const Favorites = () => {
     const user = FIREBASE_AUTH.currentUser;
@@ -87,6 +46,7 @@ const Favorites = () => {
                     }
                 }
                 setFavoriteList(favoriteList)
+                console.log(favoriteList)
             }
         } catch (error) {
             console.error(
