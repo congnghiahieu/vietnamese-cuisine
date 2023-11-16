@@ -11,7 +11,7 @@ import { STYLES } from "@/lib/constants";
 import { hp } from "@/lib/utils";
 import StyledImage from "@/components/Styled/StyledImage";
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from "@/config/firebase";
-import {query, collection, where, getDocs} from "firebase/firestore";
+import { query, collection, where, getDocs } from "firebase/firestore";
 
 import { DocumentData } from "firebase/firestore";
 import { setParams } from "expo-router/src/global-state/routing";
@@ -20,8 +20,6 @@ interface Food {
     title: string;
     imageUrl: string;
 }
-
-
 
 const Home = () => {
     const [foodList, setFoodList] = useState<Food[]>([]);
