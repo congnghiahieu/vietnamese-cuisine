@@ -7,5 +7,5 @@ const defaultConfig = getDefaultConfig(__dirname, {
   isCSSEnabled: true,
 });
 defaultConfig.resolver.sourceExts.push('cjs', 'mjs');
-defaultConfig.resolver.assetExts.push('cjs', 'mjs');
+// defaultConfig.resolver.assetExts.push('cjs', 'mjs');
 module.exports = defaultConfig;

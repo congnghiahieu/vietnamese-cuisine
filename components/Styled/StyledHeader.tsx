@@ -7,6 +7,7 @@ import { STYLES } from '@/lib/constants';
 import { AvatarIcon, MenuIcon } from '@/components/Icon';
 import StyledPressable from './StyledPressable';
 import StyledText from './StyledText';
+import { KeyboardDismissView, dismissKeyboard } from './StyledView';
 
 type SidebarHeaderProps = {
   title: string | undefined;
@@ -23,9 +24,10 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
 
   return (
     <Header
+      onStartShouldSetResponder={dismissKeyboard}
       statusBarProps={{
         animated: true,
-        hidden: true,
+        // hidden: true,
       }}
       backgroundColor={theme.colors.background}
       barStyle={dT ? 'light-content' : 'dark-content'}
@@ -40,7 +42,10 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
       }}
       leftComponent={
         <StyledPressable
-          onPress={onMenuPress}
+          onPress={() => {
+            dismissKeyboard();
+            onMenuPress();
+          }}
           style={{
             paddingVertical: STYLES.PADDING.PADDING_8,
             paddingRight: STYLES.PADDING.PADDING_32,
@@ -55,7 +60,12 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
         </StyledText>
       }
       rightComponent={
-        <StyledPressable onPress={onAvatarPress} style={{ padding: 0 }}>
+        <StyledPressable
+          onPress={() => {
+            dismissKeyboard();
+            onAvatarPress();
+          }}
+          style={{ padding: 0 }}>
           <AvatarIcon />
         </StyledPressable>
       }

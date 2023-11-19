@@ -36,6 +36,7 @@ const useSolidStyles = makeStyles(theme => ({
   container: {
     borderRadius: STYLES.RADIUS.RADIUS_20,
     ...STYLES.SHADOW.SHADOW_ORANGE_4,
+    backgroundColor: theme.colors.orange,
   },
   button: {
     backgroundColor: theme.colors.orange,

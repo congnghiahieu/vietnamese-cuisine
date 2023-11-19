@@ -167,6 +167,12 @@ export const STYLES = {
     SHADOW_ORANGE_12: createShadowStyle('12', SHADOW_ORANGE_COLOR),
     SHADOW_ORANGE_16: createShadowStyle('16', SHADOW_ORANGE_COLOR),
   },
+  DURATION: {
+    DURATION_500: 500,
+    DURATION_1000: 500,
+    DURATION_1500: 500,
+    DURATION_2000: 500,
+  },
 } as const;
 
 export type MarginType = keyof typeof STYLES.MARGIN;

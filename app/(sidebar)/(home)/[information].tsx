@@ -1,5 +1,5 @@
 import { useRef, useMemo, useState, useEffect } from 'react';
-import { Image, View } from 'react-native';
+import { Image, View, StatusBar, Platform } from 'react-native';
 import { Slider, ListItem, makeStyles, useTheme } from '@rneui/themed';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import BottomSheet, {
@@ -7,7 +7,7 @@ import BottomSheet, {
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import StyledHandle, { StyledHandleProps } from '@/components/Styled/BottomSheet/StyledHandle';
-import StyledBackdrop from '@/components/Styled/BottomSheet/StyledBackdrop';
+import StyledBackdrop, { DefaultBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
 import StyledBackground, {
   StyledBackgroundProps,
 } from '@/components/Styled/BottomSheet/StyledBackground';
@@ -26,10 +26,11 @@ const Information = () => {
   const styles = useStyles();
 
   return (
-    <SafeView>
+    <View style={{ flex: 1 }}>
+      <StatusBar hidden />
       <ImageSlide />
       <InformationBottomSheet />
-    </SafeView>
+    </View>
   );
 };
 
@@ -42,8 +43,17 @@ const ImageSlide = (props?: ImageSlideProps) => {
   const router = useRouter();
 
   return (
-    <View style={styles.imageSlideContainer}>
-      <StyledPressable onPress={() => router.back()} style={styles.backButton}>
+    <View
+      style={styles.imageSlideContainer}
+      onTouchEnd={() => {
+        // console.log('View touched');
+      }}>
+      <StyledPressable
+        onPress={() => {
+          // console.log(`${Platform.OS} Back button Pressed`);
+          router.back();
+        }}
+        style={styles.backButton}>
         <ChevronLeftIcon />
       </StyledPressable>
       <StyledImage
@@ -51,6 +61,9 @@ const ImageSlide = (props?: ImageSlideProps) => {
           uri: 'https://file1.dangcongsan.vn/data/0/images/2021/02/08/duongntcd/13-chung-tet-td.jpg?dpi=150&quality=100&w=680',
         }}
         style={styles.image}
+        onPress={() => {
+          // console.log(`${Platform.OS} Image Pressed`);
+        }}
       />
     </View>
   );
@@ -64,7 +77,10 @@ const InformationBottomSheet = () => {
       index={0}
       snapPoints={snapPoints}
       handleComponent={InformationBottomSheetHandle}
-      backdropComponent={StyledBackdrop}
+      // backdropComponent={StyledBackdrop}
+      // backdropComponent={props => (
+      //   <DefaultBackdrop enableTouchThrough pressBehavior={'collapse'} {...props} />
+      // )}
       backgroundComponent={InformationBottomSheetBackground}
       enablePanDownToClose={false}>
       <InformationBottomSheetBody />
@@ -101,7 +117,7 @@ const InformationBottomSheetBody = () => {
   const styles = useStyles();
   const [like, setLike] = useState(false);
   const params = useLocalSearchParams();
-  const foodId = params.id.toString();
+  const foodId = params.information.toString();
   const [ingredientList, setIngredientList] = useState<string[]>([]);
   const [steps, setSteps] = useState<{ title: string; content: string }[]>([]);
   const [introduce, setIntroduce] = useState<string>('');
@@ -304,18 +320,29 @@ const useStyles = makeStyles(theme => {
   return {
     imageSlideContainer: {
       position: 'relative',
+      // zIndex: 1,
     },
     backButton: {
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
+      // backgroundColor: 'red',
       position: 'absolute',
-      top: STYLES.MARGIN.MARGIN_8,
-      left: STYLES.MARGIN.MARGIN_8,
-      zIndex: 1,
+      ...Platform.select<{ top: number; left: number }>({
+        android: {
+          top: STYLES.MARGIN.MARGIN_8,
+          left: STYLES.MARGIN.MARGIN_8,
+        },
+        ios: {
+          top: STYLES.MARGIN.MARGIN_24,
+          left: STYLES.MARGIN.MARGIN_16,
+        },
+      }),
+      zIndex: 2,
       borderRadius: STYLES.RADIUS.RADIUS_50,
     },
     image: {
       width: '100%',
       height: hp(55),
+      zIndex: 1,
     },
     body: {
       // flex: 1,

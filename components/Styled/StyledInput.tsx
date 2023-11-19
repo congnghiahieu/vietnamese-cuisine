@@ -1,9 +1,27 @@
 import { useState } from 'react';
-import { Input, InputProps, makeStyles } from '@rneui/themed';
+import { Input, InputProps, makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
 import { EyeIcon } from '@/components/Icon';
 import StyledPressable from './StyledPressable';
+
+const BaseInput = (props: InputProps) => {
+  const { theme } = useTheme();
+  const dT = theme.mode === 'dark';
+
+  return (
+    <Input
+      inputMode='text'
+      clearButtonMode='always'
+      keyboardAppearance={dT ? 'dark' : 'light'}
+      scrollEnabled
+      cursorColor={theme.colors.orange}
+      selectionColor={theme.colors.orange}
+      renderToHardwareTextureAndroid
+      {...props}
+    />
+  );
+};
 
 type FormInputProps = InputProps & {
   type: 'normal' | 'password';
@@ -36,7 +54,7 @@ export const FormInput = (props: FormInputProps) => {
     );
 
   return (
-    <Input
+    <BaseInput
       containerStyle={[styles.container, containerStyle]}
       inputContainerStyle={[styles.inputContainer, inputContainerStyle]}
       placeholderTextColor={styles.placeHolder.color}
@@ -98,7 +116,7 @@ export const SearchInput = (props: InputProps) => {
   const styles = useSearchInputStyles();
 
   return (
-    <Input
+    <BaseInput
       containerStyle={[styles.container, containerStyle]}
       inputContainerStyle={[styles.inputContainer, inputContainerStyle]}
       placeholderTextColor={styles.placeHolder.color}

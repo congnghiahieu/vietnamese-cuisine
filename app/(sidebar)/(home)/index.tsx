@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Image, View } from 'react-native';
+import { Image, Keyboard, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
+import { dismissKeyboard } from '@/components/Styled/StyledView';
 import StyledText from '@/components/Styled/StyledText';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import StyledPressable from '@/components/Styled/StyledPressable';
@@ -25,7 +26,6 @@ import {
 } from 'firebase/firestore';
 
 import { DocumentData } from 'firebase/firestore';
-import { setParams } from 'expo-router/src/global-state/routing';
 
 interface Food {
   title: string;
@@ -53,7 +53,7 @@ const Home = () => {
 
   const styles = useStyles();
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onStartShouldSetResponder={dismissKeyboard}>
       <View>
         <StyledText type='Heading_4' color='grey'>
           Let's find your favourite {'\n'}
@@ -109,6 +109,12 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
     }
   }
 
+  const navigateToInformation = () =>
+    router.push({
+      pathname: '/(sidebar)/(home)/[information]',
+      params: { information: title },
+    });
+
   return (
     <View style={styles.card}>
       <StyledImage
@@ -116,6 +122,7 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
           uri: imageUrl,
         }}
         style={styles.cardImage}
+        onPress={navigateToInformation}
       />
       <StyledPressable onPress={loveFood} style={styles.cardLoveButton}>
         <HeartIcon active={love} />
@@ -124,14 +131,7 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
         <StyledText type='Heading_5' color='white'>
           {title}
         </StyledText>
-        <StyledPressable
-          style={styles.redirectButton}
-          onPress={() =>
-            router.push({
-              pathname: '/information',
-              params: { id: title },
-            })
-          }>
+        <StyledPressable style={styles.redirectButton} onPress={navigateToInformation}>
           <ChevronRightIcon />
         </StyledPressable>
       </View>

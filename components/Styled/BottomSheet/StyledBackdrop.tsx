@@ -8,14 +8,24 @@ import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typesc
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { useTheme } from '@rneui/themed';
 
-export const DefaultBackdrop = (props: BottomSheetDefaultBackdropProps) => {
+export const DefaultBackdrop = ({ style, ...otherProps }: BottomSheetDefaultBackdropProps) => {
   return (
     <BottomSheetBackdrop
       disappearsOnIndex={-1}
       appearsOnIndex={0}
       enableTouchThrough={false}
       pressBehavior='close'
-      {...props}
+      style={[
+        style,
+        {
+          backgroundColor: 'red',
+          zIndex: 0,
+        },
+      ]}
+      {...otherProps}
+      // style={{
+      //   backgroundColor: 'blue',
+      // }}
     />
   );
 };
@@ -32,6 +42,7 @@ const StyledBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
     () => [
       {
         backgroundColor: theme.mode === 'dark' ? theme.colors.black : theme.colors.white,
+        zIndex: 0,
       },
       style,
       containerAnimatedStyle,
@@ -39,7 +50,14 @@ const StyledBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
     [style, containerAnimatedStyle],
   );
 
-  return <Animated.View style={containerStyle} />;
+  return (
+    <Animated.View
+      style={containerStyle}
+      onTouchEnd={() => {
+        // console.log('Backdrop touch');
+      }}
+    />
+  );
 };
 
 export default StyledBackdrop;

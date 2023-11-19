@@ -57,6 +57,16 @@ export const GiftIcon = () => {
   return <MaterialCommunityIcons name='gift' style={styles.baseIcon} />;
 };
 
+export const CircleCheckIcon = () => {
+  const styles = useStyles();
+  return <AntDesign name='checkcircle' style={[styles.baseIcon, styles.green]} />;
+};
+
+export const CircleCloseIcon = () => {
+  const styles = useStyles();
+  return <AntDesign name='closecircle' style={[styles.baseIcon, styles.redPink]} />;
+};
+
 export const HeartDislikeIcon = (props: SvgProps) => (
   <Svg
     width={STYLES.ICON_SIZE.ICON_SIZE_24}

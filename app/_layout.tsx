@@ -7,8 +7,10 @@ import {
   ThemeProvider as DefaultNavigationThemeProvider,
   useIsFocused,
 } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { theme } from '@/components/Theme/theme';
 import { FontsLoader } from '@/components/Theme/Text';
+import StyledToast from '@/components/Styled/StyledToast';
 import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from '@/config/firebase';
 import { useAuthStates } from '@/states/auth';
@@ -124,9 +126,26 @@ const StackLayout = () => {
   );
 };
 
+// const queryClient = new QueryClient({
+// defaultOptions: {
+//   queries: {
+//     refetchInterval: false,
+//     refetchOnMount: false,
+//     refetchOnWindowFocus: false,
+//     refetchOnReconnect: true,
+//     retry: 0,
+//     staleTime: Infinity,
+//   },
+//   mutations: {
+//     retry: 0,
+//   },
+// },
+// });
+
 export default function RootLayout() {
   return (
     <FontsLoader onFontsLoaded={SplashScreen.hideAsync}>
+      {/* <QueryClientProvider client={queryClient}> */}
       <ThemeProvider theme={theme}>
         <DarkThemeProvider>
           <NavigationThemeProvider>
@@ -134,8 +153,10 @@ export default function RootLayout() {
               <StackLayout />
             </AuthProvider>
           </NavigationThemeProvider>
+          <StyledToast />
         </DarkThemeProvider>
       </ThemeProvider>
+      {/* </QueryClientProvider> */}
     </FontsLoader>
   );
 }

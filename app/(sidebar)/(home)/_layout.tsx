@@ -16,7 +16,7 @@ const HomeLayout = () => {
         }}
       />
       <Stack.Screen
-        name='information'
+        name='[information]'
         options={{
           headerShown: false,
           title: 'Information',

@@ -1,85 +1,238 @@
-import { View, StatusBar, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useCallback } from 'react';
+import { View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
 import { SolidButton, GoogleButton } from '@/components/Styled/StyledButton';
-import { KeyboardView, SafeView } from '@/components/Styled/StyledView';
+import { KeyboardView, SafeView, dismissKeyboard } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
+import StyledToast from '@/components/Styled/StyledToast';
 import { ArrowRightIcon } from '@/components/Icon';
 import { STYLES } from '@/lib/constants';
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { query, collection, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+import Animated from 'react-native-reanimated';
+import {
+  ReFadeInDown,
+  ReFadeInLeft,
+  ReFadeInRight,
+  ReFadeInUp,
+  ReFadeOutDown,
+  ReFadeOutLeft,
+  ReFadeOutRight,
+  ReFadeOutUp,
+} from '@/components/Animated';
+
+type RegisterFormInput = {
+  fullname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 const Register = () => {
   const styles = useStyles();
   const router = useRouter();
 
-  let email = 'caotrung@gmail.com';
-  let password = '123456';
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<RegisterFormInput>({
+    defaultValues: {
+      fullname: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+  // Clear form when redirecting between login and register
+  useFocusEffect(useCallback(() => reset(), []));
 
-  async function signUp() {
+  const handleRegister: SubmitHandler<RegisterFormInput> = async data => {
     try {
-      const { user } = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-      // const user = FIREBASE_AUTH.currentUser;
-      const userEmail = user?.email?.toString();
-      if (userEmail) {
-        await setDoc(doc(FIREBASE_DB, 'users', userEmail), {
-          email: userEmail,
-          favoriteFoods: [],
-        });
-      }
-
-      console.log('sign up success');
-      router.push('/login');
+      const { user } = await createUserWithEmailAndPassword(
+        FIREBASE_AUTH,
+        data.email,
+        data.password,
+      );
+      const userEmail = user?.email?.toString() || data.email;
+      await setDoc(doc(FIREBASE_DB, 'users', userEmail), {
+        email: userEmail,
+        favoriteFoods: [],
+      });
+      StyledToast.show({
+        type: 'success',
+        text1: 'Register sucessfully. Redirecting ...',
+        onHide: () => {
+          router.push('/login');
+        },
+        visibilityTime: 1000,
+      });
     } catch (error: any) {
-      alert(error.message);
+      console.log(error.message);
+      StyledToast.show({
+        type: 'error',
+        text1: 'Fail to register',
+        text2: 'Email already in use',
+      });
+      reset();
     }
-  }
+  };
+
+  const handleGoogleRegister = () => {
+    StyledToast.show({
+      type: 'success',
+      text1: 'Login sucessfully. Redirecting ...',
+      onHide: () => {
+        router.push('/(sidebar)/(home)/');
+      },
+      visibilityTime: 1000,
+    });
+  };
 
   return (
     <SafeView>
-      <KeyboardView style={styles.container}>
-        <View style={styles.heading}>
-          <StyledText type='Heading_2' color='blackGrey'>
-            Welcome 👋
-          </StyledText>
-          <StyledText type='Body' color='blackGrey'>
-            Pleases fill out information to create an account
-          </StyledText>
-        </View>
-        <View style={styles.form}>
-          <FormInput type='normal' placeholder='Fullname' />
-          <FormInput type='normal' placeholder='Email' />
-          <FormInput type='password' placeholder='Password' />
-          <FormInput type='password' placeholder='Confirm Password' />
-        </View>
-        <View style={styles.subField}>
-          <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
-            <StyledText type='SubInputField' color='orange'>
-              Back to home
+      <KeyboardView style={styles.container} onStartShouldSetResponder={dismissKeyboard}>
+        <Animated.View entering={ReFadeInUp} exiting={ReFadeOutUp}>
+          <View style={styles.heading}>
+            <StyledText type='Heading_2' color='blackGrey'>
+              Welcome 👋
             </StyledText>
-          </StyledPressable>
-        </View>
-        <View style={styles.button}>
-          <SolidButton
-            title='Sign Up'
-            icon={<ArrowRightIcon />}
-            iconPosition='right'
-            onPress={signUp}
-          />
-          <ContinueWithText />
-          <GoogleButton />
-        </View>
-        <View style={styles.footer}>
-          <StyledText type='SubInputField' color='blackGrey'>
-            Already have an account?
-          </StyledText>
-          <StyledPressable onPress={() => router.push('/login')}>
-            <StyledText style={styles.redirectText}>SIGN IN</StyledText>
-          </StyledPressable>
-        </View>
+            <StyledText type='Body' color='blackGrey'>
+              Pleases fill out information to create an account
+            </StyledText>
+          </View>
+        </Animated.View>
+        <Animated.View entering={ReFadeInLeft} exiting={ReFadeOutLeft}>
+          <View style={styles.form}>
+            <Controller
+              name='fullname'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Your full name is required',
+                },
+              }}
+              render={({ field: { value, onChange, onBlur } }) => (
+                <FormInput
+                  type='normal'
+                  placeholder='Fullname'
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  errorMessage={errors.fullname?.message}
+                />
+              )}
+            />
+
+            <Controller
+              name='email'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Email is required',
+                },
+                pattern: {
+                  value:
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  message: 'Please fill in valid email',
+                },
+              }}
+              render={({ field: { value, onChange, onBlur } }) => (
+                <FormInput
+                  inputMode='email'
+                  type='normal'
+                  placeholder='Email'
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  errorMessage={errors.email?.message}
+                />
+              )}
+            />
+            <Controller
+              name='password'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Password is required',
+                },
+                minLength: {
+                  value: 6,
+                  message: 'Password contains at least 6 character',
+                },
+              }}
+              render={({ field: { value, onChange, onBlur } }) => (
+                <FormInput
+                  type='password'
+                  placeholder='Password'
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  errorMessage={errors.password?.message}
+                />
+              )}
+            />
+
+            <Controller
+              name='confirmPassword'
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Please confirm your password',
+                },
+                validate: (value, formValues) =>
+                  value === formValues.password ? true : 'Confirm password not match',
+              }}
+              render={({ field: { value, onChange, onBlur } }) => (
+                <FormInput
+                  type='password'
+                  placeholder='Confirm Password'
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  errorMessage={errors.confirmPassword?.message}
+                />
+              )}
+            />
+          </View>
+          <View style={styles.subField}>
+            <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
+              <StyledText type='SubInputField' color='orange'>
+                Back to home
+              </StyledText>
+            </StyledPressable>
+          </View>
+        </Animated.View>
+        <Animated.View entering={ReFadeInDown} exiting={ReFadeOutDown}>
+          <View style={styles.button}>
+            <SolidButton
+              title='Sign Up'
+              icon={<ArrowRightIcon />}
+              iconPosition='right'
+              onPress={handleSubmit(handleRegister)}
+            />
+            <ContinueWithText />
+            <GoogleButton onPress={handleGoogleRegister} />
+          </View>
+          <View style={styles.footer}>
+            <StyledText type='SubInputField' color='blackGrey'>
+              Already have an account?
+            </StyledText>
+            <StyledPressable onPress={() => router.push('/login')}>
+              <StyledText style={styles.redirectText}>SIGN IN</StyledText>
+            </StyledPressable>
+          </View>
+        </Animated.View>
       </KeyboardView>
     </SafeView>
   );
