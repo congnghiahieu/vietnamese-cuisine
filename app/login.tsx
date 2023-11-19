@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { TextInput, View, Keyboard } from 'react-native';
 import { useRouter, useFocusEffect, useNavigation } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -8,13 +9,12 @@ import StyledToast from '@/components/Styled/StyledToast';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
 import { SolidButton, GoogleButton } from '@/components/Styled/StyledButton';
-import { KeyboardView, SafeView, dismissKeyboard } from '@/components/Styled/StyledView';
+import { KeyboardView, SafeView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ArrowRightIcon } from '@/components/Icon';
 import { STYLES } from '@/lib/constants';
 import { FIREBASE_AUTH } from '@/config/firebase';
 import StyledImage from '@/components/Styled/StyledImage';
-import { wp, hp } from '@/lib/utils';
 import Animated from 'react-native-reanimated';
 import {
   ReFadeInLeft,
@@ -24,6 +24,8 @@ import {
   ReFadeOutRight,
   ReFadeOutUp,
 } from '@/components/Animated';
+import { dismissKeyboard } from '@/lib/utils';
+import useSidebar from '@/hooks/useSidebar';
 
 type LoginFormInput = {
   email: string;
@@ -33,7 +35,8 @@ type LoginFormInput = {
 const Login = () => {
   const styles = useStyles();
   const router = useRouter();
-  const navigate = useNavigation();
+  const sidebar = useSidebar();
+
   const {
     control,
     handleSubmit,
@@ -49,6 +52,8 @@ const Login = () => {
   useFocusEffect(useCallback(() => reset(), []));
 
   const loginSuccess = () => {
+    // Close drawer if still open for better UX
+    sidebar.close();
     StyledToast.show({
       type: 'success',
       text1: 'Login sucessfully. Redirecting ...',
@@ -149,7 +154,10 @@ const Login = () => {
             />
           </View>
           <View style={styles.subField}>
-            <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
+            <StyledPressable
+              onPress={() => {
+                router.push('/(sidebar)/(home)/');
+              }}>
               <StyledText type='SubInputField' color='orange'>
                 Back to home
               </StyledText>

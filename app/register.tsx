@@ -6,7 +6,7 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
 import { SolidButton, GoogleButton } from '@/components/Styled/StyledButton';
-import { KeyboardView, SafeView, dismissKeyboard } from '@/components/Styled/StyledView';
+import { KeyboardView, SafeView } from '@/components/Styled/StyledView';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import StyledToast from '@/components/Styled/StyledToast';
 import { ArrowRightIcon } from '@/components/Icon';
@@ -25,6 +25,8 @@ import {
   ReFadeOutRight,
   ReFadeOutUp,
 } from '@/components/Animated';
+import { dismissKeyboard } from '@/lib/utils';
+import useSidebar from '@/hooks/useSidebar';
 
 type RegisterFormInput = {
   fullname: string;
@@ -36,6 +38,7 @@ type RegisterFormInput = {
 const Register = () => {
   const styles = useStyles();
   const router = useRouter();
+  const sidebar = useSidebar();
 
   const {
     control,
@@ -85,9 +88,11 @@ const Register = () => {
   };
 
   const handleGoogleRegister = () => {
+    // Close drawer if still open for better UX
+    sidebar.close();
     StyledToast.show({
       type: 'success',
-      text1: 'Login sucessfully. Redirecting ...',
+      text1: 'Register sucessfully. Redirecting ...',
       onHide: () => {
         router.push('/(sidebar)/(home)/');
       },
@@ -206,7 +211,10 @@ const Register = () => {
             />
           </View>
           <View style={styles.subField}>
-            <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
+            <StyledPressable
+              onPress={() => {
+                router.push('/(sidebar)/(home)/');
+              }}>
               <StyledText type='SubInputField' color='orange'>
                 Back to home
               </StyledText>

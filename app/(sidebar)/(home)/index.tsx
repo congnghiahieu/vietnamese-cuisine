@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Image, Keyboard, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
-import { dismissKeyboard } from '@/components/Styled/StyledView';
 import StyledText from '@/components/Styled/StyledText';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import StyledPressable from '@/components/Styled/StyledPressable';
@@ -24,8 +23,7 @@ import {
   arrayRemove,
   arrayUnion,
 } from 'firebase/firestore';
-
-import { DocumentData } from 'firebase/firestore';
+import { dismissKeyboard } from '@/lib/utils';
 
 interface Food {
   title: string;

@@ -7,19 +7,19 @@ import { STYLES } from '@/lib/constants';
 import { AvatarIcon, MenuIcon } from '@/components/Icon';
 import StyledPressable from './StyledPressable';
 import StyledText from './StyledText';
-import { KeyboardDismissView, dismissKeyboard } from './StyledView';
+import { dismissKeyboard } from '@/lib/utils';
+import useSidebar from '@/hooks/useSidebar';
 
 type SidebarHeaderProps = {
   title: string | undefined;
 };
 
 const StyledHeader = ({ title }: SidebarHeaderProps) => {
-  const navigation = useNavigation();
   const router = useRouter();
+  const sidebar = useSidebar();
   const { theme } = useTheme();
   const dT = theme.mode === 'dark';
 
-  const onMenuPress = () => navigation.dispatch(DrawerActions.openDrawer());
   const onAvatarPress = () => router.push('/(sidebar)/profile');
 
   return (
@@ -44,7 +44,7 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
         <StyledPressable
           onPress={() => {
             dismissKeyboard();
-            onMenuPress();
+            sidebar.open();
           }}
           style={{
             paddingVertical: STYLES.PADDING.PADDING_8,

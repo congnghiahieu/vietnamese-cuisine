@@ -1,4 +1,3 @@
-import { Keyboard, View, ViewProps } from 'react-native';
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
@@ -24,24 +23,5 @@ export const SafeView = ({ children, style, ...otherProps }: SafeAreaViewProps) 
     <SafeAreaView style={[{ flex: 1 }, style]} mode='padding' {...otherProps}>
       {children}
     </SafeAreaView>
-  );
-};
-
-export const dismissKeyboard = () => {
-  Keyboard.dismiss();
-  return false;
-};
-
-export const KeyboardDismissViewFCHOC = <T extends ViewProps>(
-  ViewComponent: React.FunctionComponent<T>,
-) => {
-  return (props: T) => <ViewComponent onStartShouldSetResponder={dismissKeyboard} {...props} />;
-};
-
-export const KeyboardDismissView = ({ children, ...otherProps }: ViewProps) => {
-  return (
-    <View onStartShouldSetResponder={dismissKeyboard} {...otherProps}>
-      {children}
-    </View>
   );
 };

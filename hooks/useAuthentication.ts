@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from '@/config/firebase';
 
-export function useAuthentication() {
+const useAuthentication = () => {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
@@ -23,4 +23,6 @@ export function useAuthentication() {
   return {
     user,
   };
-}
+};
+
+export default useAuthentication;
