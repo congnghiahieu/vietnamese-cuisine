@@ -27,6 +27,7 @@ import {
 } from '@/components/Animated';
 import { dismissKeyboard } from '@/lib/utils';
 import useSidebar from '@/hooks/useSidebar';
+import { useMutation } from '@tanstack/react-query';
 
 type RegisterFormInput = {
   fullname: string;
@@ -36,10 +37,9 @@ type RegisterFormInput = {
 };
 
 const Register = () => {
+  console.log('Register re-render');
   const styles = useStyles();
   const router = useRouter();
-  const sidebar = useSidebar();
-
   const {
     control,
     handleSubmit,
@@ -53,11 +53,12 @@ const Register = () => {
       confirmPassword: '',
     },
   });
-  // Clear form when redirecting between login and register
-  useFocusEffect(useCallback(() => reset(), []));
-
-  const handleRegister: SubmitHandler<RegisterFormInput> = async data => {
-    try {
+  const cleanUp = useCallback(() => {
+    registerMutation.reset();
+    reset();
+  }, []);
+  const registerMutation = useMutation({
+    mutationFn: async (data: RegisterFormInput) => {
       const { user } = await createUserWithEmailAndPassword(
         FIREBASE_AUTH,
         data.email,
@@ -68,6 +69,8 @@ const Register = () => {
         email: userEmail,
         favoriteFoods: [],
       });
+    },
+    onSuccess: () => {
       StyledToast.show({
         type: 'success',
         text1: 'Register sucessfully. Redirecting ...',
@@ -76,29 +79,48 @@ const Register = () => {
         },
         visibilityTime: 1000,
       });
-    } catch (error: any) {
-      console.log(error.message);
+    },
+    onError: () => {
       StyledToast.show({
         type: 'error',
         text1: 'Fail to register',
         text2: 'Email already in use',
       });
-      reset();
-    }
-  };
+    },
+    onSettled: () => cleanUp(),
+  });
+  const googleRegisterMutation = useMutation({
+    mutationFn: async () => {
+      // Register Google = Login Google
+      await new Promise(resolve => {
+        setTimeout(resolve, 2000);
+      });
+    },
+    onSuccess: () => {
+      StyledToast.show({
+        type: 'success',
+        text1: 'Register sucessfully. Redirecting ...',
+        onHide: () => {
+          router.push('/(sidebar)/(home)/');
+        },
+        visibilityTime: 1000,
+      });
+    },
+    onError: () => {
+      StyledToast.show({
+        type: 'error',
+        text1: 'Fail to register via Google',
+        text2: 'Please try again',
+      });
+    },
+    onSettled: () => cleanUp(),
+  });
 
-  const handleGoogleRegister = () => {
-    // Close drawer if still open for better UX
-    sidebar.close();
-    StyledToast.show({
-      type: 'success',
-      text1: 'Register sucessfully. Redirecting ...',
-      onHide: () => {
-        router.push('/(sidebar)/(home)/');
-      },
-      visibilityTime: 1000,
-    });
-  };
+  useFocusEffect(
+    useCallback(() => {
+      return () => cleanUp();
+    }, []),
+  );
 
   return (
     <SafeView>
@@ -227,10 +249,14 @@ const Register = () => {
               title='Sign Up'
               icon={<ArrowRightIcon />}
               iconPosition='right'
-              onPress={handleSubmit(handleRegister)}
+              onPress={handleSubmit(data => registerMutation.mutate(data))}
+              loading={registerMutation.isPending}
             />
             <ContinueWithText />
-            <GoogleButton onPress={handleGoogleRegister} />
+            <GoogleButton
+              onPress={() => googleRegisterMutation.mutate()}
+              loading={googleRegisterMutation.isPending}
+            />
           </View>
           <View style={styles.footer}>
             <StyledText type='SubInputField' color='blackGrey'>

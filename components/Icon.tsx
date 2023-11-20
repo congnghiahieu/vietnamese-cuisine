@@ -67,6 +67,11 @@ export const CircleCloseIcon = () => {
   return <AntDesign name='closecircle' style={[styles.baseIcon, styles.redPink]} />;
 };
 
+export const CircleExclamationIcon = () => {
+  const styles = useStyles();
+  return <AntDesign name='exclamationcircle' style={[styles.baseIcon, styles.yellow]} />;
+};
+
 export const HeartDislikeIcon = (props: SvgProps) => (
   <Svg
     width={STYLES.ICON_SIZE.ICON_SIZE_24}
@@ -375,6 +380,9 @@ const useStyles = makeStyles(theme => ({
   },
   green: {
     color: theme.colors.green,
+  },
+  yellow: {
+    color: theme.colors.yellow,
   },
   white: {
     color: theme.colors.white,

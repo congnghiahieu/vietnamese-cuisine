@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Image, Keyboard, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Image, Keyboard, RefreshControl, View } from 'react-native';
+import { useNavigation, useRouter } from 'expo-router';
 import { makeStyles, useTheme, useThemeMode } from '@rneui/themed';
 import StyledText from '@/components/Styled/StyledText';
 import { SearchInput } from '@/components/Styled/StyledInput';
@@ -24,32 +24,31 @@ import {
   arrayUnion,
 } from 'firebase/firestore';
 import { dismissKeyboard } from '@/lib/utils';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { LoadingView } from '@/components/Styled/StyledView';
+import { StyledRefreshControl } from '@/components/Styled/StyledLoading';
+import StyledToast from '@/components/Styled/StyledToast';
 
-interface Food {
+type FoodItem = {
   title: string;
   imageUrl: string;
-}
+};
+type FoodList = FoodItem[];
+
+const useFoodListQuery = () =>
+  useQuery<FoodList>({
+    queryKey: ['food', 'list'],
+    queryFn: async () => {
+      const querySnapshot = await getDocs(collection(FIREBASE_DB, 'foods'));
+      return querySnapshot.docs.map(doc => doc.data()) as FoodList;
+    },
+  });
 
 const Home = () => {
-  const [foodList, setFoodList] = useState<Food[]>([]);
-  const getFoodList = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(FIREBASE_DB, 'foods'));
-      const fetchedFoodList = querySnapshot.docs.map(doc => {
-        const { title, imageUrl } = doc.data();
-        return { title, imageUrl } as Food;
-      });
-      setFoodList(fetchedFoodList);
-    } catch (error) {
-      console.error('Error fetching food list data from FIRESTORE:', error);
-    }
-  };
-
-  useEffect(() => {
-    getFoodList();
-  }, []);
-
+  console.log('Home re-render');
   const styles = useStyles();
+  const { data, isPending, refetch, isFetching } = useFoodListQuery();
+
   return (
     <View style={styles.container} onStartShouldSetResponder={dismissKeyboard}>
       <View>
@@ -66,46 +65,70 @@ const Home = () => {
           </StyledPressable>
         }
       />
-      <FoodList foodList={foodList} />
-      {/* <FoodList foodList={[]} /> */}
+      {isPending ? (
+        <LoadingView />
+      ) : (
+        <FoodList foodList={data || []} isRefreshing={isFetching} onRefresh={refetch} />
+      )}
     </View>
   );
 };
 
-type FoodItem = {
-  title: string;
-  imageUrl: string;
+type FoodListProps = {
+  foodList: FoodItem[];
+  isRefreshing?: boolean;
+  onRefresh?: () => void;
+};
+
+const FoodList = ({ foodList, isRefreshing = false, onRefresh = () => {} }: FoodListProps) => {
+  const styles = useStyles();
+  return (
+    <StyledFlatList
+      emptyTitle='No dish available!'
+      refreshControl={<StyledRefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+      keyExtractor={({ title }) => title}
+      numColumns={2}
+      columnWrapperStyle={styles.foodListColumn}
+      contentContainerStyle={{
+        paddingHorizontal: 0,
+        opacity: isRefreshing ? 0.4 : 1,
+      }}
+      data={foodList}
+      renderItem={({ item }) => <FoodCard {...item} />}
+    />
+  );
 };
 
 const FoodCard = ({ title, imageUrl }: FoodItem) => {
   const styles = useStyles();
-  const [love, setLove] = useState(false);
+  const user = FIREBASE_AUTH.currentUser;
   const router = useRouter();
+  const [love, setLove] = useState(false);
 
-  async function loveFood() {
-    const user = FIREBASE_AUTH.currentUser;
-    console.log(user?.email);
-    try {
-      if (!user) {
-        router.push('/login');
+  const loveMutation = useMutation({
+    mutationFn: async () => {
+      if (!user || !user?.email) {
+        StyledToast.show({
+          type: 'warning',
+          text1: 'This action requires authentication',
+        });
+        router.replace('/login');
+        return;
       }
-      if (user?.email) {
-        setLove(prev => !prev);
-        const docRef = doc(FIREBASE_DB, 'users', user.email);
-        if (love) {
-          await updateDoc(docRef, {
-            favoriteFoods: arrayRemove(title),
-          });
-        } else {
-          await updateDoc(docRef, {
-            favoriteFoods: arrayUnion(title),
-          });
-        }
-      }
-    } catch (error: any) {
-      alert(error.message);
-    }
-  }
+      setLove(prev => !prev);
+      const docRef = doc(FIREBASE_DB, 'users', user.email);
+      await updateDoc(docRef, {
+        favoriteFoods: love ? arrayRemove(title) : arrayUnion(title),
+      });
+    },
+    onError: () => {
+      StyledToast.show({
+        type: 'error',
+        text1: `Fail to love ${title}`,
+        text2: 'Please try again',
+      });
+    },
+  });
 
   const navigateToInformation = () =>
     router.push({
@@ -122,7 +145,7 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
         style={styles.cardImage}
         onPress={navigateToInformation}
       />
-      <StyledPressable onPress={loveFood} style={styles.cardLoveButton}>
+      <StyledPressable onPress={() => loveMutation.mutate()} style={styles.cardLoveButton}>
         <HeartIcon active={love} />
       </StyledPressable>
       <View style={styles.cardFooter}>
@@ -134,27 +157,6 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
         </StyledPressable>
       </View>
     </View>
-  );
-};
-
-type FoodListProps = {
-  foodList: FoodItem[];
-};
-
-const FoodList = ({ foodList }: FoodListProps) => {
-  const styles = useStyles();
-  return (
-    <StyledFlatList
-      emptyTitle='No dish available!'
-      keyExtractor={({ title }) => title}
-      numColumns={2}
-      columnWrapperStyle={styles.foodListColumn}
-      contentContainerStyle={{
-        paddingHorizontal: 0,
-      }}
-      data={foodList}
-      renderItem={({ item }) => <FoodCard {...item} />}
-    />
   );
 };
 

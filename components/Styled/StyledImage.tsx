@@ -1,5 +1,5 @@
 import { Image, ImageProps } from '@rneui/themed';
-import StyledLoading from './StyledLoading';
+import { StyledImageLoading } from './StyledLoading';
 
 const StyledImage = (props: ImageProps) => {
   const { containerStyle, ...otherProps } = props;
@@ -8,7 +8,7 @@ const StyledImage = (props: ImageProps) => {
     <Image
       transition
       transitionDuration={200}
-      PlaceholderContent={<StyledLoading />}
+      PlaceholderContent={<StyledImageLoading />}
       containerStyle={[
         {
           // backgroundColor: 'red',

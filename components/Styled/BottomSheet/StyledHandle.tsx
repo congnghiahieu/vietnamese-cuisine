@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
-import { BottomSheetHandleProps } from '@gorhom/bottom-sheet';
+import { StyleProp, View, ViewStyle } from 'react-native';
+import { BottomSheetHandleProps, BottomSheetHandle } from '@gorhom/bottom-sheet';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -11,17 +11,26 @@ import { toRad } from 'react-native-redash';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 
+export const StyledHandle = (props: BottomSheetHandleProps) => {
+  const styles = useStyles();
+  return (
+    <View style={[styles.header]}>
+      <View style={styles.normalIndicator} />
+    </View>
+  );
+};
+
 // @ts-ignore
 export const createTransform = ({ x, y }, ...transformations) => {
   'worklet';
   return [{ translateX: x }, { translateY: y }, ...transformations];
 };
 
-export type StyledHandleProps = BottomSheetHandleProps & {
+export type AnimatedHandleProps = BottomSheetHandleProps & {
   style?: StyleProp<ViewStyle>;
 };
 
-const StyledHandle = ({ style, animatedIndex }: StyledHandleProps) => {
+export const AnimatedHandle = ({ style, animatedIndex }: AnimatedHandleProps) => {
   const styles = useStyles();
 
   const indicatorTransformOriginY = useDerivedValue(() =>
@@ -103,8 +112,6 @@ const StyledHandle = ({ style, animatedIndex }: StyledHandleProps) => {
   );
 };
 
-export default StyledHandle;
-
 const useStyles = makeStyles(theme => {
   const dT = theme.mode === 'dark';
 
@@ -122,6 +129,12 @@ const useStyles = makeStyles(theme => {
       position: 'absolute',
       width: 10,
       height: 4,
+      backgroundColor: dT ? theme.colors.white : theme.colors.black,
+    },
+    normalIndicator: {
+      width: STYLES.ICON_SIZE.ICON_SIZE_24,
+      height: STYLES.ICON_SIZE.ICON_SIZE_24 / 6,
+      borderRadius: STYLES.RADIUS.RADIUS_20,
       backgroundColor: dT ? theme.colors.white : theme.colors.black,
     },
     leftIndicator: {

@@ -12,6 +12,7 @@ import {
 } from '@/components/Styled/StyledButton';
 
 const About = () => {
+  console.log('About re-render');
   const styles = useStyles();
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>

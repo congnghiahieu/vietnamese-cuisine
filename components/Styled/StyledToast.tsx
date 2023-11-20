@@ -9,7 +9,7 @@ import Toast, {
 } from 'react-native-toast-message';
 import { TEXT_STYLE_TYPE_MAP, TextTypeStyle } from '@/components/Theme/Text';
 import { STYLES } from '@/lib/constants';
-import { CircleCheckIcon, CircleCloseIcon } from '../Icon';
+import { CircleCheckIcon, CircleCloseIcon, CircleExclamationIcon } from '../Icon';
 
 export const StyledBaseToast = ({
   style,
@@ -54,13 +54,28 @@ export const StyledErrorToast = <T,>(props: ToastConfigParams<T>) => {
   );
 };
 
-const config: ToastConfig = {
-  'success': props => <StyledSuccessToast {...props} />,
-  'error': props => <StyledErrorToast {...props} />,
+export const StyledWarningToast = <T,>(props: ToastConfigParams<T>) => {
+  const styles = useStyles();
+  return (
+    <StyledBaseToast
+      text1Style={styles.warningText1}
+      renderLeadingIcon={CircleExclamationIcon}
+      {...props}
+    />
+  );
 };
 
+const config = {
+  'success': props => <StyledSuccessToast {...props} />,
+  'error': props => <StyledErrorToast {...props} />,
+  'warning': props => <StyledWarningToast {...props} />,
+} satisfies ToastConfig;
+
 const StyledToast = (props: ToastProps) => <Toast config={config} {...props} />;
-StyledToast.show = (options: ToastShowParams) =>
+type StyledToastShowParams = Omit<ToastShowParams, 'type'> & {
+  type: keyof typeof config;
+};
+StyledToast.show = (options: StyledToastShowParams) =>
   Toast.show({
     autoHide: true,
     position: 'top',
@@ -109,6 +124,9 @@ const useStyles = makeStyles(theme => {
     },
     errorText1: {
       color: theme.colors.redPink,
+    },
+    warningText1: {
+      color: theme.colors.yellow,
     },
   };
 });

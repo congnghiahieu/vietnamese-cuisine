@@ -1,75 +1,130 @@
-import { useRef, useMemo, useState, useEffect } from 'react';
-import { Image, View, StatusBar, Platform } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, StatusBar, Platform } from 'react-native';
 import { Slider, ListItem, makeStyles, useTheme } from '@rneui/themed';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import BottomSheet, {
-  useBottomSheetSpringConfigs,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
-import StyledHandle, { StyledHandleProps } from '@/components/Styled/BottomSheet/StyledHandle';
-import StyledBackdrop, { DefaultBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
+import * as Linking from 'expo-linking';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { AnimatedHandle, AnimatedHandleProps } from '@/components/Styled/BottomSheet/StyledHandle';
 import StyledBackground, {
   StyledBackgroundProps,
 } from '@/components/Styled/BottomSheet/StyledBackground';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
+import StyledCarousel from '@/components/Styled/StyledCarousel';
 import { SolidButton } from '@/components/Styled/StyledButton';
 import { PlayCircleIcon, ChevronLeftIcon, HeartIcon, AudioControlIcon } from '@/components/Icon';
-import { hp } from '@/lib/utils';
+import { hp, wp } from '@/lib/utils';
 import { STYLES } from '@/lib/constants';
-import StyledImage from '@/components/Styled/StyledImage';
-import { SafeView } from '@/components/Styled/StyledView';
+import { ErrorView, LoadingView, SafeView } from '@/components/Styled/StyledView';
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
-import { query, collection, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+  query,
+  collection,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  arrayRemove,
+  arrayUnion,
+  updateDoc,
+} from 'firebase/firestore';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import StyledToast from '@/components/Styled/StyledToast';
+
+type FoodInformation = {
+  foodId: string;
+  imageUrlList: string[];
+  title: string;
+  subTitle: string;
+  introduce: string;
+  ingredientList: string[];
+  steps: Step[];
+  videoLink: string;
+};
+
+type Step = {
+  title: string;
+  content: string;
+};
 
 const Information = () => {
-  const styles = useStyles();
+  const params = useLocalSearchParams();
+  const foodId = useMemo(() => decodeURI(params.information as string), []);
+  console.log(foodId);
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ['food', 'Phở'],
+    queryFn: async () => {
+      const docRef = doc(FIREBASE_DB, 'foods', 'Phở');
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        throw new Error(`Information not available`);
+      }
+      return docSnap.data() as FoodInformation;
+    },
+  });
+
+  let effect: React.ReactNode = null;
+
+  if (isPending) {
+    effect = <LoadingView />;
+  }
+  if (isError) {
+    effect = <ErrorView errorMessage={error.message} />;
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <StatusBar hidden />
-      <ImageSlide />
-      <InformationBottomSheet />
+      {effect || (
+        <>
+          <ImageSlide imageUrlList={data!.imageUrlList} />
+          <InformationBottomSheet {...data!} />
+        </>
+      )}
     </View>
   );
 };
 
 type ImageSlideProps = {
-  imageUrlList?: string[];
+  imageUrlList: string[];
 };
 
-const ImageSlide = (props?: ImageSlideProps) => {
+const ImageSlide = ({ imageUrlList }: ImageSlideProps) => {
   const styles = useStyles();
   const router = useRouter();
+  imageUrlList = [
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504142019-pho.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504152158-cha-ca.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504142339-banh-xeo.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/111005063013-vietnam-food-cao-lau.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170306134418-goi-cuon.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504151643-banh-knot.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504151239-bun-bo-nam-bo.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504150749-ga-nuong.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/160524100325-05-vietnam-dishes-xoi.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504150157-banh-cuon.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/160524092144-vietnam-street-food-bot-chien.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504145056-bun-cha.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170124150901-26-banh-mi.jpg?q=w_1110,c_fill/f_webp',
+    'https://media.cnn.com/api/v1/images/stellar/prod/170504144408-banh-bao.jpg?q=w_1110,c_fill/f_webp',
+  ];
 
   return (
-    <View
-      style={styles.imageSlideContainer}
-      onTouchEnd={() => {
-        // console.log('View touched');
-      }}>
+    <View style={styles.imageSlideContainer}>
       <StyledPressable
         onPress={() => {
-          // console.log(`${Platform.OS} Back button Pressed`);
           router.back();
         }}
         style={styles.backButton}>
         <ChevronLeftIcon />
       </StyledPressable>
-      <StyledImage
-        source={{
-          uri: 'https://file1.dangcongsan.vn/data/0/images/2021/02/08/duongntcd/13-chung-tet-td.jpg?dpi=150&quality=100&w=680',
-        }}
-        style={styles.image}
-        onPress={() => {
-          // console.log(`${Platform.OS} Image Pressed`);
-        }}
-      />
+      <StyledCarousel imageUrlList={imageUrlList} width={wp(100)} height={hp(55)} />
     </View>
   );
 };
 
-const InformationBottomSheet = () => {
+const InformationBottomSheet = (props: FoodInformation) => {
   const snapPoints = useMemo(() => ['50%', '70%', '90%'] as const, []);
 
   return (
@@ -77,20 +132,16 @@ const InformationBottomSheet = () => {
       index={0}
       snapPoints={snapPoints}
       handleComponent={InformationBottomSheetHandle}
-      // backdropComponent={StyledBackdrop}
-      // backdropComponent={props => (
-      //   <DefaultBackdrop enableTouchThrough pressBehavior={'collapse'} {...props} />
-      // )}
       backgroundComponent={InformationBottomSheetBackground}
       enablePanDownToClose={false}>
-      <InformationBottomSheetBody />
+      <InformationBottomSheetBody {...props} />
     </BottomSheet>
   );
 };
 
-const InformationBottomSheetHandle = (props: StyledHandleProps) => {
+const InformationBottomSheetHandle = (props: AnimatedHandleProps) => {
   const bottomSheetstyles = useBottomSheetStyles();
-  return <StyledHandle {...props} style={bottomSheetstyles.handle} />;
+  return <AnimatedHandle {...props} style={bottomSheetstyles.handle} />;
 };
 
 const InformationBottomSheetBackground = ({
@@ -113,52 +164,57 @@ const useBottomSheetStyles = makeStyles(theme => {
   };
 });
 
-const InformationBottomSheetBody = () => {
+const InformationBottomSheetBody = ({
+  title,
+  subTitle,
+  introduce,
+  ingredientList,
+  steps,
+  videoLink,
+}: FoodInformation) => {
   const styles = useStyles();
-  const [like, setLike] = useState(false);
-  const params = useLocalSearchParams();
-  const foodId = params.information.toString();
-  const [ingredientList, setIngredientList] = useState<string[]>([]);
-  const [steps, setSteps] = useState<{ title: string; content: string }[]>([]);
-  const [introduce, setIntroduce] = useState<string>('');
-  const [videoLink, setVideoLink] = useState<string>('');
+  const router = useRouter();
+  const [love, setLove] = useState(false);
+  const user = FIREBASE_AUTH.currentUser;
 
-  const getFoodData = async () => {
-    try {
-      const docRef = doc(FIREBASE_DB, 'foods', foodId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const fetchedIngredientList = docSnap.data()?.ingredientList || [];
-        const fetchedSteps = docSnap?.data()?.steps || [];
-        const fetchedIntro = docSnap?.data()?.introduce || '';
-        const fetchedVideoLink = docSnap?.data()?.videoLink || '';
-        setIngredientList(fetchedIngredientList);
-        setSteps(fetchedSteps);
-        setIntroduce(fetchedIntro);
-        setVideoLink(fetchedVideoLink);
+  const loveMutation = useMutation({
+    mutationFn: async () => {
+      if (!user || !user?.email) {
+        StyledToast.show({
+          type: 'warning',
+          text1: 'This action requires authentication',
+        });
+        router.replace('/login');
+        return;
       }
-    } catch (error) {
-      console.error('Error fetching food data from FIRESTORE:', error);
-    }
-  };
-
-  useEffect(() => {
-    getFoodData();
-  }, []);
+      setLove(prev => !prev);
+      const docRef = doc(FIREBASE_DB, 'users', user.email);
+      await updateDoc(docRef, {
+        favoriteFoods: love ? arrayRemove(title) : arrayUnion(title),
+      });
+    },
+    onError: () => {
+      StyledToast.show({
+        type: 'error',
+        text1: `Fail to love ${title}`,
+        text2: 'Please try again',
+      });
+    },
+  });
 
   return (
     <BottomSheetScrollView contentContainerStyle={styles.body}>
       <View style={styles.headerContainer}>
         <View style={styles.header}>
           <StyledText type='Heading_2' color='orange'>
-            Phở
+            {title}
           </StyledText>
           <StyledText type='Body' color='grey'>
-            Vietnamese traditional breakfast
+            {subTitle}
           </StyledText>
         </View>
-        <StyledPressable onPress={() => setLike(prev => !prev)}>
-          <HeartIcon active={like} />
+        <StyledPressable onPress={() => loveMutation.mutate()}>
+          <HeartIcon active={love} />
         </StyledPressable>
       </View>
       <View style={styles.story}>
@@ -167,16 +223,7 @@ const InformationBottomSheetBody = () => {
         </StyledText>
         <AudioControl />
         <StyledText type='Body' color='grey' style={{ textAlign: 'justify' }}>
-          Phở nổi tiếng nhất vẫn là phở Hà Nội. Không biết tự bao giờ, phở đã trở thành món ăn vô
-          cùng hấp dẫn mỗi khi đến Hà Nội. Với hương vị độc đáo không có một nơi nào có được, phở Hà
-          Nội đã in sâu vào tiềm thức con người, mặc định nó là món ăn ngon nhất. Muốn ăn phở phải
-          đến Hà Nội. Vào những năm 1940. phở đã rất nổi tiếng ở Hà Nội. Phở là một món ăn có thể ăn
-          vào bất cứ khoảng thời gian nào mà bạn muốn: sáng, trưa, chiều, tối đều được cả. Điểm đặc
-          biệt, món phở không ăn kèm, uống kèm bất cứ thứ gì khác. Một bát phở bao gồm: nước dùng,
-          bánh phở, gia vị ăn kèm như tiêu, hành lá, lát chanh, ớt… Nước dùng của phở có thể được
-          chế biến từ xương bò: xương cục, xương ống và xương vè. Bánh phở phải dai, mềm. Hành lá,
-          ớt, tiêu tăng thêm mùi vị của bát phở. Tùy thuộc vào bí quyết nấu mà mỗi nơi lại có mùi vị
-          của phở khác nhau.
+          {introduce.replaceAll(/\s+/g, ' ')}
         </StyledText>
       </View>
       <View>
@@ -201,6 +248,9 @@ const InformationBottomSheetBody = () => {
         }}
         buttonStyle={{
           paddingVertical: STYLES.PADDING.PADDING_16,
+        }}
+        onPress={() => {
+          Linking.openURL(videoLink);
         }}
       />
     </BottomSheetScrollView>
@@ -246,10 +296,7 @@ const IngredientSubList = ({ ingredients }: IngredientListProps) => {
 };
 
 type StepListProps = {
-  steps: {
-    title: string;
-    content: string;
-  }[];
+  steps: Step[];
 };
 
 const StepList = ({ steps }: StepListProps) => {
@@ -339,11 +386,11 @@ const useStyles = makeStyles(theme => {
       zIndex: 2,
       borderRadius: STYLES.RADIUS.RADIUS_50,
     },
-    image: {
-      width: '100%',
-      height: hp(55),
-      zIndex: 1,
-    },
+    // image: {
+    //   width: '100%',
+    //   height: hp(55),
+    //   zIndex: 1,
+    // },
     body: {
       // flex: 1,
       paddingHorizontal: STYLES.PADDING.PADDING_16,

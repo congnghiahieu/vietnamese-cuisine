@@ -6,17 +6,19 @@ import StyledSwitch from '@/components/Styled/StyledSwitch';
 import StyledDivider from '@/components/Styled/StyledDivider';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import StyledHandle from '@/components/Styled/BottomSheet/StyledHandle';
-import { DefaultBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
+import { StyledHandle } from '@/components/Styled/BottomSheet/StyledHandle';
+import { StyledBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
 import StyledBackground from '@/components/Styled/BottomSheet/StyledBackground';
 import { STYLES, LANGUAGE_LIST } from '@/lib/constants';
 import { useSettingStates } from '@/states/setting';
 import { DarkModeIcon, LanguageIcon, NotificationsIcon } from '@/components/Icon';
+import StyledToast from '@/components/Styled/StyledToast';
 
 const Settings = () => {
+  console.log('Settings re-render');
   const styles = useStyles();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => [150], []);
+  const snapPoints = useMemo(() => [200], []);
   const openBottomSheet = () => {
     bottomSheetRef.current?.snapToIndex(0);
   };
@@ -40,7 +42,7 @@ const Settings = () => {
         ref={bottomSheetRef}
         snapPoints={snapPoints}
         handleComponent={StyledHandle}
-        backdropComponent={DefaultBackdrop}
+        backdropComponent={StyledBackdrop}
         backgroundComponent={StyledBackground}>
         <LanguageSettingBottomSheet closeBottomSheet={closeBottomSheet} />
       </BottomSheet>
@@ -65,9 +67,14 @@ const LanguageSettingBottomSheet = ({ closeBottomSheet }: LanguageSettingBottomS
             onPress={() => {
               setLanguage(lang);
               closeBottomSheet();
-            }}
-            style={{ padding: 0 }}>
+              StyledToast.show({
+                type: 'success',
+                text1: `Change language to ${lang} `,
+                visibilityTime: 1000,
+              });
+            }}>
             <ListItem
+              key={i}
               bottomDivider={i !== arr.length - 1}
               containerStyle={styles.listItemContainer}>
               <ListItem.Content>
@@ -185,6 +192,8 @@ const useStyles = makeStyles(theme => {
     },
     listItemContainer: {
       backgroundColor,
+      // paddingVertical: STYLES.PADDING.PADDING_8,
+      // paddingHorizontal: STYLES.PADDING.PADDING_8,
     },
   };
 });

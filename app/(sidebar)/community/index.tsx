@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { View, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Redirect, useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { SolidButton, OutlineButton } from '@/components/Styled/StyledButton';
 import { STYLES } from '@/lib/constants';
@@ -11,6 +11,7 @@ import StyledDivider from '@/components/Styled/StyledDivider';
 import { hp } from '@/lib/utils';
 import { StyledFlatList } from '@/components/Styled/StyledList';
 import StyledImage from '@/components/Styled/StyledImage';
+import { FIREBASE_AUTH } from '@/config/firebase';
 
 const POST_LIST = [
   {
@@ -33,8 +34,22 @@ const POST_LIST = [
 type Page = 'MyFeed' | 'MyWall';
 
 const MyFeed = () => {
-  const styles = useStyles();
+  console.log('Community re-render');
+  const user = FIREBASE_AUTH.currentUser;
   const router = useRouter();
+  console.log('User emailL:', user?.email);
+  if (!user) {
+    return <Redirect href={'/login'} />;
+  }
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (!user) {
+  //       router.replace('/login');
+  //     }
+  //   }, []),
+  // );
+
+  const styles = useStyles();
   const [page, setPage] = useState<Page>('MyFeed');
 
   return (

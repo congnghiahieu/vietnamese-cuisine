@@ -26,6 +26,7 @@ import {
 } from '@/components/Animated';
 import { dismissKeyboard } from '@/lib/utils';
 import useSidebar from '@/hooks/useSidebar';
+import { useMutation } from '@tanstack/react-query';
 
 type LoginFormInput = {
   email: string;
@@ -33,10 +34,9 @@ type LoginFormInput = {
 };
 
 const Login = () => {
+  console.log('Login re-render');
   const styles = useStyles();
   const router = useRouter();
-  const sidebar = useSidebar();
-
   const {
     control,
     handleSubmit,
@@ -48,12 +48,7 @@ const Login = () => {
       password: '',
     },
   });
-  // Clear form when redirecting between login and register
-  useFocusEffect(useCallback(() => reset(), []));
-
-  const loginSuccess = () => {
-    // Close drawer if still open for better UX
-    sidebar.close();
+  const loginSuccess = useCallback(() => {
     StyledToast.show({
       type: 'success',
       text1: 'Login sucessfully. Redirecting ...',
@@ -62,30 +57,53 @@ const Login = () => {
       },
       visibilityTime: 1000,
     });
-  };
-
-  const loginFail = () => {
-    StyledToast.show({
-      type: 'error',
-      text1: 'Fail to login',
-      text2: 'Invalid email or password',
-    });
+  }, []);
+  const cleanUp = useCallback(() => {
+    loginMutation.reset();
     reset();
-  };
+  }, []);
 
-  const handleLogin: SubmitHandler<LoginFormInput> = async data => {
-    try {
+  const loginMutation = useMutation({
+    mutationFn: async (data: LoginFormInput) => {
       await signInWithEmailAndPassword(FIREBASE_AUTH, data.email, data.password);
-      loginSuccess();
-    } catch (error: any) {
-      console.log(error.message);
-      loginFail();
-    }
-  };
+    },
+    onSuccess: () => loginSuccess(),
+    onError: () => {
+      StyledToast.show({
+        type: 'error',
+        text1: 'Fail to login',
+        text2: 'Invalid email or password',
+      });
+    },
+    onSettled: () => {
+      loginMutation.reset();
+      reset();
+    },
+  });
+  const googleLoginMutation = useMutation({
+    mutationFn: async () => {
+      await new Promise(resolve => {
+        setTimeout(resolve, 2000);
+      });
+    },
+    onSuccess: () => loginSuccess(),
+    onError: () => {
+      StyledToast.show({
+        type: 'error',
+        text1: 'Fail to login via Google',
+        text2: 'Please try again',
+      });
+    },
+    onSettled: () => {
+      cleanUp();
+    },
+  });
 
-  const handleGoogleLogin = () => {
-    loginSuccess();
-  };
+  useFocusEffect(
+    useCallback(() => {
+      return () => cleanUp();
+    }, []),
+  );
 
   return (
     <SafeView>
@@ -175,10 +193,14 @@ const Login = () => {
               title='Sign In'
               icon={<ArrowRightIcon />}
               iconPosition='right'
-              onPress={handleSubmit(handleLogin)}
+              onPress={handleSubmit(data => loginMutation.mutate(data))}
+              loading={loginMutation.isPending}
             />
             <ContinueWithText />
-            <GoogleButton onPress={handleGoogleLogin} />
+            <GoogleButton
+              onPress={() => googleLoginMutation.mutate()}
+              loading={googleLoginMutation.isPending}
+            />
           </View>
           <View style={styles.footer}>
             <StyledText type='SubInputField' color='blackGrey'>

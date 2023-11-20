@@ -11,19 +11,19 @@ import {
 } from 'react-native-reanimated';
 import { STYLES } from '@/lib/constants';
 
-export const ReFadeInUp = FadeInUp.duration(STYLES.DURATION.DURATION_2000).easing(Easing.ease);
-export const ReFadeOutUp = FadeOutUp.duration(STYLES.DURATION.DURATION_2000).easing(Easing.ease);
-export const ReFadeInDown = FadeInDown.duration(STYLES.DURATION.DURATION_2000).easing(Easing.ease);
-export const ReFadeOutDown = FadeOutDown.duration(STYLES.DURATION.DURATION_2000).easing(
+export const ReFadeInUp = FadeInUp.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
+export const ReFadeOutUp = FadeOutUp.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
+export const ReFadeInDown = FadeInDown.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
+export const ReFadeOutDown = FadeOutDown.duration(STYLES.DURATION.DURATION_1000).easing(
   Easing.ease,
 );
-export const ReFadeInLeft = FadeInLeft.duration(STYLES.DURATION.DURATION_2000).easing(Easing.ease);
-export const ReFadeOutLeft = FadeOutLeft.duration(STYLES.DURATION.DURATION_2000).easing(
+export const ReFadeInLeft = FadeInLeft.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
+export const ReFadeOutLeft = FadeOutLeft.duration(STYLES.DURATION.DURATION_1000).easing(
   Easing.ease,
 );
-export const ReFadeInRight = FadeInRight.duration(STYLES.DURATION.DURATION_2000).easing(
+export const ReFadeInRight = FadeInRight.duration(STYLES.DURATION.DURATION_1000).easing(
   Easing.ease,
 );
-export const ReFadeOutRight = FadeOutRight.duration(STYLES.DURATION.DURATION_2000).easing(
+export const ReFadeOutRight = FadeOutRight.duration(STYLES.DURATION.DURATION_1000).easing(
   Easing.ease,
 );

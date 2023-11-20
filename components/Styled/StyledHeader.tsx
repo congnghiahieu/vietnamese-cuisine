@@ -20,7 +20,8 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
   const { theme } = useTheme();
   const dT = theme.mode === 'dark';
 
-  const onAvatarPress = () => router.push('/(sidebar)/profile');
+  // const onAvatarPress = () => router.push('/(sidebar)/profile');
+  const onAvatarPress = () => router.push('/onboard');
 
   return (
     <Header

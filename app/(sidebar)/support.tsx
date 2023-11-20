@@ -7,7 +7,8 @@ import { GithubButton, SolidButton } from '@/components/Styled/StyledButton';
 import { hp, wp } from '@/lib/utils';
 import { GiftIcon } from '@/components/Icon';
 
-const About = () => {
+const Support = () => {
+  console.log('Support re-render');
   const styles = useStyles();
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -75,4 +76,4 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-export default About;
+export default Support;

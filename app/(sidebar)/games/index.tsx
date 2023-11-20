@@ -29,7 +29,8 @@ const GAME_LIST = [
   },
 ];
 
-const Favourites = () => {
+const Games = () => {
+  console.log('Games re-render');
   return <GameList gameList={GAME_LIST} />;
 };
 
@@ -109,4 +110,4 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-export default Favourites;
+export default Games;

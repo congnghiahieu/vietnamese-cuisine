@@ -10,6 +10,7 @@ export type ExtendedColors = {
   whiteGrey: string;
   white: string;
   black: string;
+  yellow: string;
 };
 
 export const LIGHT_COLORS: ExtendedColors = {
@@ -17,6 +18,7 @@ export const LIGHT_COLORS: ExtendedColors = {
   background: '#FFF8F1',
   redPink: '#E73253',
   green: '#85BC39',
+  yellow: '#FFCC00',
   blackGrey: '#454545',
   grey: '#484646b3',
   whiteGrey: '#DEDEDE',
@@ -29,6 +31,7 @@ export const DARK_COLORS: ExtendedColors = {
   background: '#1D232A',
   redPink: '#E73253',
   green: '#36D399',
+  yellow: '#ffc107',
   blackGrey: '#676D78',
   grey: '#A6ADBA',
   whiteGrey: '#DEDEDE',
@@ -168,10 +171,11 @@ export const STYLES = {
     SHADOW_ORANGE_16: createShadowStyle('16', SHADOW_ORANGE_COLOR),
   },
   DURATION: {
-    DURATION_500: 500,
-    DURATION_1000: 500,
-    DURATION_1500: 500,
-    DURATION_2000: 500,
+    DURATION_1000: 1000,
+    DURATION_2000: 2000,
+    DURATION_3000: 3000,
+    DURATION_4000: 4000,
+    DURATION_5000: 5000,
   },
 } as const;
 

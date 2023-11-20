@@ -103,11 +103,11 @@ const useOutlineStyles = makeStyles(theme => {
       borderColor: color,
     },
     disabled: {
-      backgroundColor: 'transparent',
+      backgroundColor: theme.colors.whiteGrey,
     },
     disabledTitle: {
       ...TEXT_STYLE_TYPE_MAP.Heading_4,
-      color: theme.colors.whiteGrey,
+      color: theme.colors.blackGrey,
     },
     iconContainer: {},
     loading: {},

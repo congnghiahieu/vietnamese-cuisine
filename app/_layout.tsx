@@ -1,13 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import { Stack } from 'expo-router';
+import {
+  Stack,
+  useFocusEffect,
+  useNavigation,
+  useRootNavigation,
+  useRootNavigationState,
+} from 'expo-router';
 import { ThemeProvider, useTheme, useThemeMode } from '@rneui/themed';
 import {
   Theme as NavigationTheme,
   ThemeProvider as DefaultNavigationThemeProvider,
   useIsFocused,
 } from '@react-navigation/native';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
+import NetInfo from '@react-native-community/netinfo';
 import { theme } from '@/components/Theme/theme';
 import { FontsLoader } from '@/components/Theme/Text';
 import StyledToast from '@/components/Styled/StyledToast';
@@ -51,31 +58,15 @@ const NavigationThemeProvider = ({ children }: ProviderProps) => {
 };
 
 const DarkThemeProvider = ({ children }: ProviderProps) => {
-  const firstMount = useRef(false);
   const { darkMode } = useSettingStates();
   const { setMode } = useThemeMode();
-  const isFocused = useIsFocused();
 
-  useEffect(() => {
-    console.log(darkMode);
-    setMode(darkMode ? 'dark' : 'light');
-    if (firstMount.current) {
-      console.log('Second mount');
-    } else {
-      firstMount.current = true;
-      console.log('First mount');
-    }
-
-    return;
-  }, [firstMount.current]);
-
-  // useEffect(() => {
-  //   console.log('Dark Theme use effect called');
-  //   if (isFocused) {
-  //     console.log('Dark mode: ', darkMode);
-  //     setMode(darkMode ? 'dark' : 'light');
-  //   }
-  // }, [isFocused]);
+  useFocusEffect(
+    useCallback(() => {
+      console.log('Dark mode:', darkMode);
+      if (darkMode) setMode('dark');
+    }, []),
+  );
 
   return children;
 };
@@ -84,6 +75,7 @@ const AuthProvider = ({ children }: ProviderProps) => {
   const { setUser } = useAuthStates();
   useEffect(() => {
     const unsubscribeFromAuthStatusChanged = onAuthStateChanged(FIREBASE_AUTH, user => {
+      console.log('Auth state change');
       if (user) {
         setUser(user);
       } else {
@@ -126,37 +118,46 @@ const StackLayout = () => {
   );
 };
 
-// const queryClient = new QueryClient({
-// defaultOptions: {
-//   queries: {
-//     refetchInterval: false,
-//     refetchOnMount: false,
-//     refetchOnWindowFocus: false,
-//     refetchOnReconnect: true,
-//     retry: 0,
-//     staleTime: Infinity,
-//   },
-//   mutations: {
-//     retry: 0,
-//   },
-// },
-// });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval: false,
+      refetchOnMount: false,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      retry: 0,
+      retryOnMount: true,
+      staleTime: Infinity,
+    },
+    mutations: {
+      retry: 0,
+    },
+  },
+});
+
+// Set up react query refetch on reconnect
+onlineManager.setEventListener(setOnline => {
+  return NetInfo.addEventListener(state => {
+    setOnline(!!state.isConnected);
+  });
+});
 
 export default function RootLayout() {
   return (
     <FontsLoader onFontsLoaded={SplashScreen.hideAsync}>
-      {/* <QueryClientProvider client={queryClient}> */}
-      <ThemeProvider theme={theme}>
-        <DarkThemeProvider>
-          <NavigationThemeProvider>
-            <AuthProvider>
-              <StackLayout />
-            </AuthProvider>
-          </NavigationThemeProvider>
-          <StyledToast />
-        </DarkThemeProvider>
-      </ThemeProvider>
-      {/* </QueryClientProvider> */}
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <DarkThemeProvider>
+            <NavigationThemeProvider>
+              <AuthProvider>
+                <StackLayout />
+              </AuthProvider>
+            </NavigationThemeProvider>
+            <StyledToast />
+          </DarkThemeProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </FontsLoader>
   );
 }
