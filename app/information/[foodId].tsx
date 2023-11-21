@@ -32,6 +32,7 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import StyledToast from '@/components/Styled/StyledToast';
 import { useAuthStates } from '@/states/auth';
+import { useAuth } from '@/context/AuthContext';
 
 type FoodInformation = {
   foodId: string;
@@ -175,7 +176,7 @@ const InformationBottomSheetBody = ({
   const styles = useStyles();
   const router = useRouter();
   const [love, setLove] = useState(false);
-  const { user } = useAuthStates();
+  const { user } = useAuth();
 
   const loveMutation = useMutation({
     mutationFn: async () => {

@@ -28,7 +28,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { LoadingView } from '@/components/Styled/StyledView';
 import { StyledRefreshControl } from '@/components/Styled/StyledLoading';
 import StyledToast from '@/components/Styled/StyledToast';
-import { useAuthStates } from '@/states/auth';
+import { useAuth } from '@/context/AuthContext';
 
 type FoodItem = {
   title: string;
@@ -102,7 +102,7 @@ const FoodList = ({ foodList, isRefreshing = false, onRefresh = () => {} }: Food
 
 const FoodCard = ({ title, imageUrl }: FoodItem) => {
   const styles = useStyles();
-  const { user } = useAuthStates();
+  const { user } = useAuth();
   const router = useRouter();
   const [love, setLove] = useState(false);
 

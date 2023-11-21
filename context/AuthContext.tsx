@@ -31,7 +31,9 @@ export const useProtectedRoute = (user: User | null) => {
     // if (!navigationState.key || hasNavigated) return;
     console.log(segments);
     // (sidebar)(protected)
-    const inProtectedGroup = segments[1] === '(protected)';
+    const inProtectedGroup = segments.includes('(protected)' as never);
+    const from = '/' + segments.join('/');
+    console.log(from);
     setHasNavigated(true);
     if (!user?.uid && inProtectedGroup) {
       router.replace('/login');

@@ -20,7 +20,7 @@ import { hp } from '@/lib/utils';
 import { useRouter } from 'expo-router';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import { StyledFlatList } from '@/components/Styled/StyledList';
-import { SafeView } from '@/components/Styled/StyledView';
+import { KeyboardView, SafeView } from '@/components/Styled/StyledView';
 
 const WORD_LIMIT = 100;
 const COMMENT_LIST = [
@@ -69,19 +69,7 @@ const Comment = () => {
   const router = useRouter();
 
   return (
-    // <KeyboardAvoidingView contentContainerStyle={}>
-    // <ScrollView style={styles.container}>
-    <SafeView style={styles.container}>
-      <View style={styles.header}>
-        <StyledText type='Heading_3' color='blackGrey'>
-          Comments
-        </StyledText>
-        <StyledPressable style={styles.backButton} onPress={() => router.back()}>
-          <ArrowLeftIcon />
-        </StyledPressable>
-      </View>
-      <StyledDivider orientation='horizontal' />
-      {/* <CommentList commentList={[]} /> */}
+    <KeyboardAvoidingView style={styles.container} behavior='padding' keyboardVerticalOffset={120}>
       <CommentList commentList={COMMENT_LIST} />
       <StyledDivider orientation='horizontal' />
       <View style={styles.footer}>
@@ -127,9 +115,7 @@ const Comment = () => {
           />
         </View>
       </View>
-      {/* </ScrollView> */}
-    </SafeView>
-    // </KeyboardAvoidingView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -141,7 +127,6 @@ type Comment = {
 
 const CommentCard = ({ name, content }: Comment) => {
   const styles = useStyles();
-  const router = useRouter();
 
   return (
     <View style={styles.card}>
@@ -180,8 +165,6 @@ const useStyles = makeStyles(theme => {
     container: {
       flex: 1,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      borderTopLeftRadius: STYLES.RADIUS.RADIUS_30,
-      borderTopRightRadius: STYLES.RADIUS.RADIUS_30,
     },
     header: {
       marginHorizontal: STYLES.MARGIN.MARGIN_16,

@@ -1,6 +1,12 @@
 import { useCallback } from 'react';
 import { TextInput, View, Keyboard } from 'react-native';
-import { useRouter, useFocusEffect, useNavigation } from 'expo-router';
+import {
+  useRouter,
+  useFocusEffect,
+  useNavigation,
+  useLocalSearchParams,
+  useGlobalSearchParams,
+} from 'expo-router';
 import { DrawerActions } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
@@ -52,7 +58,7 @@ const Login = () => {
       type: 'success',
       text1: 'Login sucessfully. Redirecting ...',
       onHide: () => {
-        router.push('/(sidebar)/');
+        router.push('/(sidebar)');
       },
       visibilityTime: 1000,
     });
