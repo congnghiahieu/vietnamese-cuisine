@@ -39,14 +39,7 @@ type Page = 'MyFeed' | 'MyWall';
 const MyFeed = () => {
   console.log('Community re-render');
   const styles = useStyles();
-  // const user = FIREBASE_AUTH.currentUser;
   const { user } = useAuth();
-  // const { user } = useAuthentication();
-  // const user = FIREBASE_AUTH.currentUser;
-  // if (!user) {
-  //   return <Redirect href={'/login'} />;
-  // }
-
   const [page, setPage] = useState<Page>('MyFeed');
 
   return (
@@ -56,7 +49,6 @@ const MyFeed = () => {
         <WannaPost />
       </View>
       <PostList postList={POST_LIST} />
-      {/* <PostList postList={[]} /> */}
     </View>
   );
 };
@@ -72,11 +64,13 @@ const NavigateButton = ({ page, setPage }: NavigateButtonProps) => {
   if (page === 'MyFeed') {
     return (
       <View style={styles.navigate}>
-        <SolidButton title={'My Feed'} containerStyle={styles.navigateButton} />
+        <SolidButton title='My Feed' containerStyle={styles.navigateButton} />
         <OutlineButton
-          title={'My Wall'}
+          title='My Wall'
           containerStyle={styles.navigateButton}
-          buttonStyle={styles.navigateButton}
+          buttonStyle={{
+            borderRadius: STYLES.RADIUS.RADIUS_10,
+          }}
           onPress={() => setPage('MyWall')}
         />
       </View>
@@ -87,7 +81,9 @@ const NavigateButton = ({ page, setPage }: NavigateButtonProps) => {
         <OutlineButton
           title={'My Feed'}
           containerStyle={styles.navigateButton}
-          buttonStyle={styles.navigateButton}
+          buttonStyle={{
+            borderRadius: STYLES.RADIUS.RADIUS_10,
+          }}
           onPress={() => setPage('MyFeed')}
         />
         <SolidButton title={'My Wall'} containerStyle={styles.navigateButton} />
@@ -99,12 +95,11 @@ const NavigateButton = ({ page, setPage }: NavigateButtonProps) => {
 const WannaPost = () => {
   const styles = useStyles();
   const router = useRouter();
-  const { theme } = useTheme();
 
   return (
     <StyledPressable
       style={styles.createPostButton}
-      onPress={() => router.push('/(sidebar)/(protected)/community/post')}>
+      onPress={() => router.push('/(sidebar)/(protected)/community/publish')}>
       <StyledText type='Placeholder' color='whiteGrey'>
         Wanna post somethings?
       </StyledText>
@@ -225,7 +220,6 @@ const useCardStyles = makeStyles(theme => {
 
   return {
     card: {
-      overflow: 'hidden',
       borderRadius: STYLES.RADIUS.RADIUS_20,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,
       ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8),
@@ -244,9 +238,7 @@ const useCardStyles = makeStyles(theme => {
     },
     image: {
       width: '100%',
-      height: hp(45),
-      // height: 350,
-      maxHeight: 350,
+      height: hp(40),
     },
     footer: {
       flexDirection: 'row',
