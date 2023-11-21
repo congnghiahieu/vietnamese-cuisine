@@ -3,7 +3,8 @@ import { Text, TextProps } from '@rneui/themed';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 
-const StyledText = (props: TextProps) => {
+export type StyledTextProps = TextProps;
+const StyledText = (props: StyledTextProps) => {
   const { children, ...otherProps } = props;
   return <Text {...otherProps}>{children}</Text>;
 };

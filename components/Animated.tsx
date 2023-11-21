@@ -1,4 +1,6 @@
-import {
+import Animated, {
+  FadeIn,
+  FadeOut,
   FadeInUp,
   FadeOutUp,
   FadeInDown,
@@ -10,7 +12,8 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { STYLES } from '@/lib/constants';
-
+export const ReFadeIn = FadeIn.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
+export const ReFadeOut = FadeOut.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
 export const ReFadeInUp = FadeInUp.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
 export const ReFadeOutUp = FadeOutUp.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);
 export const ReFadeInDown = FadeInDown.duration(STYLES.DURATION.DURATION_1000).easing(Easing.ease);

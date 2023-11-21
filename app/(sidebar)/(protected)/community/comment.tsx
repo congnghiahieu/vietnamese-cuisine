@@ -16,7 +16,7 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import { useState } from 'react';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
 import { SolidButton } from '@/components/Styled/StyledButton';
-import { hp } from '@/lib/utils';
+import { dismissKeyboard, hp } from '@/lib/utils';
 import { useRouter } from 'expo-router';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import { StyledFlatList } from '@/components/Styled/StyledList';
@@ -101,6 +101,7 @@ const Comment = () => {
             maxLength={WORD_LIMIT}
             value={comments}
             onChangeText={setComments}
+            blurOnSubmit={false}
           />
           <SolidButton
             icon={<SendIcon width={30} height={30} />}

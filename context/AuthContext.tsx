@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter, useSegments, useRootNavigation, useRootNavigationState } from 'expo-router';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, User as AuthUser } from 'firebase/auth';
 import { FIREBASE_AUTH } from '@/config/firebase';
 
 type AuthContextValue = {
-  user: User | null;
+  user: AuthUser | null;
 };
 const initialValue: AuthContextValue = {
   user: null,
@@ -22,7 +22,7 @@ export const useAuth = () => {
   return context;
 };
 
-export const useProtectedRoute = (user: User | null) => {
+export const useProtectedRoute = (user: AuthUser | null) => {
   const router = useRouter();
   const segments = useSegments();
   const navigationState = useRootNavigationState();
@@ -32,9 +32,9 @@ export const useProtectedRoute = (user: User | null) => {
     console.log(segments);
     // (sidebar)(protected)
     const inProtectedGroup = segments.includes('(protected)' as never);
-    const from = '/' + segments.join('/');
-    console.log(from);
-    setHasNavigated(true);
+    // const from = '/' + segments.join('/');
+    // console.log(from);
+    // setHasNavigated(true);
     if (!user?.uid && inProtectedGroup) {
       router.replace('/login');
     }
@@ -47,7 +47,7 @@ export const useProtectedRoute = (user: User | null) => {
 };
 
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   useProtectedRoute(user);
 
   useEffect(() => {

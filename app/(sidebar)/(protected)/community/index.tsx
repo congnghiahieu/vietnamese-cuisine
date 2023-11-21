@@ -15,6 +15,8 @@ import { FIREBASE_AUTH } from '@/config/firebase';
 import { useAuthStates } from '@/states/auth';
 import { HoldingView } from '@/components/Styled/StyledView';
 import { useAuth } from '@/context/AuthContext';
+import Animated from 'react-native-reanimated';
+import { ReFadeIn, ReFadeOut } from '@/components/Animated';
 
 const POST_LIST = [
   {
@@ -149,9 +151,11 @@ const PostCard = ({ name, time, desc, imageUrl }: Post) => {
         <StyledPressable onPress={() => setLove(prev => !prev)} style={styles.button}>
           <HeartIcon active={love} />
           {love ? (
-            <StyledText type='Heading_5' color={'redPink'}>
-              Love
-            </StyledText>
+            <Animated.View entering={ReFadeIn}>
+              <StyledText type='Heading_5' color={'redPink'}>
+                Love
+              </StyledText>
+            </Animated.View>
           ) : null}
         </StyledPressable>
         <StyledDivider orientation='vertical' />

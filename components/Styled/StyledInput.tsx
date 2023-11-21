@@ -18,6 +18,7 @@ const BaseInput = (props: InputProps) => {
       cursorColor={theme.colors.orange}
       selectionColor={theme.colors.orange}
       renderToHardwareTextureAndroid
+      lineBreakStrategyIOS='standard'
       {...props}
     />
   );

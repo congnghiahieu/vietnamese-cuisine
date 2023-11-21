@@ -12,6 +12,16 @@ import { View } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import Svg, { SvgProps, Path, G } from 'react-native-svg';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  Easing,
+  withTiming,
+  withDelay,
+  withRepeat,
+} from 'react-native-reanimated';
+import { forwardRef, useEffect } from 'react';
 
 export const SidebarHomeIcon = () => {
   const styles = useStyles();
@@ -322,13 +332,72 @@ export const EyeIcon = ({ active }: ActiveIconProps) => {
   );
 };
 
-export const HeartIcon = ({ active }: ActiveIconProps) => {
+const HeartNoFillIcon = () => {
   const styles = useStyles();
-  return active ? (
-    <AntDesign name='heart' style={[styles.baseIcon, styles.redPink]} />
-  ) : (
-    <AntDesign name='hearto' style={[styles.baseIcon, styles.redPink]} />
-  );
+  return <AntDesign name='hearto' style={[styles.baseIcon, styles.redPink]} />;
+};
+
+const HeartFillIcon = () => {
+  const styles = useStyles();
+  return <AntDesign name='heart' style={[styles.baseIcon, styles.redPink]} />;
+};
+const AnimatedHeartFillIconComponent = Animated.createAnimatedComponent(forwardRef(HeartFillIcon));
+const AnimatedHeartFillIcon = () => {
+  const easing = Easing.elastic(2);
+  const duration = 300;
+  const rotateDuration = 50;
+  const rotateRepeated = 5;
+  const scaleFrom = 1;
+  const scaleTo = 1.4;
+  const angle = 8;
+  const initialRotate = useSharedValue(0);
+  const initialScale = useSharedValue(scaleFrom);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: initialScale.value,
+      },
+      {
+        rotateZ: `${initialRotate.value}deg`,
+      },
+    ],
+  }));
+
+  useEffect(() => {
+    initialScale.value = withSequence(
+      withTiming(scaleTo, {
+        duration,
+        easing,
+      }),
+      withDelay(
+        rotateRepeated * rotateDuration,
+        withTiming(scaleFrom, {
+          duration,
+          easing,
+        }),
+      ),
+    );
+    initialRotate.value = withSequence(
+      // deviate left to start from -ANGLE
+      withTiming(-angle, { duration: rotateDuration, easing }),
+      // wobble between -ANGLE and ANGLE 7 times
+      withRepeat(
+        withTiming(angle, {
+          duration: rotateDuration,
+          easing,
+        }),
+        7,
+        true,
+      ),
+      withTiming(0, { duration: rotateDuration / 2, easing }),
+    );
+  }, []);
+
+  return <AnimatedHeartFillIconComponent style={animatedStyle} />;
+};
+
+export const HeartIcon = ({ active }: ActiveIconProps) => {
+  return active ? <AnimatedHeartFillIcon /> : <HeartNoFillIcon />;
 };
 
 export const AudioControlIcon = ({ active }: ActiveIconProps) => {
