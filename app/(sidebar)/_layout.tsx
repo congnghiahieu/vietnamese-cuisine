@@ -26,9 +26,8 @@ const SidebarLayout = () => {
       screenOptions={sidebarOptions}
       drawerContent={SidebarContent}>
       <Sidebar.Screen
-        name='(home)'
+        name='index'
         options={{
-          headerShown: false,
           title: 'Home',
           drawerIcon: ({ color }) => (
             <Ionicons name='home' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
@@ -36,7 +35,7 @@ const SidebarLayout = () => {
         }}
       />
       <Sidebar.Screen
-        name='community'
+        name='(protected)/community'
         options={{
           headerShown: false,
           title: 'Community',
@@ -56,7 +55,7 @@ const SidebarLayout = () => {
         }}
       />
       <Sidebar.Screen
-        name='favourites'
+        name='(protected)/favourites'
         options={{
           title: 'Favourites',
           drawerIcon: ({ color }) => (
@@ -65,7 +64,7 @@ const SidebarLayout = () => {
         }}
       />
       <Sidebar.Screen
-        name='profile'
+        name='(protected)/profile'
         options={{
           title: 'My Profile',
           drawerIcon: ({ color }) => (
@@ -176,11 +175,6 @@ const SidebarContent = ({ descriptors, state, ...rest }: DrawerContentComponentP
               titleStyle={styles.buttonTitle}
               onPress={() => router.push('/register')}
             />
-            {/* <OutlineButton
-              title='Sign Out'
-              buttonStyle={styles.button}
-              titleStyle={styles.buttonTitle}
-            /> */}
           </View>
         </View>
       </View>

@@ -16,7 +16,7 @@ const CommunityLayout = () => {
         }}
       />
       <Stack.Screen
-        name='post'
+        name='publish'
         options={{
           headerShown: false,
           animation: 'slide_from_bottom',

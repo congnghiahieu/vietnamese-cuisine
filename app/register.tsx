@@ -18,15 +18,12 @@ import Animated from 'react-native-reanimated';
 import {
   ReFadeInDown,
   ReFadeInLeft,
-  ReFadeInRight,
   ReFadeInUp,
   ReFadeOutDown,
   ReFadeOutLeft,
-  ReFadeOutRight,
   ReFadeOutUp,
 } from '@/components/Animated';
 import { dismissKeyboard } from '@/lib/utils';
-import useSidebar from '@/hooks/useSidebar';
 import { useMutation } from '@tanstack/react-query';
 
 type RegisterFormInput = {
@@ -101,7 +98,7 @@ const Register = () => {
         type: 'success',
         text1: 'Register sucessfully. Redirecting ...',
         onHide: () => {
-          router.push('/(sidebar)/(home)/');
+          router.push('/(sidebar)/');
         },
         visibilityTime: 1000,
       });
@@ -118,7 +115,7 @@ const Register = () => {
 
   useFocusEffect(
     useCallback(() => {
-      return () => cleanUp();
+      return cleanUp;
     }, []),
   );
 
@@ -235,7 +232,7 @@ const Register = () => {
           <View style={styles.subField}>
             <StyledPressable
               onPress={() => {
-                router.push('/(sidebar)/(home)/');
+                router.push('/(sidebar)/');
               }}>
               <StyledText type='SubInputField' color='orange'>
                 Back to home

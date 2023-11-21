@@ -28,6 +28,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { LoadingView } from '@/components/Styled/StyledView';
 import { StyledRefreshControl } from '@/components/Styled/StyledLoading';
 import StyledToast from '@/components/Styled/StyledToast';
+import { useAuthStates } from '@/states/auth';
 
 type FoodItem = {
   title: string;
@@ -101,7 +102,7 @@ const FoodList = ({ foodList, isRefreshing = false, onRefresh = () => {} }: Food
 
 const FoodCard = ({ title, imageUrl }: FoodItem) => {
   const styles = useStyles();
-  const user = FIREBASE_AUTH.currentUser;
+  const { user } = useAuthStates();
   const router = useRouter();
   const [love, setLove] = useState(false);
 
@@ -112,7 +113,7 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
           type: 'warning',
           text1: 'This action requires authentication',
         });
-        router.replace('/login');
+        router.push('/login');
         return;
       }
       setLove(prev => !prev);
@@ -132,8 +133,8 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
 
   const navigateToInformation = () =>
     router.push({
-      pathname: '/(sidebar)/(home)/[information]',
-      params: { information: title },
+      pathname: '/information/[foodId]',
+      params: { foodId: title },
     });
 
   return (
@@ -183,8 +184,7 @@ const useStyles = makeStyles(theme => {
     },
     card: {
       flexBasis: '49%',
-      height: hp(35),
-      maxHeightheight: 300,
+      height: hp(40),
       position: 'relative',
       borderRadius: STYLES.RADIUS.RADIUS_10,
       backgroundColor: dT ? theme.colors.black : theme.colors.white,

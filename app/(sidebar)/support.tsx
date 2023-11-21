@@ -55,8 +55,6 @@ const useStyles = makeStyles(theme => {
       width: wp(60),
       maxWidth: 250,
       height: hp(30),
-      maxHeight: 250,
-      // backgroundColor: 'red',
     },
     block: {
       paddingVertical: STYLES.PADDING.PADDING_8,

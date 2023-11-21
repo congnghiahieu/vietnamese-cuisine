@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, FirebaseOptions } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from '@firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getFirestore } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
 // TODO: Add SDKs for Firebase products that you want to use

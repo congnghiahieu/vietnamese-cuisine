@@ -25,7 +25,6 @@ import {
   ReFadeOutUp,
 } from '@/components/Animated';
 import { dismissKeyboard } from '@/lib/utils';
-import useSidebar from '@/hooks/useSidebar';
 import { useMutation } from '@tanstack/react-query';
 
 type LoginFormInput = {
@@ -53,7 +52,7 @@ const Login = () => {
       type: 'success',
       text1: 'Login sucessfully. Redirecting ...',
       onHide: () => {
-        router.push('/(sidebar)/(home)/');
+        router.push('/(sidebar)/');
       },
       visibilityTime: 1000,
     });
@@ -76,8 +75,7 @@ const Login = () => {
       });
     },
     onSettled: () => {
-      loginMutation.reset();
-      reset();
+      cleanUp();
     },
   });
   const googleLoginMutation = useMutation({
@@ -101,7 +99,7 @@ const Login = () => {
 
   useFocusEffect(
     useCallback(() => {
-      return () => cleanUp();
+      return cleanUp;
     }, []),
   );
 
@@ -174,7 +172,7 @@ const Login = () => {
           <View style={styles.subField}>
             <StyledPressable
               onPress={() => {
-                router.push('/(sidebar)/(home)/');
+                router.push('/(sidebar)/');
               }}>
               <StyledText type='SubInputField' color='orange'>
                 Back to home

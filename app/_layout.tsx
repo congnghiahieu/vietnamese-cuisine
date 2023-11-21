@@ -18,10 +18,8 @@ import NetInfo from '@react-native-community/netinfo';
 import { theme } from '@/components/Theme/theme';
 import { FontsLoader } from '@/components/Theme/Text';
 import StyledToast from '@/components/Styled/StyledToast';
-import { onAuthStateChanged } from 'firebase/auth';
-import { FIREBASE_AUTH } from '@/config/firebase';
-import { useAuthStates } from '@/states/auth';
 import { useSettingStates } from '@/states/setting';
+import { AuthProvider } from '@/context/AuthContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -31,11 +29,7 @@ export {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-type ProviderProps = {
-  children: React.ReactNode;
-};
-
-const NavigationThemeProvider = ({ children }: ProviderProps) => {
+const NavigationThemeProvider = ({ children }: React.PropsWithChildren) => {
   const { theme } = useTheme();
   const dT = theme.mode === 'dark';
 
@@ -57,7 +51,7 @@ const NavigationThemeProvider = ({ children }: ProviderProps) => {
   );
 };
 
-const DarkThemeProvider = ({ children }: ProviderProps) => {
+const DarkThemeProvider = ({ children }: React.PropsWithChildren) => {
   const { darkMode } = useSettingStates();
   const { setMode } = useThemeMode();
 
@@ -71,22 +65,40 @@ const DarkThemeProvider = ({ children }: ProviderProps) => {
   return children;
 };
 
-const AuthProvider = ({ children }: ProviderProps) => {
-  const { setUser } = useAuthStates();
-  useEffect(() => {
-    const unsubscribeFromAuthStatusChanged = onAuthStateChanged(FIREBASE_AUTH, user => {
-      console.log('Auth state change');
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-    return unsubscribeFromAuthStatusChanged;
-  }, []);
+// const AuthProvider = ({ children }: React.PropsWithChildren) => {
+//   const { setUser } = useAuthStates();
+//   useEffect(() => {
+//     const unsubscribeFromAuthStatusChanged = onAuthStateChanged(FIREBASE_AUTH, user => {
+//       console.log('Auth state change');
+//       if (user) {
+//         console.log('New user login');
+//         setUser(user);
+//       } else {
+//         console.log('New user logout');
+//         setUser(null);
+//       }
+//     });
+//     return unsubscribeFromAuthStatusChanged;
+//   }, []);
 
-  return children;
-};
+//   // useFocusEffect(
+//   //   useCallback(() => {
+//   //     const unsubscribeFromAuthStatusChanged = onAuthStateChanged(FIREBASE_AUTH, user => {
+//   //       console.log('Auth state change');
+//   //       if (user) {
+//   //         console.log('New user login');
+//   //         setUser(user);
+//   //       } else {
+//   //         console.log('New user logout');
+//   //         setUser(null);
+//   //       }
+//   //     });
+//   //     return unsubscribeFromAuthStatusChanged;
+//   //   }, []),
+//   // );
+
+//   return children;
+// };
 
 const StackLayout = () => {
   return (
@@ -112,6 +124,16 @@ const StackLayout = () => {
         name='onboard'
         options={{
           title: 'Onboard',
+        }}
+      />
+      <Stack.Screen
+        name='information/[foodId]'
+        options={{
+          title: 'Information',
+          animation: 'slide_from_right',
+          // headerShown: true,
+          // headerTransparent: true,
+          // headerTitle: '',
         }}
       />
     </Stack>

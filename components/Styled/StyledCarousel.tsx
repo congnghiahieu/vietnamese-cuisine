@@ -25,7 +25,8 @@ const StyledCarousel = ({ imageUrlList, width, height }: StyledCarouselProps) =>
         position: 'relative',
       }}>
       <Carousel
-        // mode='horizontal-stack'
+        mode='horizontal-stack'
+        modeConfig={{}}
         // autoPlay
         // autoPlayReverse
         // autoPlayInterval={2000}

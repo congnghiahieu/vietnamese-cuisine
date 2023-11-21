@@ -4,7 +4,7 @@ import {
 } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context';
 import { RandomLoading } from './StyledLoading';
-import { View } from 'react-native';
+import { View, ViewProps } from 'react-native';
 import { EmptyList } from './StyledList';
 import StyledPressable from './StyledPressable';
 import StyledText from './StyledText';
@@ -36,16 +36,29 @@ type LoadingViewProps = {
   LoadingComponent?: () => React.ReactNode;
 };
 
-export const LoadingView = ({ LoadingComponent = RandomLoading }: LoadingViewProps) => {
+export const HoldingView = ({ style, children, ...otherProps }: ViewProps) => {
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <LoadingComponent />
+      style={[
+        {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        style,
+      ]}>
+      {children}
     </View>
+  );
+};
+
+export const LoadingView = ({ LoadingComponent = RandomLoading }: LoadingViewProps) => {
+  console.log('Loading...');
+
+  return (
+    <HoldingView>
+      <LoadingComponent />
+    </HoldingView>
   );
 };
 

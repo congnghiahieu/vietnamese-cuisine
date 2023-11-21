@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo, useState, useCallback } from 'react';
 import { View } from 'react-native';
 import { useThemeMode, useTheme, makeStyles, ListItem } from '@rneui/themed';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -13,6 +13,7 @@ import { STYLES, LANGUAGE_LIST } from '@/lib/constants';
 import { useSettingStates } from '@/states/setting';
 import { DarkModeIcon, LanguageIcon, NotificationsIcon } from '@/components/Icon';
 import StyledToast from '@/components/Styled/StyledToast';
+import { useFocusEffect } from 'expo-router';
 
 const Settings = () => {
   console.log('Settings re-render');
@@ -25,6 +26,12 @@ const Settings = () => {
   const closeBottomSheet = () => {
     bottomSheetRef.current?.close();
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      return closeBottomSheet;
+    }, []),
+  );
 
   return (
     <View style={{ flex: 1 }}>

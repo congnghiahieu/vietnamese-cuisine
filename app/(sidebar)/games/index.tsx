@@ -2,7 +2,7 @@ import { Image, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
-import { hp } from '@/lib/utils';
+import { hp, wp } from '@/lib/utils';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { SolidButton } from '@/components/Styled/StyledButton';
@@ -98,8 +98,6 @@ const useStyles = makeStyles(theme => {
       flex: 1,
       width: '100%',
       height: hp(40),
-      // height: 300,
-      maxHeight: 300,
       borderTopLeftRadius: STYLES.RADIUS.RADIUS_20,
       borderTopRightRadius: STYLES.RADIUS.RADIUS_20,
     },

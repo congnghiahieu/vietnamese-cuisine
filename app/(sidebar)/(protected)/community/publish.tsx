@@ -16,7 +16,7 @@ import { SafeView } from '@/components/Styled/StyledView';
 const WORD_LIMIT = 500;
 const DEFAULT_LINE = 4;
 
-const CreatePost = () => {
+const Publish = () => {
   const styles = useStyles();
   const [thought, setThought] = useState('');
   const [images, setImages] = useState(false);
@@ -146,7 +146,6 @@ const useStyles = makeStyles(theme => {
     imageContainer: {
       height: hp(55),
       // height: 450,
-      maxHeight: 450,
     },
     imagePlaceholder: {
       flex: 1,
@@ -166,4 +165,4 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-export default CreatePost;
+export default Publish;
