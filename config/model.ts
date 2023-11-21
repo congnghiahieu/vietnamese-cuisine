@@ -1,5 +1,10 @@
-type FoodInformation = {
-    foodId: string;
+type Step = {
+    title: string;
+    content: string;
+};
+
+type Food = {
+    foodId: string; // name of this food
     imageUrlList: string[];
     title: string;
     subTitle: string;
@@ -9,7 +14,11 @@ type FoodInformation = {
     videoLink: string;
 };
 
-type Step = {
-    title: string;
-    content: string;
-};
+type User = {
+    email: string
+    favoriteFoods: string[] 
+}
+
+
+
+
