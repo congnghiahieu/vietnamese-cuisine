@@ -31,6 +31,7 @@ import {
 } from 'firebase/firestore';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import StyledToast from '@/components/Styled/StyledToast';
+import { useAuthStates } from '@/states/auth';
 
 type FoodInformation = {
   foodId: string;
@@ -49,8 +50,7 @@ type Step = {
 };
 
 const Information = () => {
-  const params = useLocalSearchParams();
-  const foodId = useMemo(() => decodeURI(params.information as string), []);
+  const foodId = decodeURI(useLocalSearchParams<{ foodId: string }>().foodId);
   console.log(foodId);
   const { data, isPending, isError, error } = useQuery({
     queryKey: ['food', 'Phở'],
@@ -175,7 +175,7 @@ const InformationBottomSheetBody = ({
   const styles = useStyles();
   const router = useRouter();
   const [love, setLove] = useState(false);
-  const user = FIREBASE_AUTH.currentUser;
+  const { user } = useAuthStates();
 
   const loveMutation = useMutation({
     mutationFn: async () => {
@@ -184,7 +184,7 @@ const InformationBottomSheetBody = ({
           type: 'warning',
           text1: 'This action requires authentication',
         });
-        router.replace('/login');
+        router.push('/login');
         return;
       }
       setLove(prev => !prev);

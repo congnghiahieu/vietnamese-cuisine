@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import StyledImage from '@/components/Styled/StyledImage';
-import { useRouter, useFocusEffect, Redirect } from 'expo-router';
+import { Redirect, useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { AvatarIconWithCamera, LockIcon, PencilEditIcon, SignOutIcon } from '@/components/Icon';
@@ -11,37 +10,65 @@ import { SolidButton } from '@/components/Styled/StyledButton';
 import { FIREBASE_AUTH } from '@/config/firebase';
 import { signOut } from 'firebase/auth';
 import StyledToast from '@/components/Styled/StyledToast';
-import { useCallback } from 'react';
+import { useAuthStates } from '@/states/auth';
+import { useMutation } from '@tanstack/react-query';
+import { useCallback, useState } from 'react';
+import { LoadingView } from '@/components/Styled/StyledView';
+import { StyledCircleLoading } from '@/components/Styled/StyledLoading';
+import { useAuth } from '@/context/AuthContext';
 
 const Profile = () => {
   console.log('Profile re-render');
-  const user = FIREBASE_AUTH.currentUser;
+  const styles = useStyles();
+  // const user = FIREBASE_AUTH.currentUser;
+  const { user } = useAuth();
   const router = useRouter();
-  console.log('User emailL:', user?.email);
-  if (!user) {
-    return <Redirect href={'/login'} />;
-  }
+  const signOutMutation = useMutation({
+    mutationFn: async () => {
+      await signOut(FIREBASE_AUTH);
+    },
+    onSuccess: () =>
+      StyledToast.show({
+        type: 'success',
+        text1: 'Sign out successfully. Redirecting...',
+        visibilityTime: 1000,
+        onHide: () => {
+          router.push('/login');
+        },
+      }),
+    onError: () =>
+      StyledToast.show({
+        type: 'error',
+        text1: 'Fail to sign out',
+        text2: 'Please try again',
+      }),
+    onSettled: () => {
+      signOutMutation.reset();
+    },
+  });
+
   // useFocusEffect(
   //   useCallback(() => {
-  //     if (!user) {
-  //       router.replace('/login');
-  //     }
+  //     setKey(Math.random());
   //   }, []),
   // );
 
-  const handleSignOut = async () => {
-    await signOut(FIREBASE_AUTH);
-    StyledToast.show({
-      type: 'success',
-      text1: 'Sign out successfully. Redirecting...',
-      visibilityTime: 1000,
-      onHide: () => {
-        router.push('/login');
-      },
-    });
-  };
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log('Focus effect');
+  //     if (!user) {
+  //       // router.replace('/login');
+  //       router.push('/login');
+  //     }
 
-  const styles = useStyles();
+  //     return signOutMutation.reset;
+  //   }, []),
+  // );
+
+  // if (!user) {
+  //   return <LoadingView LoadingComponent={StyledCircleLoading} />;
+  // }
+
   return (
     <View style={styles.container}>
       <StyledPressable
@@ -100,7 +127,8 @@ const Profile = () => {
           containerStyle={{
             borderRadius: STYLES.RADIUS.RADIUS_10,
           }}
-          onPress={handleSignOut}
+          loading={signOutMutation.isPending}
+          onPress={() => signOutMutation.mutate()}
         />
       </View>
     </View>

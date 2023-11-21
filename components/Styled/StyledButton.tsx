@@ -7,6 +7,8 @@ type StyledButtonProps = ButtonProps;
 
 export const SolidButton = (props: StyledButtonProps) => {
   const styles = useSolidStyles();
+  const { theme } = useTheme();
+
   const {
     buttonStyle,
     containerStyle,
@@ -25,7 +27,10 @@ export const SolidButton = (props: StyledButtonProps) => {
       disabledStyle={[styles.disabled, disabledStyle]}
       disabledTitleStyle={[styles.disabledTitle, disabledTitleStyle]}
       iconContainerStyle={[styles.iconContainer, iconContainerStyle]}
-      loadingStyle={[styles.loading, loadingStyle]}
+      loadingProps={{
+        color: theme.colors.white,
+        size: 'small',
+      }}
       titleStyle={[styles.titleStyle, titleStyle]}
       {...otherProps}
     />
@@ -50,7 +55,6 @@ const useSolidStyles = makeStyles(theme => ({
     color: theme.colors.blackGrey,
   },
   iconContainer: {},
-  loading: {},
   titleStyle: {
     ...TEXT_STYLE_TYPE_MAP.Heading_4,
     color: theme.colors.white,
@@ -60,6 +64,8 @@ const useSolidStyles = makeStyles(theme => ({
 
 export const OutlineButton = (props: StyledButtonProps) => {
   const styles = useOutlineStyles();
+  const { theme } = useTheme();
+
   const {
     buttonStyle,
     containerStyle,
@@ -78,7 +84,10 @@ export const OutlineButton = (props: StyledButtonProps) => {
       disabledStyle={[styles.disabled, disabledStyle]}
       disabledTitleStyle={[styles.disabledTitle, disabledTitleStyle]}
       iconContainerStyle={[styles.iconContainer, iconContainerStyle]}
-      loadingStyle={[styles.loading, loadingStyle]}
+      loadingProps={{
+        color: theme.mode === 'dark' ? theme.colors.white : theme.colors.black,
+        size: 'small',
+      }}
       titleStyle={[styles.titleStyle, titleStyle]}
       {...otherProps}
     />
@@ -110,7 +119,6 @@ const useOutlineStyles = makeStyles(theme => {
       color: theme.colors.blackGrey,
     },
     iconContainer: {},
-    loading: {},
     titleStyle: {
       ...TEXT_STYLE_TYPE_MAP.Heading_4,
       color: color,

@@ -114,8 +114,7 @@ export const getDefaultTextStyleType = (
   lineHeight: STYLES.LINE_HEIGHT.LINE_HEIGHT_16(props.fs || 16),
 });
 
-type FontsLoaderProps = {
-  children: React.ReactNode;
+type FontsLoaderProps = React.PropsWithChildren & {
   onFontsLoaded: () => void;
 };
 

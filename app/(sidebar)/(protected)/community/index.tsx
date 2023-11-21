@@ -12,6 +12,9 @@ import { hp } from '@/lib/utils';
 import { StyledFlatList } from '@/components/Styled/StyledList';
 import StyledImage from '@/components/Styled/StyledImage';
 import { FIREBASE_AUTH } from '@/config/firebase';
+import { useAuthStates } from '@/states/auth';
+import { HoldingView } from '@/components/Styled/StyledView';
+import { useAuth } from '@/context/AuthContext';
 
 const POST_LIST = [
   {
@@ -35,21 +38,15 @@ type Page = 'MyFeed' | 'MyWall';
 
 const MyFeed = () => {
   console.log('Community re-render');
-  const user = FIREBASE_AUTH.currentUser;
-  const router = useRouter();
-  console.log('User emailL:', user?.email);
-  if (!user) {
-    return <Redirect href={'/login'} />;
-  }
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (!user) {
-  //       router.replace('/login');
-  //     }
-  //   }, []),
-  // );
-
   const styles = useStyles();
+  // const user = FIREBASE_AUTH.currentUser;
+  const { user } = useAuth();
+  // const { user } = useAuthentication();
+  // const user = FIREBASE_AUTH.currentUser;
+  // if (!user) {
+  //   return <Redirect href={'/login'} />;
+  // }
+
   const [page, setPage] = useState<Page>('MyFeed');
 
   return (
@@ -107,7 +104,7 @@ const WannaPost = () => {
   return (
     <StyledPressable
       style={styles.createPostButton}
-      onPress={() => router.push('/(sidebar)/community/post')}>
+      onPress={() => router.push('/(sidebar)/(protected)/community/post')}>
       <StyledText type='Placeholder' color='whiteGrey'>
         Wanna post somethings?
       </StyledText>
@@ -165,7 +162,7 @@ const PostCard = ({ name, time, desc, imageUrl }: Post) => {
         <StyledDivider orientation='vertical' />
         <StyledPressable
           style={styles.button}
-          onPress={() => router.push('/(sidebar)/community/comment')}>
+          onPress={() => router.push('/(sidebar)/(protected)/community/comment')}>
           <CommentIcon />
           <StyledText>Comments</StyledText>
         </StyledPressable>

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Language, SETTINGS_KEYS } from '@/lib/constants';
+import { Language } from '@/lib/constants';
 
 type State = {
   darkMode: boolean;
@@ -64,34 +64,3 @@ export const settingStates = create<State & Actions>()(
 );
 
 export const useSettingStates = () => settingStates(state => state);
-
-// set => ({
-//   darkMode: initialDarkMode,
-//   setDarkMode: async active =>
-//     set(() => {
-//       AsyncStorage.setItem(SETTINGS_KEYS.darkMode, String(active), error => {
-//         if (error) {
-//           console.log(error.message);
-//         }
-//       });
-//       return {
-//         darkMode: active,
-//       };
-//     }),
-//   language: initialLanguage,
-//   setLanguage: language =>
-//     set(() => {
-//       AsyncStorage.setItem(SETTINGS_KEYS.language, language).catch(err => {});
-//       return {
-//         language,
-//       };
-//     }),
-//   notifications: initialNotifications,
-//   setNotifications: active =>
-//     set(() => {
-//       AsyncStorage.setItem(SETTINGS_KEYS.notifications, String(active)).catch(err => {});
-//       return {
-//         notifications: active,
-//       };
-//     }),
-// })

@@ -8,7 +8,6 @@ import { AvatarIcon, MenuIcon } from '@/components/Icon';
 import StyledPressable from './StyledPressable';
 import StyledText from './StyledText';
 import { dismissKeyboard } from '@/lib/utils';
-import useSidebar from '@/hooks/useSidebar';
 
 type SidebarHeaderProps = {
   title: string | undefined;
@@ -16,11 +15,11 @@ type SidebarHeaderProps = {
 
 const StyledHeader = ({ title }: SidebarHeaderProps) => {
   const router = useRouter();
-  const sidebar = useSidebar();
+  const navigation = useNavigation();
   const { theme } = useTheme();
   const dT = theme.mode === 'dark';
-
   // const onAvatarPress = () => router.push('/(sidebar)/profile');
+  const onMenuPress = () => navigation.dispatch(DrawerActions.openDrawer());
   const onAvatarPress = () => router.push('/onboard');
 
   return (
@@ -45,7 +44,7 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
         <StyledPressable
           onPress={() => {
             dismissKeyboard();
-            sidebar.open();
+            onMenuPress();
           }}
           style={{
             paddingVertical: STYLES.PADDING.PADDING_8,

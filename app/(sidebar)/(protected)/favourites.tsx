@@ -1,6 +1,7 @@
 import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { Image, View } from 'react-native';
-import { Redirect, useFocusEffect, useRouter } from 'expo-router';
+import { Redirect, useFocusEffect, useNavigation, useRouter } from 'expo-router';
+import { StackActions } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { hp } from '@/lib/utils';
@@ -11,22 +12,19 @@ import { ChevronRightIcon, HeartDislikeIcon } from '@/components/Icon';
 import StyledImage from '@/components/Styled/StyledImage';
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
 import { query, collection, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+import { useAuthStates } from '@/states/auth';
+import { HoldingView } from '@/components/Styled/StyledView';
+import { useAuth } from '@/context/AuthContext';
 
 const Favorites = () => {
   console.log('Favourites re-render');
-  const user = FIREBASE_AUTH.currentUser;
-  const router = useRouter();
-  console.log('User email:', user?.email);
-  if (!user) {
-    return <Redirect href={'/login'} />;
-  }
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (!user) {
-  //       router.replace('/login');
-  //     }
-  //   }, []),
-  // );
+  // const user = FIREBASE_AUTH.currentUser;
+  // const { user } = useAuthentication();
+  const { user } = useAuth();
+  // if (!user) {
+  //   return <Redirect href={'/login'} />;
+  // }
+
   const [favoriteList, setFavoriteList] = useState<Favorite[]>([]);
   const getFavoriteList = async () => {
     try {
@@ -87,7 +85,16 @@ const FavoriteCard = ({ title, imageUrl }: Favorite) => {
         <StyledText type='Heading_5' color='white'>
           {title}
         </StyledText>
-        <StyledPressable style={styles.redirectButton} onPress={() => router.push('/information')}>
+        <StyledPressable
+          style={styles.redirectButton}
+          onPress={() =>
+            router.push({
+              pathname: '/information/[foodId]',
+              params: {
+                foodId: 'Phở',
+              },
+            })
+          }>
           <ChevronRightIcon />
         </StyledPressable>
       </View>
@@ -115,7 +122,7 @@ const FavoriteEmptySubField = () => {
   const router = useRouter();
 
   return (
-    <StyledPressable onPress={() => router.push('/(sidebar)/(home)/')}>
+    <StyledPressable onPress={() => router.push('/(sidebar)')}>
       <StyledText
         type='SubInputField'
         color='orange'
