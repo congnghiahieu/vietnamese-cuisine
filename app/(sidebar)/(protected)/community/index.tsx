@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect} from 'react';
 import { View, Image } from 'react-native';
 import { Redirect, useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles, useTheme } from '@rneui/themed';
@@ -11,28 +11,33 @@ import StyledDivider from '@/components/Styled/StyledDivider';
 import { hp } from '@/lib/utils';
 import { StyledFlatList } from '@/components/Styled/StyledList';
 import StyledImage from '@/components/Styled/StyledImage';
-import { FIREBASE_AUTH } from '@/config/firebase';
 import { useAuthStates } from '@/states/auth';
 import { HoldingView } from '@/components/Styled/StyledView';
 import { useAuth } from '@/context/AuthContext';
 import Animated from 'react-native-reanimated';
 import { ReFadeIn, ReFadeOut } from '@/components/Animated';
+import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
+import { query, collection, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+
 
 const POST_LIST = [
   {
-    id: '1',
-    name: 'Cong Nghia Hieu',
-    time: '1 minute ago',
-    desc: 'Lorem ipsum dolor sit amet consectetur adipiscing elit cubilia pharetra.',
-    imageUrl: 'https://static-images.vnncdn.net/files/publish/2022/9/15/banh-my-viet-nam-1632.jpg',
+    postId: '1',
+    userId: 'Cong Nghia Hieu',
+    createdAt: '1 minute ago',
+    content: 'Siuuu',
+    imageUrlList: ['https://static-images.vnncdn.net/files/publish/2022/9/15/banh-my-viet-nam-1632.jpg'],
+    loveNumber: 0,
+    comments: []
   },
   {
-    id: '2',
-    name: 'Cao Thanh Trung',
-    time: '8 hours ago',
-    desc: 'Massa cursus primis aptent mus hendrerit suspendisse, justo est phasellus sagittis fames scelerisque placerat, litora neque habitant id eros. Iaculis viverra per volutpat rhoncus eu ultricies id, eleifend vitae phasellus vehicula dictum vivamus, nam dapibus venenatis sem sed eget.',
-    imageUrl:
-      'https://images.chesscomfiles.com/uploads/v1/images_users/tiny_mce/plainc001123/phps8MbVn.jpg',
+    postId: '2',
+    userId: 'Cao Thanh Trung',
+    createdAt: '1 minute ago',
+    content: 'hehehe',
+    imageUrlList: ['https://static-images.vnncdn.net/files/publish/2022/9/15/banh-my-viet-nam-1632.jpg'],
+    loveNumber: 0,
+    comments: []
   },
 ];
 
@@ -44,6 +49,18 @@ const MyFeed = () => {
   const { user } = useAuth();
   const [page, setPage] = useState<Page>('MyFeed');
 
+  const [postList, setPostList] = useState<Post[]>([]);
+  const getpostList = async () => {
+    try {
+     
+    } catch (error) {
+      console.error('Error fetching post list data from FIRESTORE:', error);
+    }
+  };
+
+  useEffect(() => {
+    getpostList();
+  }, []);
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -111,14 +128,16 @@ const WannaPost = () => {
 };
 
 type Post = {
-  id: string;
-  name: string;
-  time: string;
-  desc: string;
-  imageUrl: string;
-};
+    postId: string;
+    userId: string;
+    content: string;
+    imageUrlList: string[];
+    loveNumber: number;
+    comments: Comment[];
+    createdAt: string;
+  };
 
-const PostCard = ({ name, time, desc, imageUrl }: Post) => {
+const PostCard = ({ userId, createdAt, content, imageUrlList }: Post) => {
   const styles = useCardStyles();
   const [love, setLove] = useState(false);
   const router = useRouter();
@@ -130,20 +149,20 @@ const PostCard = ({ name, time, desc, imageUrl }: Post) => {
           <AvatarIcon />
           <View style={styles.infoText}>
             <StyledText type='Heading_4' color='orange'>
-              {name}
+              {userId}
             </StyledText>
             <StyledText type='Placeholder' color='blackGrey'>
-              {time}
+              {createdAt}
             </StyledText>
           </View>
         </View>
         <StyledText type='Body' color='grey'>
-          {desc}
+          {content}
         </StyledText>
       </View>
       <StyledImage
         source={{
-          uri: imageUrl,
+          uri: imageUrlList[0],
         }}
         style={styles.image}
       />
@@ -178,7 +197,7 @@ const PostList = ({ postList }: PostListProps) => {
   return (
     <StyledFlatList
       emptyTitle='No post available!'
-      keyExtractor={({ id }) => id}
+      keyExtractor={({ postId }) => postId}
       data={postList}
       renderItem={({ item }) => <PostCard {...item} />}
       contentContainerStyle={{
