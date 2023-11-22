@@ -152,10 +152,13 @@ const SidebarContent = ({ descriptors, state, ...rest }: DrawerContentComponentP
       showsHorizontalScrollIndicator={false}>
       <View style={{ alignItems: 'center' }}>
         <StyledImage
-          source={require('../../assets/images/new/adaptive-icon.png')}
+          source={require('../../assets/images/adaptive-icon.png')}
           style={styles.icon}
         />
       </View>
+      <StyledText type='Heading_3' color='orange' style={styles.title}>
+        Vietnamese Cuisine
+      </StyledText>
       <View style={styles.user}>
         <AvatarIcon />
         <View style={styles.info}>
@@ -208,6 +211,10 @@ const useStyles = makeStyles(theme => {
     icon: {
       width: 150,
       height: 150,
+    },
+    title: {
+      paddingVertical: STYLES.PADDING.PADDING_8,
+      textAlign: 'center',
     },
     user: {
       flexDirection: 'row',

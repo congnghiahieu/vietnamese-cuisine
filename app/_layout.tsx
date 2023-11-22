@@ -65,41 +65,6 @@ const DarkThemeProvider = ({ children }: React.PropsWithChildren) => {
   return children;
 };
 
-// const AuthProvider = ({ children }: React.PropsWithChildren) => {
-//   const { setUser } = useAuthStates();
-//   useEffect(() => {
-//     const unsubscribeFromAuthStatusChanged = onAuthStateChanged(FIREBASE_AUTH, user => {
-//       console.log('Auth state change');
-//       if (user) {
-//         console.log('New user login');
-//         setUser(user);
-//       } else {
-//         console.log('New user logout');
-//         setUser(null);
-//       }
-//     });
-//     return unsubscribeFromAuthStatusChanged;
-//   }, []);
-
-//   // useFocusEffect(
-//   //   useCallback(() => {
-//   //     const unsubscribeFromAuthStatusChanged = onAuthStateChanged(FIREBASE_AUTH, user => {
-//   //       console.log('Auth state change');
-//   //       if (user) {
-//   //         console.log('New user login');
-//   //         setUser(user);
-//   //       } else {
-//   //         console.log('New user logout');
-//   //         setUser(null);
-//   //       }
-//   //     });
-//   //     return unsubscribeFromAuthStatusChanged;
-//   //   }, []),
-//   // );
-
-//   return children;
-// };
-
 const StackLayout = () => {
   return (
     <Stack
@@ -131,9 +96,6 @@ const StackLayout = () => {
         options={{
           title: 'Information',
           animation: 'slide_from_right',
-          // headerShown: true,
-          // headerTransparent: true,
-          // headerTitle: '',
         }}
       />
     </Stack>

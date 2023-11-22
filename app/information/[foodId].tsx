@@ -194,6 +194,9 @@ const InformationBottomSheetBody = ({
         favoriteFoods: love ? arrayRemove(title) : arrayUnion(title),
       });
     },
+    // onSuccess: () => {
+    //   setLove(prev => !prev);
+    // },
     onError: () => {
       StyledToast.show({
         type: 'error',

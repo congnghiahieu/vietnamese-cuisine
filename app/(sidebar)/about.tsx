@@ -10,13 +10,25 @@ import {
   OutlineButton,
   SolidButton,
 } from '@/components/Styled/StyledButton';
+import Animated, { FadeInLeft, FadeInRight, FadeOutRight } from 'react-native-reanimated';
+import {
+  ReFadeInDown,
+  ReFadeOutUp,
+  ReLightSpeedInLeft,
+  ReLightSpeedInRight,
+  ReLightSpeedOutLeft,
+  ReLightSpeedOutRight,
+} from '@/components/Animated';
 
 const About = () => {
   console.log('About re-render');
   const styles = useStyles();
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-      <View style={styles.block}>
+      <Animated.View
+        style={styles.block}
+        entering={ReLightSpeedInLeft}
+        exiting={ReLightSpeedOutRight}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
           Vietnamese Cuisine
         </StyledText>
@@ -34,8 +46,12 @@ const About = () => {
             />
           </View>
         </View>
-      </View>
-      <View style={styles.block}>
+      </Animated.View>
+
+      <Animated.View
+        style={styles.block}
+        entering={ReLightSpeedInRight}
+        exiting={ReLightSpeedOutLeft}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
           Social Media
         </StyledText>
@@ -50,9 +66,9 @@ const About = () => {
           />
           <TwitterButton title={'Follow us on Twitter'} />
         </View>
-      </View>
+      </Animated.View>
 
-      <View style={styles.block}>
+      <Animated.View style={styles.block} entering={ReFadeInDown} exiting={ReFadeOutUp}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
           Disclaimer
         </StyledText>
@@ -68,7 +84,7 @@ const About = () => {
             affiliated to any organization. {'\n'} Some images used in this app are not copyrighted.
           </StyledText>
         </View>
-      </View>
+      </Animated.View>
     </ScrollView>
   );
 };

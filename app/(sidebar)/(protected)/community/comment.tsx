@@ -5,6 +5,7 @@ import {
   ArrowLeftIcon,
   AvatarIcon,
   CommentIcon,
+  HeartFillIcon,
   HeartIcon,
   ImageIcon,
   PencilPostIcon,
@@ -69,54 +70,60 @@ const Comment = () => {
   const router = useRouter();
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior='padding' keyboardVerticalOffset={120}>
-      <CommentList commentList={COMMENT_LIST} />
+    <>
       <StyledDivider orientation='horizontal' />
-      <View style={styles.footer}>
-        <View style={styles.info}>
-          <StyledText type='Placeholder' color={theme.mode === 'dark' ? 'white' : 'black'}>
-            {comments.length} / {WORD_LIMIT}
-          </StyledText>
-          <View style={styles.numberContainer}>
-            <View style={styles.number}>
-              <HeartIcon active />
-              <StyledText type='Heading_4' color='redPink'>
-                55
-              </StyledText>
-            </View>
-            <View style={styles.number}>
-              <CommentIcon />
-              <StyledText type='Heading_4' color='blackGrey'>
-                16
-              </StyledText>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior='padding'
+        keyboardVerticalOffset={120}>
+        <CommentList commentList={COMMENT_LIST} />
+        <StyledDivider orientation='horizontal' />
+        <View style={styles.footer}>
+          <View style={styles.info}>
+            <StyledText type='Placeholder' color={theme.mode === 'dark' ? 'white' : 'black'}>
+              {comments.length} / {WORD_LIMIT}
+            </StyledText>
+            <View style={styles.numberContainer}>
+              <View style={styles.number}>
+                <HeartFillIcon />
+                <StyledText type='Heading_4' color='redPink'>
+                  55
+                </StyledText>
+              </View>
+              <View style={styles.number}>
+                <CommentIcon />
+                <StyledText type='Heading_4' color='blackGrey'>
+                  16
+                </StyledText>
+              </View>
             </View>
           </View>
+          <View style={styles.yourComment}>
+            <SearchInput
+              placeholder='Post your comment!'
+              containerStyle={{
+                flex: 1,
+              }}
+              maxLength={WORD_LIMIT}
+              value={comments}
+              onChangeText={setComments}
+              blurOnSubmit={false}
+            />
+            <SolidButton
+              icon={<SendIcon width={30} height={30} />}
+              iconPosition='left'
+              containerStyle={{
+                borderRadius: STYLES.RADIUS.RADIUS_10,
+              }}
+              buttonStyle={{
+                paddingHorizontal: STYLES.PADDING.PADDING_16,
+                paddingVertical: STYLES.PADDING.PADDING_8 + 2,
+              }}
+            />
+          </View>
         </View>
-        <View style={styles.yourComment}>
-          <SearchInput
-            placeholder='Post your comment!'
-            containerStyle={{
-              flex: 1,
-            }}
-            maxLength={WORD_LIMIT}
-            value={comments}
-            onChangeText={setComments}
-            blurOnSubmit={false}
-          />
-          <SolidButton
-            icon={<SendIcon width={30} height={30} />}
-            iconPosition='left'
-            containerStyle={{
-              borderRadius: STYLES.RADIUS.RADIUS_10,
-            }}
-            buttonStyle={{
-              paddingHorizontal: STYLES.PADDING.PADDING_16,
-              paddingVertical: STYLES.PADDING.PADDING_8 + 2,
-            }}
-          />
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 

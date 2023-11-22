@@ -130,13 +130,13 @@ export const BaseRotateLoading = ({
 };
 
 export const ChungCakeLoading = () => (
-  <BaseRotateLoading image={require('../../assets/images/new/chung-cake.png')} />
+  <BaseRotateLoading image={require('../../assets/images/chung-cake.png')} />
 );
 
 export const BanhMiLoading = () => {
   return (
     <BaseRotateLoading
-      image={require('../../assets/images/new/banh-mi.png')}
+      image={require('../../assets/images/banh-mi.png')}
       rotateTo={-720}
       scaleTo={2}
     />
@@ -146,7 +146,7 @@ export const BanhMiLoading = () => {
 export const GoiCuonLoading = () => {
   return (
     <BaseRotateLoading
-      image={require('../../assets/images/new/goi-cuon.png')}
+      image={require('../../assets/images/goi-cuon.png')}
       rotateTo={360}
       scaleTo={2}
       duration={STYLES.DURATION.DURATION_2000}
@@ -222,12 +222,12 @@ export const BaseZicZacLoading = ({
 };
 
 export const PhoLoading = () => (
-  <BaseZicZacLoading image={require('../../assets/images/new/pho.png')} />
+  <BaseZicZacLoading image={require('../../assets/images/pho.png')} />
 );
 
 export const NoodleLoading = () => (
   <BaseZicZacLoading
-    image={require('../../assets/images/new/noodle.png')}
+    image={require('../../assets/images/noodle.png')}
     duration={STYLES.DURATION.DURATION_1000 / 2}
     translateRatio={0.5}
   />

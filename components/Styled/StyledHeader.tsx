@@ -4,10 +4,19 @@ import { AntDesign } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { useRouter, useNavigation } from 'expo-router';
 import { STYLES } from '@/lib/constants';
-import { AvatarIcon, MenuIcon } from '@/components/Icon';
+import { AvatarIcon, MenuIcon, ResetIcon, SoundIcon } from '@/components/Icon';
 import StyledPressable from './StyledPressable';
 import StyledText from './StyledText';
 import { dismissKeyboard } from '@/lib/utils';
+import Animated, {
+  useSharedValue,
+  withTiming,
+  withSequence,
+  useAnimatedStyle,
+  Easing,
+} from 'react-native-reanimated';
+import { useSound } from '@/hooks/useSound';
+import { forwardRef, useReducer, useRef } from 'react';
 
 type SidebarHeaderProps = {
   title: string | undefined;
@@ -73,6 +82,93 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
   );
 };
 
-const useStyles = makeStyles(theme => ({}));
+type GameHeaderRightProps = {
+  soundOn: boolean;
+  onSoundPress: () => void;
+  onResetPress: () => void;
+};
+
+export const GameHeaderRight = ({ soundOn, onSoundPress, onResetPress }: GameHeaderRightProps) => {
+  const styles = useStyles();
+
+  return (
+    <View style={styles.headerRightContainer}>
+      <StyledPressable onPress={onSoundPress} style={styles.pressable}>
+        <SoundIcon active={soundOn} />
+      </StyledPressable>
+      <AnimatedResetIcon onResetPress={onResetPress} />
+    </View>
+  );
+};
+
+export const AnimatedResetIcon = ({ onResetPress }: Pick<GameHeaderRightProps, 'onResetPress'>) => {
+  const styles = useStyles();
+  const pressTime = useRef<number>(0);
+  const { playSound } = useSound(require('../../assets/sound/wind-sound.mp3'));
+  const duration = 200;
+  const easing = Easing.ease;
+  const scaleFrom = 1;
+  const scaleTo = 1.6;
+  const angle = 360;
+  const initalScale = useSharedValue(1);
+  const initialRotate = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: initalScale.value,
+      },
+      {
+        rotateZ: `${initialRotate.value}deg`,
+      },
+    ],
+  }));
+
+  const onAnimate = () => {
+    initalScale.value = withSequence(
+      withTiming(scaleTo, {
+        duration,
+        easing,
+      }),
+      withTiming(scaleFrom, {
+        duration,
+        easing,
+      }),
+    );
+
+    initialRotate.value = withTiming(-angle * pressTime.current, {
+      duration,
+      easing,
+    });
+  };
+
+  const handleResetPress = () => {
+    playSound();
+
+    pressTime.current += 1;
+    onAnimate();
+
+    onResetPress();
+  };
+  return (
+    <Animated.View style={[animatedStyle]}>
+      <StyledPressable onPress={handleResetPress} style={styles.pressable}>
+        <ResetIcon />
+      </StyledPressable>
+    </Animated.View>
+  );
+};
+
+const useStyles = makeStyles(theme => ({
+  headerRightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: STYLES.GAP.GAP_16,
+  },
+  pressable: {
+    // backgroundColor: 'red',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+  },
+}));
 
 export default StyledHeader;

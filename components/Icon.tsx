@@ -5,7 +5,6 @@ import {
   MaterialIcons,
   Entypo,
   FontAwesome5,
-  FontAwesome,
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
 import { View } from 'react-native';
@@ -21,7 +20,9 @@ import Animated, {
   withDelay,
   withRepeat,
 } from 'react-native-reanimated';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
+import { useAppearSoundEffect } from '@/hooks/useSound';
+import { Audio } from 'expo-av';
 
 export const SidebarHomeIcon = () => {
   const styles = useStyles();
@@ -39,12 +40,17 @@ export const ArrowLeftIcon = () => {
 
 export const ChevronLeftIcon = () => {
   const styles = useStyles();
-  return <MaterialIcons name='chevron-left' style={[styles.baseIcon, styles.blackGrey]} />;
+  return <MaterialIcons name='chevron-left' style={[styles.baseIcon, styles.blackGrey, {}]} />;
 };
 
 export const ChevronRightIcon = () => {
   const styles = useStyles();
   return <MaterialIcons name='chevron-right' style={[styles.baseIcon, styles.orange]} />;
+};
+
+export const CloseIcon = () => {
+  const styles = useStyles();
+  return <AntDesign name='close' style={[styles.baseIcon, styles.redPink]} />;
 };
 
 export const PlayCircleIcon = () => {
@@ -122,6 +128,21 @@ export const GoogleIcon = (props: SvgProps) => (
     />
   </Svg>
 );
+
+export const ResetIcon = () => {
+  const styles = useStyles();
+  return (
+    <Svg
+      width={STYLES.ICON_SIZE.ICON_SIZE_36}
+      height={STYLES.ICON_SIZE.ICON_SIZE_36}
+      color={styles.green.color}>
+      <Path
+        fill='currentColor'
+        d='M18 28A12 12 0 1 0 6 16v6.2l-3.6-3.6L1 20l6 6l6-6l-1.4-1.4L8 22.2V16a10 10 0 1 1 10 10Z'
+      />
+    </Svg>
+  );
+};
 
 export const TwitterIcon = () => {
   const styles = useStyles();
@@ -332,15 +353,16 @@ export const EyeIcon = ({ active }: ActiveIconProps) => {
   );
 };
 
-const HeartNoFillIcon = () => {
+export const HeartNoFillIcon = () => {
   const styles = useStyles();
   return <AntDesign name='hearto' style={[styles.baseIcon, styles.redPink]} />;
 };
 
-const HeartFillIcon = () => {
+export const HeartFillIcon = () => {
   const styles = useStyles();
   return <AntDesign name='heart' style={[styles.baseIcon, styles.redPink]} />;
 };
+
 const AnimatedHeartFillIconComponent = Animated.createAnimatedComponent(forwardRef(HeartFillIcon));
 const AnimatedHeartFillIcon = () => {
   const easing = Easing.elastic(2);
@@ -393,11 +415,58 @@ const AnimatedHeartFillIcon = () => {
     );
   }, []);
 
+  useAppearSoundEffect(require('../assets/sound/love-sound.mp3'));
+
   return <AnimatedHeartFillIconComponent style={animatedStyle} />;
 };
-
 export const HeartIcon = ({ active }: ActiveIconProps) => {
   return active ? <AnimatedHeartFillIcon /> : <HeartNoFillIcon />;
+};
+
+export const SoundOffIcon = () => {
+  const styles = useStyles();
+  return <Entypo name='sound-mute' style={[styles.baseIcon, styles.largeIcon, styles.orange]} />;
+};
+
+export const SoundOnIcon = () => {
+  const styles = useStyles();
+  return <Entypo name='sound' style={[styles.baseIcon, styles.largeIcon, styles.orange]} />;
+};
+
+const AnimatedSoundOnIconComponent = Animated.createAnimatedComponent(forwardRef(SoundOnIcon));
+const AnimatedSoundOnIcon = () => {
+  const easing = Easing.elastic(2);
+  const duration = 200;
+  const scaleFrom = 1;
+  const scaleTo = 1.4;
+  const initialScale = useSharedValue(scaleFrom);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: initialScale.value,
+      },
+    ],
+  }));
+
+  useEffect(() => {
+    initialScale.value = withSequence(
+      withTiming(scaleTo, {
+        duration,
+        easing,
+      }),
+      withTiming(scaleFrom, {
+        duration,
+        easing,
+      }),
+    );
+  }, []);
+
+  useAppearSoundEffect(require('../assets/sound/on-sound.mp3'));
+
+  return <AnimatedSoundOnIconComponent style={animatedStyle} />;
+};
+export const SoundIcon = ({ active }: ActiveIconProps) => {
+  return active ? <AnimatedSoundOnIcon /> : <SoundOffIcon />;
 };
 
 export const AudioControlIcon = ({ active }: ActiveIconProps) => {
@@ -431,6 +500,9 @@ const useStyles = makeStyles(theme => ({
   baseIcon: {
     fontSize: STYLES.ICON_SIZE.ICON_SIZE_24,
     color: theme.colors.white,
+  },
+  largeIcon: {
+    fontSize: STYLES.ICON_SIZE.ICON_SIZE_36,
   },
   blackGrey: {
     color: theme.colors.blackGrey,

@@ -6,11 +6,11 @@ module.exports = {
     slug: 'vietnamese-cuisine',
     version: '1.0.0',
     orientation: 'portrait',
-    icon: './assets/images/new/icon.jpg',
+    icon: './assets/images/icon.jpg',
     scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     splash: {
-      image: './assets/images/new/splash-3.png',
+      image: './assets/images/splash-3.png',
       resizeMode: 'contain',
       backgroundColor: '#FFF8F1',
     },
@@ -20,7 +20,7 @@ module.exports = {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: './assets/images/new/adaptive-icon.png',
+        foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#FFF8F1',
       },
     },
@@ -29,7 +29,17 @@ module.exports = {
       output: 'static',
       favicon: './assets/images/favicon.png',
     },
-    plugins: ['expo-router'],
+    plugins: [
+      'expo-router',
+      [
+        'expo-image-picker',
+        {
+          // 'photosPermission': 'Allow Vietnamese Cuisine to access your photos',
+          'cameraPermission': 'Allow Vietnamese Cuisine to access your camera',
+          // 'microphonePermission': 'Allow Vietnamese Cuisine to access your microphone',
+        },
+      ],
+    ],
     experiments: {
       typedRoutes: true,
       tsconfigPaths: true,

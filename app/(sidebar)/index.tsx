@@ -122,7 +122,11 @@ const FoodCard = ({ title, imageUrl }: FoodItem) => {
         favoriteFoods: love ? arrayRemove(title) : arrayUnion(title),
       });
     },
-    onError: () => {
+    // onSuccess: () => {
+    //   setLove(prev => !prev);
+    // },
+    onError: err => {
+      console.log(err);
       StyledToast.show({
         type: 'error',
         text1: `Fail to love ${title}`,

@@ -6,16 +6,18 @@ import StyledDivider from '@/components/Styled/StyledDivider';
 import { GithubButton, SolidButton } from '@/components/Styled/StyledButton';
 import { hp, wp } from '@/lib/utils';
 import { GiftIcon } from '@/components/Icon';
+import Animated from 'react-native-reanimated';
+import { ReBounceIn, ReBounceInDown, ReFadeOutDown, ReFadeOutUp } from '@/components/Animated';
 
 const Support = () => {
   console.log('Support re-render');
   const styles = useStyles();
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-      <View style={{ alignItems: 'center' }}>
-        <Image source={require('../../assets/images/new/adaptive-icon.png')} style={styles.icon} />
-      </View>
-      <View style={styles.block}>
+      <Animated.View style={{ alignItems: 'center' }} entering={ReBounceIn} exiting={ReFadeOutUp}>
+        <Image source={require('../../assets/images/adaptive-icon.png')} style={styles.icon} />
+      </Animated.View>
+      <Animated.View style={styles.block} entering={ReBounceInDown} exiting={ReFadeOutDown}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
           Vietnamese Cuisine
         </StyledText>
@@ -34,7 +36,7 @@ const Support = () => {
             <GithubButton title={'Contribute on Github'} />
           </View>
         </View>
-      </View>
+      </Animated.View>
     </ScrollView>
   );
 };

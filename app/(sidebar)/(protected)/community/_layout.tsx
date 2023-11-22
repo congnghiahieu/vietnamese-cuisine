@@ -1,14 +1,23 @@
-import { Platform } from 'react-native';
-import { ArrowLeftIcon } from '@/components/Icon';
+import { Platform, View } from 'react-native';
+import { CloseIcon } from '@/components/Icon';
 import StyledHeader from '@/components/Styled/StyledHeader';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import StyledText from '@/components/Styled/StyledText';
 import { Stack, useRouter } from 'expo-router';
+import { useTheme } from '@rneui/themed';
 
 const CommunityLayout = () => {
   const router = useRouter();
+  const { theme } = useTheme();
+  const dT = theme.mode === 'dark';
   return (
-    <Stack initialRouteName='index'>
+    <Stack
+      initialRouteName='index'
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: dT ? theme.colors.black : theme.colors.white,
+        },
+      }}>
       <Stack.Screen
         name='index'
         options={{
@@ -27,7 +36,7 @@ const CommunityLayout = () => {
           ),
           headerLeft: () => (
             <StyledPressable onPress={() => router.back()}>
-              <ArrowLeftIcon />
+              <CloseIcon />
             </StyledPressable>
           ),
           ...Platform.select({
@@ -50,7 +59,7 @@ const CommunityLayout = () => {
           ),
           headerLeft: () => (
             <StyledPressable onPress={() => router.back()}>
-              <ArrowLeftIcon />
+              <CloseIcon />
             </StyledPressable>
           ),
           ...Platform.select({

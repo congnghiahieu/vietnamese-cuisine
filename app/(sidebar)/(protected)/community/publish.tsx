@@ -8,8 +8,10 @@ import { useState } from 'react';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
 import { SolidButton } from '@/components/Styled/StyledButton';
 import { hp, wp } from '@/lib/utils';
-import StyledImage from '@/components/Styled/StyledImage';
 import StyledCarousel from '@/components/Styled/StyledCarousel';
+import * as ImagePicker from 'expo-image-picker';
+import StyledDivider from '@/components/Styled/StyledDivider';
+
 const imageUrlList = [
   'https://media.cnn.com/api/v1/images/stellar/prod/170504142019-pho.jpg?q=w_1110,c_fill/f_webp',
   'https://media.cnn.com/api/v1/images/stellar/prod/170504152158-cha-ca.jpg?q=w_1110,c_fill/f_webp',
@@ -30,63 +32,82 @@ const WORD_LIMIT = 500;
 
 const Publish = () => {
   const styles = useStyles();
-  const [thought, setThought] = useState('');
-  const [images, setImages] = useState(false);
   const { theme } = useTheme();
+  const [thought, setThought] = useState('');
+  const [_, requestLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
+  const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
 
-  const pickImages = () => setImages(prev => !prev);
+  const pickImages = async () => {
+    const status = await requestLibraryPermission();
+    if (!status.granted) {
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsMultipleSelection: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      orderedSelection: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setImages(result.assets);
+    }
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.contentHeader}>
-        <AvatarIcon />
-        <StyledText type='Heading_4' color='orange'>
-          Cong Nghia Hieu
-        </StyledText>
-        <StyledPressable style={styles.imageButton} onPress={pickImages}>
-          <ImageIcon />
-        </StyledPressable>
-      </View>
-      <View style={styles.writeThought}>
-        <StyledText type='Placeholder' color={theme.mode === 'dark' ? 'white' : 'black'}>
-          {thought.length} / {WORD_LIMIT}
-        </StyledText>
-        <TextInput
-          placeholder='Write your thought'
-          placeholderTextColor={theme.colors.whiteGrey}
-          multiline
-          maxLength={WORD_LIMIT}
-          // numberOfLines={DEFAULT_LINE}
-          style={styles.input}
-          value={thought}
-          onChangeText={setThought}
-        />
-      </View>
-      <View style={styles.imageContainer}>
-        {images ? (
-          <StyledCarousel
-            imageUrlList={imageUrlList}
-            width={wp(100) - STYLES.MARGIN.MARGIN_16 * 2}
-            height={hp(50)}
-          />
-        ) : (
-          <StyledPressable style={styles.imagePlaceholder} onPress={pickImages}>
-            <StyledText type='Heading_2' color='blackGrey'>
-              Pick some images
-            </StyledText>
+    <>
+      <StyledDivider orientation='horizontal' />
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.contentHeader}>
+          <AvatarIcon />
+          <StyledText type='Heading_4' color='orange'>
+            Cong Nghia Hieu
+          </StyledText>
+          <StyledPressable style={styles.imageButton} onPress={pickImages}>
+            <ImageIcon />
           </StyledPressable>
-        )}
-      </View>
-      <SolidButton
-        title='Publish this post'
-        icon={<PencilPostIcon />}
-        iconPosition='left'
-        containerStyle={{
-          borderRadius: STYLES.RADIUS.RADIUS_10,
-          marginTop: STYLES.MARGIN.MARGIN_8,
-        }}
-      />
-    </ScrollView>
+        </View>
+        <View style={styles.writeThought}>
+          <StyledText type='Placeholder' color={theme.mode === 'dark' ? 'white' : 'black'}>
+            {thought.length} / {WORD_LIMIT}
+          </StyledText>
+          <TextInput
+            placeholder='Write your thought'
+            placeholderTextColor={theme.colors.whiteGrey}
+            multiline
+            maxLength={WORD_LIMIT}
+            // numberOfLines={DEFAULT_LINE}
+            style={styles.input}
+            value={thought}
+            onChangeText={setThought}
+          />
+        </View>
+        <View style={styles.imageContainer}>
+          {images.length ? (
+            <StyledCarousel
+              imageUrlList={imageUrlList}
+              width={wp(100) - STYLES.MARGIN.MARGIN_16 * 2}
+              height={hp(50)}
+            />
+          ) : (
+            <StyledPressable style={styles.imagePlaceholder} onPress={pickImages}>
+              <StyledText type='Heading_2' color='blackGrey'>
+                Pick some images
+              </StyledText>
+            </StyledPressable>
+          )}
+        </View>
+        <SolidButton
+          title='Publish this post'
+          icon={<PencilPostIcon />}
+          iconPosition='left'
+          containerStyle={{
+            borderRadius: STYLES.RADIUS.RADIUS_10,
+            marginTop: STYLES.MARGIN.MARGIN_16,
+          }}
+        />
+      </ScrollView>
+    </>
   );
 };
 
@@ -124,7 +145,7 @@ const useStyles = makeStyles(theme => {
       ...(Platform.OS === 'ios' ? {} : {}),
     },
     imageContainer: {
-      height: hp(50),
+      height: hp(48),
       marginTop: STYLES.MARGIN.MARGIN_8,
       borderRadius: STYLES.RADIUS.RADIUS_10,
       overflow: 'hidden',

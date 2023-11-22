@@ -115,7 +115,7 @@ const Login = () => {
         <Animated.View entering={ReFadeInUp} exiting={ReFadeOutUp}>
           <View style={{ alignItems: 'center' }}>
             <StyledImage
-              source={require('../assets/images/new/adaptive-icon.png')}
+              source={require('../assets/images/adaptive-icon.png')}
               style={styles.icon}
             />
           </View>
