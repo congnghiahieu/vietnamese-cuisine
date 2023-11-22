@@ -3,11 +3,11 @@ export type Step = {
   content: string;
 };
 
-// Ở dưới dùng id cho post, comment, user id. Hay là dùng luôn foodId cho Food, name cho xuống title
+
 export type Food = {
   foodId: string; // name of this food
+  title: string // same as food
   imageUrlList: string[];
-  // title: string
   subTitle: string;
   introduce: string;
   ingredientList: string[];
@@ -38,3 +38,5 @@ export type Post = {
   comments: Comment[];
   createdAt: string;
 };
+
+

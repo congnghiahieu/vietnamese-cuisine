@@ -34,7 +34,7 @@ module.exports = {
       [
         'expo-image-picker',
         {
-          // 'photosPermission': 'Allow Vietnamese Cuisine to access your photos',
+          'photosPermission': 'Allow Vietnamese Cuisine to access your photos',
           'cameraPermission': 'Allow Vietnamese Cuisine to access your camera',
           // 'microphonePermission': 'Allow Vietnamese Cuisine to access your microphone',
         },

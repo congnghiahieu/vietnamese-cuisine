@@ -64,7 +64,9 @@ const Register = () => {
       const userEmail = user?.email?.toString() || data.email;
       await setDoc(doc(FIREBASE_DB, 'users', userEmail), {
         email: userEmail,
-        favoriteFoods: [],
+        fullname: data.fullname,
+        favouritedFoods: [],
+        lovePosts: [],
       });
     },
     onSuccess: () => {

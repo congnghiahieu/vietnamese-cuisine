@@ -122,4 +122,5 @@ const FAVORITE_LIST = [
         title: "Bánh Chưng",
         imageUrl: "https://statics.vinpearl.com/banh-chung-1_1668262682.jpg",
     },
+
 ];
