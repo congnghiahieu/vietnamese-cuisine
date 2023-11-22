@@ -29,8 +29,7 @@ import { useAuthStates } from "@/states/auth";
 import { HoldingView } from "@/components/Styled/StyledView";
 import { useAuth } from "@/context/AuthContext";
 
-
-const Favorites = () => {
+const Favourites = () => {
     console.log("Favourites re-render");
     // const user = FIREBASE_AUTH.currentUser;
     // const { user } = useAuthentication();
@@ -39,28 +38,32 @@ const Favorites = () => {
     //   return <Redirect href={'/login'} />;
     // }
 
-    const [favoriteList, setFavoriteList] = useState<Favorite[]>([]);
-    const getFavoriteList = async () => {
+    const [favouriteList, setFavouriteList] = useState<Favourite[]>([]);
+    const getFavouriteList = async () => {
+        
+
+
+
         try {
             if (user?.email) {
-                let favoriteList: Favorite[] = [];
+                let favouriteList: Favourite[] = [];
                 const docRef = doc(FIREBASE_DB, "users", user.email);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    const fetchedFavoriteList =
-                        docSnap.data()?.favoriteFoods || [];
-                    for (const foodId of fetchedFavoriteList) {
+                    const fetchedFavouriteList =
+                        docSnap.data()?.favouritedFoods || [];
+                    for (const foodId of fetchedFavouriteList) {
                         const foodRef = doc(FIREBASE_DB, "foods", foodId);
                         const foodSnap = await getDoc(foodRef);
                         if (foodSnap.exists()) {
                             const { title, imageUrl } = foodSnap.data();
-                            const temp: Favorite = { title, imageUrl };
-                            favoriteList.push(temp);
+                            const temp: Favourite = { title, imageUrl };
+                            favouriteList.push(temp);
                         }
                     }
                 }
-                setFavoriteList(favoriteList);
-                console.log(favoriteList);
+                setFavouriteList(favouriteList);
+                console.log(favouriteList);
             }
         } catch (error) {
             console.error(
@@ -71,20 +74,20 @@ const Favorites = () => {
     };
 
     useEffect(() => {
-        getFavoriteList();
+        getFavouriteList();
     }, []);
     return (
-        <FavoriteList favoriteList={favoriteList} />
+        <FavouriteList favouriteList={favouriteList} />
         // <FavoriteList favoriteList={[]} />
     );
 };
 
-type Favorite = {
+type Favourite = {
     title: string;
     imageUrl: string;
 };
 
-const FavoriteCard = ({ title, imageUrl }: Favorite) => {
+const FavouriteCard = ({ title, imageUrl }: Favourite) => {
     const styles = useStyles();
     const router = useRouter();
 
@@ -121,23 +124,23 @@ const FavoriteCard = ({ title, imageUrl }: Favorite) => {
     );
 };
 
-type FavoriteListProps = {
-    favoriteList: Favorite[];
+type FavouriteListProps = {
+    favouriteList: Favourite[];
 };
 
-const FavoriteList = ({ favoriteList }: FavoriteListProps) => {
+const FavouriteList = ({ favouriteList }: FavouriteListProps) => {
     return (
         <StyledFlatList
             emptyTitle=""
             keyExtractor={({ title }) => title}
-            data={favoriteList}
-            renderItem={({ item }) => <FavoriteCard {...item} />}
-            ListEmptyComponent={FavoriteEmpty}
+            data={favouriteList}
+            renderItem={({ item }) => <FavouriteCard {...item} />}
+            ListEmptyComponent={FavouriteEmpty}
         />
     );
 };
 
-const FavoriteEmptySubField = () => {
+const FavouriteEmptySubField = () => {
     const router = useRouter();
 
     return (
@@ -155,11 +158,11 @@ const FavoriteEmptySubField = () => {
     );
 };
 
-const FavoriteEmpty = () => {
+const FavouriteEmpty = () => {
     return (
         <EmptyList
-            title="No favorite dish"
-            subField={<FavoriteEmptySubField />}
+            title="No favourite dish"
+            subField={<FavouriteEmptySubField />}
         />
     );
 };
@@ -206,4 +209,4 @@ const useStyles = makeStyles((theme) => {
     };
 });
 
-export default Favorites;
+export default Favourites;
