@@ -53,8 +53,6 @@ export const HoldingView = ({ style, children, ...otherProps }: ViewProps) => {
 };
 
 export const LoadingView = ({ LoadingComponent = RandomLoading }: LoadingViewProps) => {
-  console.log('Loading...');
-
   return (
     <HoldingView>
       <LoadingComponent />

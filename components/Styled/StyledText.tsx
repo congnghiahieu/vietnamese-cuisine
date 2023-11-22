@@ -3,10 +3,20 @@ import { Text, TextProps } from '@rneui/themed';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 
-export type StyledTextProps = TextProps;
+export type StyledTextProps = TextProps & {
+  lengthLimit?: number;
+};
 const StyledText = (props: StyledTextProps) => {
-  const { children, ...otherProps } = props;
-  return <Text {...otherProps}>{children}</Text>;
+  const { children, lengthLimit, ...otherProps } = props;
+  let newChildren = children;
+  if (Array.isArray(newChildren)) {
+    newChildren = newChildren.join(' ');
+  }
+  if (lengthLimit && typeof newChildren === 'string' && newChildren.length > lengthLimit) {
+    newChildren = newChildren.slice(0, lengthLimit) + '...';
+  }
+
+  return <Text {...otherProps}>{newChildren}</Text>;
 };
 
 export const ContinueWithText = () => {

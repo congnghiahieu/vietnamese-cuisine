@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, StatusBar, Platform } from 'react-native';
 import { Slider, ListItem, makeStyles, useTheme } from '@rneui/themed';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
+import * as Speech from 'expo-speech';
 import * as Linking from 'expo-linking';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { AnimatedHandle, AnimatedHandleProps } from '@/components/Styled/BottomSheet/StyledHandle';
@@ -10,64 +11,56 @@ import StyledBackground, {
 } from '@/components/Styled/BottomSheet/StyledBackground';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import StyledCarousel from '@/components/Styled/StyledCarousel';
 import { SolidButton } from '@/components/Styled/StyledButton';
 import { PlayCircleIcon, ChevronLeftIcon, HeartIcon, AudioControlIcon } from '@/components/Icon';
 import { hp, wp } from '@/lib/utils';
 import { STYLES } from '@/lib/constants';
-import { ErrorView, LoadingView, SafeView } from '@/components/Styled/StyledView';
-import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
-import {
-  query,
-  collection,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-  setDoc,
-  arrayRemove,
-  arrayUnion,
-  updateDoc,
-} from 'firebase/firestore';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { ErrorView, LoadingView } from '@/components/Styled/StyledView';
+import { FIREBASE_DB } from '@/config/firebase';
+import { doc, getDoc, arrayRemove, arrayUnion, updateDoc } from 'firebase/firestore';
+import Carousel from 'react-native-reanimated-carousel';
+import { useSharedValue } from 'react-native-reanimated';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import StyledToast from '@/components/Styled/StyledToast';
-import { useAuthStates } from '@/states/auth';
 import { useAuth } from '@/context/AuthContext';
+import StyledImage from '@/components/Styled/StyledImage';
+import { PaginationItem } from '@/components/Styled/StyledCarousel';
+import { Food, User } from '@/config/model';
+import { useSound } from '@/hooks/useSound';
 
-type FoodInformation = {
-  foodId: string;
-  imageUrlList: string[];
-  title: string;
-  subTitle: string;
-  introduce: string;
-  ingredientList: string[];
-  steps: Step[];
-  videoLink: string;
-};
-
-type Step = {
-  title: string;
-  content: string;
-};
-
-const Information = () => {
-  const foodId = decodeURI(useLocalSearchParams<{ foodId: string }>().foodId);
-  console.log(foodId);
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ['food', 'Phở'],
+const useFoodQuery = ({ title, email }: { title: string; email: string }) =>
+  useQuery<Food>({
+    queryKey: ['food', title, email],
     queryFn: async () => {
-      const docRef = doc(FIREBASE_DB, 'foods', 'Phở');
+      const docRef = doc(FIREBASE_DB, 'foods', title);
       const docSnap = await getDoc(docRef);
       if (!docSnap.exists()) {
         throw new Error(`Information not available`);
       }
-      return docSnap.data() as FoodInformation;
+      let food = docSnap.data() as Food;
+      if (!email) return food;
+      const userRef = doc(FIREBASE_DB, 'users', email);
+      const userDoc = await getDoc(userRef);
+      if (!userDoc.exists()) return food;
+
+      const user = userDoc.data() as User;
+      food.loved = user.favouritedFoods.includes(food.title);
+      return food;
     },
   });
 
-  let effect: React.ReactNode = null;
+const Information = () => {
+  console.log('Information re-render');
+  const title = decodeURI(useLocalSearchParams<{ title: string }>().title);
 
-  if (isPending) {
+  const { user } = useAuth();
+  const { data, isPending, isError, error, isFetching } = useFoodQuery({
+    title,
+    email: user?.email || '',
+  });
+
+  let effect: React.ReactNode = null;
+  if (isPending || isFetching) {
     effect = <LoadingView />;
   }
   if (isError) {
@@ -87,29 +80,12 @@ const Information = () => {
   );
 };
 
-type ImageSlideProps = {
-  imageUrlList: string[];
-};
-
-const ImageSlide = ({ imageUrlList }: ImageSlideProps) => {
+const ImageSlide = ({ imageUrlList }: Pick<Food, 'imageUrlList'>) => {
   const styles = useStyles();
   const router = useRouter();
-  imageUrlList = [
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504142019-pho.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504152158-cha-ca.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504142339-banh-xeo.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/111005063013-vietnam-food-cao-lau.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170306134418-goi-cuon.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504151643-banh-knot.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504151239-bun-bo-nam-bo.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504150749-ga-nuong.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/160524100325-05-vietnam-dishes-xoi.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504150157-banh-cuon.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/160524092144-vietnam-street-food-bot-chien.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504145056-bun-cha.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170124150901-26-banh-mi.jpg?q=w_1110,c_fill/f_webp',
-    'https://media.cnn.com/api/v1/images/stellar/prod/170504144408-banh-bao.jpg?q=w_1110,c_fill/f_webp',
-  ];
+  const carouselWidth = wp(100);
+  const carouselHeight = hp(55);
+  const progressValue = useSharedValue<number>(0);
 
   return (
     <View style={styles.imageSlideContainer}>
@@ -120,12 +96,68 @@ const ImageSlide = ({ imageUrlList }: ImageSlideProps) => {
         style={styles.backButton}>
         <ChevronLeftIcon />
       </StyledPressable>
-      <StyledCarousel imageUrlList={imageUrlList} width={wp(100)} height={hp(55)} />
+      {/* Image Carousel*/}
+      <View
+        style={{
+          position: 'relative',
+        }}>
+        <Carousel
+          mode='horizontal-stack'
+          modeConfig={{}}
+          // autoPlay
+          // autoPlayReverse
+          // autoPlayInterval={2000}
+          scrollAnimationDuration={STYLES.DURATION.DURATION_1000 / 2}
+          loop
+          pagingEnabled
+          snapEnabled
+          onProgressChange={(_, absoluteProgress) => {
+            // console.log(absoluteProgress);
+            progressValue.value = absoluteProgress;
+          }}
+          width={carouselWidth}
+          height={carouselHeight}
+          data={imageUrlList}
+          renderItem={({ item }) => {
+            return (
+              <StyledImage
+                source={{
+                  uri: item,
+                }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+            );
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            top: (carouselHeight / 11) * 10 - STYLES.MARGIN.MARGIN_16,
+            flexDirection: 'row',
+            alignSelf: 'center',
+            gap: STYLES.GAP.GAP_4,
+          }}>
+          {imageUrlList.map((_, index) => {
+            return (
+              <PaginationItem
+                key={index}
+                index={index}
+                length={imageUrlList.length}
+                animatedValue={progressValue}
+              />
+            );
+          })}
+        </View>
+      </View>
+      {/* Image Carousel*/}
     </View>
   );
 };
 
-const InformationBottomSheet = (props: FoodInformation) => {
+const InformationBottomSheet = (props: Food) => {
   const snapPoints = useMemo(() => ['50%', '70%', '90%'] as const, []);
 
   return (
@@ -172,11 +204,14 @@ const InformationBottomSheetBody = ({
   ingredientList,
   steps,
   videoLink,
-}: FoodInformation) => {
+  loved,
+}: Food) => {
   const styles = useStyles();
   const router = useRouter();
-  const [love, setLove] = useState(false);
   const { user } = useAuth();
+  const [love, setLove] = useState(loved || false);
+  const { playSound } = useSound(require('../../assets/sound/love-sound.mp3'));
+  const queryClient = useQueryClient();
 
   const loveMutation = useMutation({
     mutationFn: async () => {
@@ -189,15 +224,24 @@ const InformationBottomSheetBody = ({
         return;
       }
       setLove(prev => !prev);
+      if (!love) {
+        playSound();
+      }
       const docRef = doc(FIREBASE_DB, 'users', user.email);
       await updateDoc(docRef, {
-        favoriteFoods: love ? arrayRemove(title) : arrayUnion(title),
+        favouritedFoods: love ? arrayRemove(title) : arrayUnion(title),
       });
     },
-    // onSuccess: () => {
-    //   setLove(prev => !prev);
-    // },
+    onSuccess: () => {
+      queryClient.resetQueries({
+        queryKey: ['food', 'list'],
+      });
+      queryClient.resetQueries({
+        queryKey: ['favourite', user?.email],
+      });
+    },
     onError: () => {
+      setLove(prev => !prev);
       StyledToast.show({
         type: 'error',
         text1: `Fail to love ${title}`,
@@ -225,9 +269,9 @@ const InformationBottomSheetBody = ({
         <StyledText type='Heading_3' color='orange'>
           Story
         </StyledText>
-        <AudioControl />
+        <AudioControl introduce={introduce} />
         <StyledText type='Body' color='grey' style={{ textAlign: 'justify' }}>
-          {introduce.replaceAll(/\s+/g, ' ')}
+          {introduce}
         </StyledText>
       </View>
       <View>
@@ -299,11 +343,7 @@ const IngredientSubList = ({ ingredients }: IngredientListProps) => {
   );
 };
 
-type StepListProps = {
-  steps: Step[];
-};
-
-const StepList = ({ steps }: StepListProps) => {
+const StepList = ({ steps }: Pick<Food, 'steps'>) => {
   return (
     <View>
       {steps.map(step => (
@@ -322,46 +362,139 @@ const StepList = ({ steps }: StepListProps) => {
   );
 };
 
-const AudioControl = () => {
+// 711 character ~ rate 1 ~ 47413 milliseconds ~ 48 seconds => WORD_PER_SECOND_PER_RATE = 14.8125 ~ 15
+
+// 248 word ~ rate 1 ~ 74761 ms => WORD_PER_SECOND_PER_RATE = 3.3172
+// 155 word ~ rate 1 ~ 47327 ms => WORD_PER_SECOND_PER_RATE = 3.2750
+// 71 word ~ rate 1 ~ 21214 ms => WORD_PER_SECOND_PER_RATE = 3.3468
+// 82 word ~ rate 1 ~ 24995 ms => WORD_PER_SECOND_PER_RATE = 3.2806
+// 91 word ~ rate 1 ~ 28024 ms => WORD_PER_SECOND_PER_RATE = 3.2472
+// 207 word ~ rate 1 ~ 65827 ms => WORD_PER_SECOND_PER_RATE = 3.1446
+// 112 word ~ rate 1 ~ 36813 ms => WORD_PER_SECOND_PER_RATE = 3.0424
+// 191 word ~ rate 1 ~ 65228 ms => WORD_PER_SECOND_PER_RATE = 2.9281
+
+const WORD_PER_SECOND_PER_RATE = 3.4;
+const calculateSpeakPeriodBySeconds = ({
+  wordCount,
+  speedRate = 1,
+}: {
+  wordCount: number;
+  speedRate?: number;
+}) => {
+  const period = Math.floor(wordCount / (WORD_PER_SECOND_PER_RATE * speedRate));
+  return {
+    start: 1,
+    end: 1 + period,
+  };
+};
+
+const AudioControl = ({ introduce }: Pick<Food, 'introduce'>) => {
   const styles = useStyles();
+  const { theme } = useTheme();
+  const speechSpeedRate = 1;
+  const { start, end } = useMemo(
+    () =>
+      calculateSpeakPeriodBySeconds({
+        wordCount: introduce.split(' ').length,
+        speedRate: speechSpeedRate,
+      }),
+    [],
+  );
   const [playing, setPlaying] = useState(false);
+  const [sliderValue, setSliderValue] = useState(start);
+  const intervalId = useRef<any>(null);
+  // const startRef = useRef<number>();
+  // const endRef = useRef<number>();
+
+  const handleSpeech = async () => {
+    const voiceList = await Speech.getAvailableVoicesAsync();
+    // console.log(voiceList.length);
+    const vietnamVoice = voiceList.find(voice => {
+      // console.log(`${voice.language}: ${voice.name} : ${voice.identifier}`);
+      return voice.language.includes('vi');
+    });
+    const vietnamVoiceId = 'com.apple.voice.compact.vi-VN.Linh';
+    const englishVoiceId = 'com.apple.ttsbundle.siri_Martha_en-GB_compact';
+
+    const alreadyPlay = await Speech.isSpeakingAsync();
+    if (!alreadyPlay) {
+      Speech.speak(introduce, {
+        language: 'vi',
+        pitch: 1,
+        rate: speechSpeedRate,
+        voice: vietnamVoiceId,
+        onStart: () => {
+          // console.log('Rate:', 1);
+          // console.log('Paragraph length:', introduce.split(' ').length);
+          // startRef.current = Date.now();
+          // console.log('Start at:', startRef.current);
+          // console.log('Started');
+        },
+        onDone: () => {
+          // endRef.current = Date.now();
+          // const long = endRef.current - startRef.current!;
+          // console.log('Long:', long, 'milliseconds');
+          // console.log('Long: ', Math.round(long / 1000), 'seconds');
+          clearInterval(intervalId.current);
+          intervalId.current = null;
+          setPlaying(false);
+          setSliderValue(1);
+        },
+      });
+      setPlaying(true);
+    } else if (alreadyPlay && playing) {
+      await Speech.pause();
+      setPlaying(false);
+    } else {
+      await Speech.resume();
+      setPlaying(true);
+    }
+  };
+
+  useEffect(() => {
+    if (playing) {
+      intervalId.current = setInterval(() => {
+        setSliderValue(prev => prev + 1);
+      }, 1000);
+    } else if (!playing && intervalId != null) {
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    }
+  }, [playing]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        Speech.stop();
+      };
+    }, []),
+  );
 
   return (
     <View style={styles.audioControlContainer}>
-      <StyledPressable onPress={() => setPlaying(prev => !prev)}>
+      <StyledPressable onPress={() => handleSpeech()}>
         <AudioControlIcon active={playing} />
       </StyledPressable>
-      <AudioSlider />
+      <Slider
+        value={sliderValue}
+        minimumValue={start}
+        maximumValue={end}
+        step={1}
+        // allowTouchTrack
+        orientation='horizontal'
+        minimumTrackTintColor={theme.colors.orange}
+        maximumTrackTintColor={theme.colors.whiteGrey}
+        trackStyle={styles.track}
+        thumbStyle={styles.thumb}
+        thumbTouchSize={{
+          width: STYLES.ICON_SIZE.ICON_SIZE_24,
+          height: STYLES.ICON_SIZE.ICON_SIZE_24,
+        }}
+        style={{
+          flex: 1,
+        }}
+      />
     </View>
-  );
-};
-
-const AudioSlider = () => {
-  const [sliderValue, setSliderValue] = useState(0);
-  const { theme } = useTheme();
-  const styles = useStyles();
-
-  return (
-    <Slider
-      value={sliderValue}
-      onValueChange={setSliderValue}
-      maximumValue={50}
-      minimumValue={0}
-      step={1}
-      allowTouchTrack
-      orientation='horizontal'
-      minimumTrackTintColor={theme.colors.orange}
-      maximumTrackTintColor={theme.colors.whiteGrey}
-      trackStyle={styles.track}
-      thumbStyle={styles.thumb}
-      thumbTouchSize={{
-        width: STYLES.ICON_SIZE.ICON_SIZE_24,
-        height: STYLES.ICON_SIZE.ICON_SIZE_24,
-      }}
-      style={{
-        flex: 1,
-      }}
-    />
   );
 };
 

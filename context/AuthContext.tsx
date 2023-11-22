@@ -29,7 +29,7 @@ export const useProtectedRoute = (user: AuthUser | null) => {
   const [hasNavigated, setHasNavigated] = useState(false);
   useEffect(() => {
     // if (!navigationState.key || hasNavigated) return;
-    console.log(segments);
+    // console.log(segments);
     // (sidebar)(protected)
     const inProtectedGroup = segments.includes('(protected)' as never);
     // const from = '/' + segments.join('/');

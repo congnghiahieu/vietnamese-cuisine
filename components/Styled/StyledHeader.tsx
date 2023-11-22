@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { useRouter, useNavigation } from 'expo-router';
 import { STYLES } from '@/lib/constants';
-import { AvatarIcon, MenuIcon, ResetIcon, SoundIcon } from '@/components/Icon';
+import { AvatarIcon, MenuIcon, RetweetIcon, SoundIcon } from '@/components/Icon';
 import StyledPressable from './StyledPressable';
 import StyledText from './StyledText';
 import { dismissKeyboard } from '@/lib/utils';
@@ -152,7 +152,7 @@ export const AnimatedResetIcon = ({ onResetPress }: Pick<GameHeaderRightProps, '
   return (
     <Animated.View style={[animatedStyle]}>
       <StyledPressable onPress={handleResetPress} style={styles.pressable}>
-        <ResetIcon />
+        <RetweetIcon />
       </StyledPressable>
     </Animated.View>
   );

@@ -63,11 +63,16 @@ const COMMENT_LIST = [
   },
 ];
 
+type Comment = {
+  id: string;
+  name: string;
+  content: string;
+};
+
 const Comment = () => {
   const styles = useStyles();
   const [comments, setComments] = useState('');
   const { theme } = useTheme();
-  const router = useRouter();
 
   return (
     <>
@@ -76,7 +81,12 @@ const Comment = () => {
         style={styles.container}
         behavior='padding'
         keyboardVerticalOffset={120}>
-        <CommentList commentList={COMMENT_LIST} />
+        <StyledFlatList
+          emptyTitle={`Be the first one \n comment this post`}
+          keyExtractor={({ id }) => id}
+          data={COMMENT_LIST}
+          renderItem={({ item }) => <CommentCard {...item} />}
+        />
         <StyledDivider orientation='horizontal' />
         <View style={styles.footer}>
           <View style={styles.info}>
@@ -127,12 +137,6 @@ const Comment = () => {
   );
 };
 
-type Comment = {
-  id: string;
-  name: string;
-  content: string;
-};
-
 const CommentCard = ({ name, content }: Comment) => {
   const styles = useStyles();
 
@@ -140,29 +144,19 @@ const CommentCard = ({ name, content }: Comment) => {
     <View style={styles.card}>
       <AvatarIcon />
       <View style={styles.content}>
-        <StyledText type='Heading_5' color='orange'>
-          {name}
-        </StyledText>
+        <View style={styles.meta}>
+          <StyledText type='Heading_5' color='orange'>
+            {name}
+          </StyledText>
+          <StyledText type='Placeholder' color='blackGrey'>
+            2 hours ago
+          </StyledText>
+        </View>
         <StyledText type='Comment' color='grey'>
           {content}
         </StyledText>
       </View>
     </View>
-  );
-};
-
-type CommentListProps = {
-  commentList: Comment[];
-};
-
-const CommentList = ({ commentList }: CommentListProps) => {
-  return (
-    <StyledFlatList
-      emptyTitle={`Be the first one \n comment this post`}
-      keyExtractor={({ id }) => id}
-      data={commentList}
-      renderItem={({ item }) => <CommentCard {...item} />}
-    />
   );
 };
 
@@ -224,6 +218,11 @@ const useStyles = makeStyles(theme => {
       backgroundColor: dT ? theme.colors.background : theme.colors.white,
       borderRadius: STYLES.RADIUS.RADIUS_10,
       ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8),
+    },
+    meta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
   };
 });

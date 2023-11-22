@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Redirect, useFocusEffect, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { AvatarIconWithCamera, LockIcon, PencilEditIcon, SignOutIcon } from '@/components/Icon';
@@ -10,17 +10,12 @@ import { SolidButton } from '@/components/Styled/StyledButton';
 import { FIREBASE_AUTH } from '@/config/firebase';
 import { signOut } from 'firebase/auth';
 import StyledToast from '@/components/Styled/StyledToast';
-import { useAuthStates } from '@/states/auth';
 import { useMutation } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
-import { LoadingView } from '@/components/Styled/StyledView';
-import { StyledCircleLoading } from '@/components/Styled/StyledLoading';
 import { useAuth } from '@/context/AuthContext';
 
 const Profile = () => {
   console.log('Profile re-render');
   const styles = useStyles();
-  // const user = FIREBASE_AUTH.currentUser;
   const { user } = useAuth();
   const router = useRouter();
   const signOutMutation = useMutation({
@@ -46,28 +41,6 @@ const Profile = () => {
       signOutMutation.reset();
     },
   });
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setKey(Math.random());
-  //   }, []),
-  // );
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     console.log('Focus effect');
-  //     if (!user) {
-  //       // router.replace('/login');
-  //       router.push('/login');
-  //     }
-
-  //     return signOutMutation.reset;
-  //   }, []),
-  // );
-
-  // if (!user) {
-  //   return <LoadingView LoadingComponent={StyledCircleLoading} />;
-  // }
 
   return (
     <View style={styles.container}>

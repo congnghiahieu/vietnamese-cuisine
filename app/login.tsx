@@ -1,15 +1,8 @@
 import { useCallback } from 'react';
-import { TextInput, View, Keyboard } from 'react-native';
-import {
-  useRouter,
-  useFocusEffect,
-  useNavigation,
-  useLocalSearchParams,
-  useGlobalSearchParams,
-} from 'expo-router';
-import { DrawerActions } from '@react-navigation/native';
+import { View } from 'react-native';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import StyledToast from '@/components/Styled/StyledToast';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';

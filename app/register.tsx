@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import StyledText, { ContinueWithText } from '@/components/Styled/StyledText';
 import { FormInput } from '@/components/Styled/StyledInput';
 import { SolidButton, GoogleButton } from '@/components/Styled/StyledButton';

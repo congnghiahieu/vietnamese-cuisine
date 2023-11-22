@@ -1,67 +1,91 @@
-import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
-import { Image, View } from 'react-native';
-import { Redirect, useFocusEffect, useNavigation, useRouter } from 'expo-router';
-import { StackActions } from '@react-navigation/native';
+import { View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
-import { STYLES } from '@/lib/constants';
-import { hp } from '@/lib/utils';
+import { doc, getDoc } from 'firebase/firestore';
+import { useQuery } from '@tanstack/react-query';
+
 import StyledText from '@/components/Styled/StyledText';
 import { EmptyList, StyledFlatList } from '@/components/Styled/StyledList';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { ChevronRightIcon, HeartDislikeIcon } from '@/components/Icon';
 import StyledImage from '@/components/Styled/StyledImage';
-import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
-import { query, collection, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
-import { useAuthStates } from '@/states/auth';
-import { HoldingView } from '@/components/Styled/StyledView';
+import { FIREBASE_DB } from '@/config/firebase';
+import { StyledRefreshControl } from '@/components/Styled/StyledLoading';
+import { LoadingView } from '@/components/Styled/StyledView';
 import { useAuth } from '@/context/AuthContext';
+
+import { hp } from '@/lib/utils';
+import { Food } from '@/config/model';
+import { STYLES } from '@/lib/constants';
+
+const useFavouriteQuery = (email: string) =>
+  useQuery<Food[]>({
+    queryKey: ['favourite', email],
+    queryFn: async () => {
+      if (!email) return [];
+
+      const userRef = doc(FIREBASE_DB, 'users', email);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) return [];
+
+      const favouriteTitleList: string[] = userSnap.data()?.favouritedFoods || [];
+      const favouriteFoodList = await Promise.all(
+        favouriteTitleList.map(async title => {
+          const foodRef = doc(FIREBASE_DB, 'foods', title);
+          const foodSnap = await getDoc(foodRef);
+          if (!foodSnap.exists()) return undefined;
+          return foodSnap.data() as Food;
+        }),
+      );
+      return favouriteFoodList.filter(food => food !== undefined) as Food[];
+    },
+  });
 
 const Favourites = () => {
   console.log('Favourites re-render');
   const { user } = useAuth();
+  const { data, isPending, refetch, isFetching } = useFavouriteQuery(user?.email!);
 
-  const [favouriteList, setFavouriteList] = useState<Favourite[]>([]);
-  const getFavouriteList = async () => {
-    try {
-      if (user?.email) {
-        let favouriteList: Favourite[] = [];
-        const docRef = doc(FIREBASE_DB, 'users', user.email);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const fetchedFavouriteList = docSnap.data()?.favouritedFoods || [];
-          for (const foodId of fetchedFavouriteList) {
-            const foodRef = doc(FIREBASE_DB, 'foods', foodId);
-            const foodSnap = await getDoc(foodRef);
-            if (foodSnap.exists()) {
-              const { title, imageUrl } = foodSnap.data();
-              const temp: Favourite = { title, imageUrl };
-              favouriteList.push(temp);
-            }
-          }
-        }
-        setFavouriteList(favouriteList);
-        console.log(favouriteList);
-      }
-    } catch (error) {
-      console.error('Error fetching food list data from FIRESTORE:', error);
-    }
-  };
-
-  useEffect(() => {
-    getFavouriteList();
-  }, []);
-  return (
-    <FavouriteList favouriteList={favouriteList} />
-    // <FavoriteList favoriteList={[]} />
+  return isPending ? (
+    <LoadingView />
+  ) : (
+    <StyledFlatList
+      emptyTitle=''
+      refreshControl={<StyledRefreshControl refreshing={isFetching} onRefresh={refetch} />}
+      contentContainerStyle={{
+        opacity: isFetching ? 0.4 : 1,
+      }}
+      keyExtractor={({ title }) => title}
+      data={data}
+      renderItem={({ item }) => <FavouriteCard {...item} />}
+      ListEmptyComponent={FavouriteEmpty}
+    />
   );
 };
 
-type Favourite = {
-  title: string;
-  imageUrl: string;
+const FavouriteEmpty = () => {
+  const router = useRouter();
+
+  return (
+    <EmptyList
+      title='No favourite dish'
+      subField={
+        <StyledPressable onPress={() => router.push('/(sidebar)')}>
+          <StyledText
+            type='SubInputField'
+            color='orange'
+            style={{
+              textDecorationLine: 'underline',
+            }}>
+            Explore more Vietnamese food
+          </StyledText>
+        </StyledPressable>
+      }
+    />
+  );
 };
 
-const FavouriteCard = ({ title, imageUrl }: Favourite) => {
+const FavouriteCard = ({ title, imageUrlList }: Food) => {
   const styles = useStyles();
   const router = useRouter();
 
@@ -69,7 +93,7 @@ const FavouriteCard = ({ title, imageUrl }: Favourite) => {
     <View style={styles.card}>
       <StyledImage
         source={{
-          uri: imageUrl,
+          uri: imageUrlList[0],
         }}
         style={styles.cardImage}
       />
@@ -84,9 +108,9 @@ const FavouriteCard = ({ title, imageUrl }: Favourite) => {
           style={styles.redirectButton}
           onPress={() =>
             router.push({
-              pathname: '/information/[foodId]',
+              pathname: '/information/[title]',
               params: {
-                foodId: 'Phở',
+                title,
               },
             })
           }>
@@ -95,43 +119,6 @@ const FavouriteCard = ({ title, imageUrl }: Favourite) => {
       </View>
     </View>
   );
-};
-
-type FavouriteListProps = {
-  favouriteList: Favourite[];
-};
-
-const FavouriteList = ({ favouriteList }: FavouriteListProps) => {
-  return (
-    <StyledFlatList
-      emptyTitle=''
-      keyExtractor={({ title }) => title}
-      data={favouriteList}
-      renderItem={({ item }) => <FavouriteCard {...item} />}
-      ListEmptyComponent={FavouriteEmpty}
-    />
-  );
-};
-
-const FavouriteEmptySubField = () => {
-  const router = useRouter();
-
-  return (
-    <StyledPressable onPress={() => router.push('/(sidebar)')}>
-      <StyledText
-        type='SubInputField'
-        color='orange'
-        style={{
-          textDecorationLine: 'underline',
-        }}>
-        Explore more Vietnamese food
-      </StyledText>
-    </StyledPressable>
-  );
-};
-
-const FavouriteEmpty = () => {
-  return <EmptyList title='No favourite dish' subField={<FavouriteEmptySubField />} />;
 };
 
 const useStyles = makeStyles(theme => {

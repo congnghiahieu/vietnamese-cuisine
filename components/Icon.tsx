@@ -68,6 +68,22 @@ export const LanguageIcon = () => {
   return <Entypo name='language' style={[styles.baseIcon, styles.orange]} />;
 };
 
+export const UploadIcon = () => {
+  const styles = useStyles();
+  return <Feather name='upload' style={[styles.baseIcon, styles.largeIcon, styles.blackGrey]} />;
+};
+
+export const BroomIcon = () => {
+  const styles = useStyles();
+  const { theme } = useTheme();
+  return (
+    <MaterialCommunityIcons
+      name='broom'
+      style={[styles.baseIcon, theme.mode === 'dark' ? styles.white : styles.black]}
+    />
+  );
+};
+
 export const GiftIcon = () => {
   const styles = useStyles();
   return <MaterialCommunityIcons name='gift' style={styles.baseIcon} />;
@@ -129,7 +145,7 @@ export const GoogleIcon = (props: SvgProps) => (
   </Svg>
 );
 
-export const ResetIcon = () => {
+export const RetweetIcon = () => {
   const styles = useStyles();
   return (
     <Svg
@@ -142,6 +158,7 @@ export const ResetIcon = () => {
       />
     </Svg>
   );
+  // return <AntDesign name='retweet' style={[styles.baseIcon, styles.largeIcon, styles.green]} />;
 };
 
 export const TwitterIcon = () => {
@@ -296,6 +313,11 @@ export const ImageIcon = () => {
   return <Ionicons name='images-outline' style={[styles.baseIcon, styles.green]} />;
 };
 
+export const CameraIconGreen = () => {
+  const styles = useStyles();
+  return <Feather name='camera' style={[styles.baseIcon, styles.green]} />;
+};
+
 export const PencilPostIcon = () => {
   const styles = useStyles();
   return <Feather name='edit' style={[styles.baseIcon]} />;
@@ -414,8 +436,6 @@ const AnimatedHeartFillIcon = () => {
       withTiming(0, { duration: rotateDuration / 2, easing }),
     );
   }, []);
-
-  useAppearSoundEffect(require('../assets/sound/love-sound.mp3'));
 
   return <AnimatedHeartFillIconComponent style={animatedStyle} />;
 };

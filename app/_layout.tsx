@@ -1,12 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import {
-  Stack,
-  useFocusEffect,
-  useNavigation,
-  useRootNavigation,
-  useRootNavigationState,
-} from 'expo-router';
+import { Stack, useFocusEffect } from 'expo-router';
 import { ThemeProvider, useTheme, useThemeMode } from '@rneui/themed';
 import {
   Theme as NavigationTheme,
@@ -20,6 +14,9 @@ import { FontsLoader } from '@/components/Theme/Text';
 import StyledToast from '@/components/Styled/StyledToast';
 import { useSettingStates } from '@/states/setting';
 import { AuthProvider } from '@/context/AuthContext';
+
+// import { LogBox } from 'react-native';
+// LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -57,7 +54,6 @@ const DarkThemeProvider = ({ children }: React.PropsWithChildren) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('Dark mode:', darkMode);
       if (darkMode) setMode('dark');
     }, []),
   );
@@ -92,7 +88,7 @@ const StackLayout = () => {
         }}
       />
       <Stack.Screen
-        name='information/[foodId]'
+        name='information/[title]'
         options={{
           title: 'Information',
           animation: 'slide_from_right',
@@ -110,9 +106,10 @@ const queryClient = new QueryClient({
       refetchIntervalInBackground: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
-      retry: 0,
+      // retry: 3,
       retryOnMount: true,
-      staleTime: Infinity,
+      // staleTime: 0,
+      // gcTime: 0,
     },
     mutations: {
       retry: 0,

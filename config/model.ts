@@ -3,16 +3,16 @@ export type Step = {
   content: string;
 };
 
-
 export type Food = {
-  foodId: string; // name of this food
-  title: string // same as food
+  // foodId: string; // name of this food
+  title: string; // same as food
   imageUrlList: string[];
   subTitle: string;
   introduce: string;
   ingredientList: string[];
   steps: Step[];
   videoLink: string;
+  loved?: boolean;
 };
 
 export type User = {
@@ -20,6 +20,7 @@ export type User = {
   email: string;
   favouritedFoods: string[];
   lovePosts: string[];
+  myPosts: string[];
 };
 
 export type Comment = {
@@ -38,5 +39,3 @@ export type Post = {
   comments: Comment[];
   createdAt: string;
 };
-
-

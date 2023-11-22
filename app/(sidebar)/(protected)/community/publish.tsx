@@ -1,47 +1,41 @@
+import { useState } from 'react';
 import { View, TextInput, ScrollView, Platform } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
-import { STYLES } from '@/lib/constants';
-import { AvatarIcon, ImageIcon, PencilPostIcon } from '@/components/Icon';
+import Carousel from 'react-native-reanimated-carousel';
+import { useSharedValue } from 'react-native-reanimated';
+import * as ImagePicker from 'expo-image-picker';
+import {
+  AvatarIcon,
+  BroomIcon,
+  CameraIconGreen,
+  ImageIcon,
+  PencilPostIcon,
+  UploadIcon,
+} from '@/components/Icon';
 import StyledText from '@/components/Styled/StyledText';
 import StyledPressable from '@/components/Styled/StyledPressable';
-import { useState } from 'react';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
 import { SolidButton } from '@/components/Styled/StyledButton';
-import { hp, wp } from '@/lib/utils';
-import StyledCarousel from '@/components/Styled/StyledCarousel';
-import * as ImagePicker from 'expo-image-picker';
 import StyledDivider from '@/components/Styled/StyledDivider';
+import { PaginationItem } from '@/components/Styled/StyledCarousel';
+import StyledImage from '@/components/Styled/StyledImage';
+import { hp, wp } from '@/lib/utils';
+import { STYLES } from '@/lib/constants';
+import { Stack } from 'expo-router';
 
-const imageUrlList = [
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504142019-pho.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504152158-cha-ca.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504142339-banh-xeo.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/111005063013-vietnam-food-cao-lau.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170306134418-goi-cuon.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504151643-banh-knot.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504151239-bun-bo-nam-bo.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504150749-ga-nuong.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/160524100325-05-vietnam-dishes-xoi.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504150157-banh-cuon.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/160524092144-vietnam-street-food-bot-chien.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504145056-bun-cha.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170124150901-26-banh-mi.jpg?q=w_1110,c_fill/f_webp',
-  'https://media.cnn.com/api/v1/images/stellar/prod/170504144408-banh-bao.jpg?q=w_1110,c_fill/f_webp',
-];
 const WORD_LIMIT = 500;
 
 const Publish = () => {
   const styles = useStyles();
   const { theme } = useTheme();
   const [thought, setThought] = useState('');
-  const [_, requestLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
-  const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
+  const [, requestLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
+  const [, requestCameraPermission] = ImagePicker.useCameraPermissions();
+  const [imageAssetList, setImageAssetList] = useState<ImagePicker.ImagePickerAsset[]>([]);
 
   const pickImages = async () => {
-    const status = await requestLibraryPermission();
-    if (!status.granted) {
-      return;
-    }
+    const permission = await requestLibraryPermission();
+    if (!permission.granted) return;
 
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
@@ -50,12 +44,43 @@ const Publish = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      setImages(result.assets);
+      // console.log(result.assets);
+      setImageAssetList(result.assets);
+    }
+  };
+
+  const takePhoto = async () => {
+    const permission = await requestCameraPermission();
+    if (!permission.granted) return;
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      orderedSelection: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      // console.log(result.assets);
+      setImageAssetList(result.assets);
     }
   };
 
   return (
     <>
+      <Stack.Screen
+        options={{
+          headerRight: () => {
+            if (imageAssetList.length === 0) {
+              return null;
+            }
+            return (
+              <StyledPressable onPress={() => setImageAssetList([])}>
+                <BroomIcon />
+              </StyledPressable>
+            );
+          },
+        }}
+      />
       <StyledDivider orientation='horizontal' />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.contentHeader}>
@@ -63,8 +88,8 @@ const Publish = () => {
           <StyledText type='Heading_4' color='orange'>
             Cong Nghia Hieu
           </StyledText>
-          <StyledPressable style={styles.imageButton} onPress={pickImages}>
-            <ImageIcon />
+          <StyledPressable style={styles.imageButton} onPress={takePhoto}>
+            <CameraIconGreen />
           </StyledPressable>
         </View>
         <View style={styles.writeThought}>
@@ -83,17 +108,14 @@ const Publish = () => {
           />
         </View>
         <View style={styles.imageContainer}>
-          {images.length ? (
-            <StyledCarousel
-              imageUrlList={imageUrlList}
-              width={wp(100) - STYLES.MARGIN.MARGIN_16 * 2}
-              height={hp(50)}
-            />
+          {imageAssetList.length ? (
+            <ImageList imageUrlList={imageAssetList.map(asset => asset.uri)} />
           ) : (
             <StyledPressable style={styles.imagePlaceholder} onPress={pickImages}>
               <StyledText type='Heading_2' color='blackGrey'>
                 Pick some images
               </StyledText>
+              <UploadIcon />
             </StyledPressable>
           )}
         </View>
@@ -108,6 +130,70 @@ const Publish = () => {
         />
       </ScrollView>
     </>
+  );
+};
+
+const ImageList = ({ imageUrlList }: { imageUrlList: string[] }) => {
+  const carouselWidth = wp(100) - STYLES.MARGIN.MARGIN_16 * 2;
+  const carouselHeight = hp(48);
+  const progressValue = useSharedValue<number>(0);
+
+  return (
+    <View
+      style={{
+        position: 'relative',
+      }}>
+      <Carousel
+        mode='horizontal-stack'
+        modeConfig={{}}
+        // autoPlay
+        // autoPlayReverse
+        // autoPlayInterval={2000}
+        scrollAnimationDuration={STYLES.DURATION.DURATION_1000 / 2}
+        loop
+        pagingEnabled
+        snapEnabled
+        onProgressChange={(_, absoluteProgress) => {
+          // console.log(absoluteProgress);
+          progressValue.value = absoluteProgress;
+        }}
+        width={carouselWidth}
+        height={carouselHeight}
+        data={imageUrlList}
+        renderItem={({ item }) => {
+          return (
+            <StyledImage
+              source={{
+                uri: item,
+              }}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            />
+          );
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          bottom: STYLES.MARGIN.MARGIN_16,
+          flexDirection: 'row',
+          alignSelf: 'center',
+          gap: STYLES.GAP.GAP_4,
+        }}>
+        {imageUrlList.map((_, index) => {
+          return (
+            <PaginationItem
+              key={index}
+              index={index}
+              length={imageUrlList.length}
+              animatedValue={progressValue}
+            />
+          );
+        })}
+      </View>
+    </View>
   );
 };
 
@@ -152,9 +238,9 @@ const useStyles = makeStyles(theme => {
     },
     imagePlaceholder: {
       flex: 1,
-      flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      gap: STYLES.GAP.GAP_8,
       borderStyle: 'dashed',
       borderColor: theme.colors.blackGrey,
       borderWidth: 2,
