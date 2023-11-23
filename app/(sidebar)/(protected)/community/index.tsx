@@ -16,7 +16,6 @@ import StyledDivider from "@/components/Styled/StyledDivider";
 import { hp } from "@/lib/utils";
 import { StyledFlatList } from "@/components/Styled/StyledList";
 import StyledImage from "@/components/Styled/StyledImage";
-import { useAuthStates } from "@/states/auth";
 import { HoldingView } from "@/components/Styled/StyledView";
 import { useAuth } from "@/context/AuthContext";
 import Animated from "react-native-reanimated";

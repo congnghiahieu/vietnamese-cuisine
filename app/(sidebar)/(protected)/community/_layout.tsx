@@ -1,4 +1,4 @@
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 import { CloseIcon } from '@/components/Icon';
 import StyledHeader from '@/components/Styled/StyledHeader';
 import StyledPressable from '@/components/Styled/StyledPressable';
