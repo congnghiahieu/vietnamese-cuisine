@@ -13,7 +13,12 @@ import * as ImagePicker from "expo-image-picker";
 import StyledDivider from "@/components/Styled/StyledDivider";
 import { getCurrentTimeString } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
-import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from "@/config/firebase";
+import {
+    FIREBASE_APP,
+    FIREBASE_AUTH,
+    FIREBASE_DB,
+    storage,
+} from "@/config/firebase";
 import {
     query,
     collection,
@@ -24,6 +29,9 @@ import {
     setDoc,
     addDoc,
 } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import 'react-native-get-random-values';
+import { v4 } from 'uuid';
 
 const imageUrlList = [
     "https://media.cnn.com/api/v1/images/stellar/prod/170504142019-pho.jpg?q=w_1110,c_fill/f_webp",
@@ -54,10 +62,22 @@ const Publish = () => {
     const publishPost = async () => {
         // Add a new post with a generated id.
         try {
+            const urls = [];
+            for (const image of images) {
+                const response = await fetch(image.uri);
+                const blob = await response.blob();
+
+                const tempRef = ref(storage, `images/${v4()}`);
+                await uploadBytes(tempRef, blob);
+                console.log("Image uploaded successfully!");
+                const downloadURL = await getDownloadURL(tempRef);
+                urls.push(downloadURL);
+            }
+
             const docRef = await addDoc(collection(FIREBASE_DB, "posts"), {
-                userID: user?.email,
-                content: "fake content",
-                imageUrlList: [],
+                userId: user?.email,
+                content: "just fake content",
+                imageUrlList: urls,
                 loveNumber: 0,
                 comments: [],
                 createdAt: getCurrentTimeString(),

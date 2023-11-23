@@ -32,30 +32,6 @@ import {
     setDoc,
 } from "firebase/firestore";
 
-const POST_LIST = [
-    {
-        postId: "1",
-        userId: "Cong Nghia Hieu",
-        createdAt: "1 minute ago",
-        content: "Siuuu",
-        imageUrlList: [
-            "https://static-images.vnncdn.net/files/publish/2022/9/15/banh-my-viet-nam-1632.jpg",
-        ],
-        loveNumber: 0,
-        comments: [],
-    },
-    {
-        postId: "2",
-        userId: "Cao Thanh Trung",
-        createdAt: "1 minute ago",
-        content: "hehehe",
-        imageUrlList: [
-            "https://static-images.vnncdn.net/files/publish/2022/9/15/banh-my-viet-nam-1632.jpg",
-        ],
-        loveNumber: 0,
-        comments: [],
-    },
-];
 
 type Page = "MyFeed" | "MyWall";
 
