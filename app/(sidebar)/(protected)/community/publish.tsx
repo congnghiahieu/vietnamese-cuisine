@@ -19,12 +19,16 @@ import { SolidButton } from '@/components/Styled/StyledButton';
 import StyledDivider from '@/components/Styled/StyledDivider';
 import { PaginationItem } from '@/components/Styled/StyledCarousel';
 import StyledImage from '@/components/Styled/StyledImage';
-import { hp, wp } from '@/lib/utils';
+import { getCurrentTimeString, hp, wp } from '@/lib/utils';
 import { STYLES } from '@/lib/constants';
 import { Stack } from 'expo-router';
+import { useAuth } from '@/context/AuthContext';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { v4 as uuid } from 'uuid';
+import { addDoc, collection } from 'firebase/firestore';
+import { FIREBASE_STORAGE, FIREBASE_DB } from '@/config/firebase';
 
 const WORD_LIMIT = 500;
-
 const Publish = () => {
   const styles = useStyles();
   const { theme } = useTheme();
@@ -32,6 +36,36 @@ const Publish = () => {
   const [, requestLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
   const [, requestCameraPermission] = ImagePicker.useCameraPermissions();
   const [imageAssetList, setImageAssetList] = useState<ImagePicker.ImagePickerAsset[]>([]);
+  const { user } = useAuth();
+
+  const publishPost = async () => {
+    // Add a new post with a generated id.
+    try {
+      const urls = [];
+      for (const image of imageAssetList) {
+        const response = await fetch(image.uri);
+        const blob = await response.blob();
+
+        const tempRef = ref(FIREBASE_STORAGE, `images/${uuid()}`);
+        await uploadBytes(tempRef, blob);
+        console.log('Image uploaded successfully!');
+        const downloadURL = await getDownloadURL(tempRef);
+        urls.push(downloadURL);
+      }
+
+      const docRef = await addDoc(collection(FIREBASE_DB, 'posts'), {
+        userId: user?.email,
+        content: 'just fake content',
+        imageUrlList: urls,
+        loveNumber: 0,
+        comments: [],
+        createdAt: getCurrentTimeString(),
+      });
+      console.log('publish successfully');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const pickImages = async () => {
     const permission = await requestLibraryPermission();

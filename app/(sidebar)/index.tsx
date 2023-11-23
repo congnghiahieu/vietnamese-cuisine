@@ -12,13 +12,16 @@ import { hp } from '@/lib/utils';
 import StyledImage from '@/components/Styled/StyledImage';
 import { FIREBASE_DB } from '@/config/firebase';
 import {
+  query,
   collection,
+  where,
   getDocs,
   doc,
+  getDoc,
+  setDoc,
   updateDoc,
   arrayRemove,
   arrayUnion,
-  getDoc,
 } from 'firebase/firestore';
 import { dismissKeyboard } from '@/lib/utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
