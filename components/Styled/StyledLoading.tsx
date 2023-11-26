@@ -21,6 +21,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { STYLES } from '@/lib/constants';
+import { i18n } from '@/lib/i18n';
 
 export const StyledImageLoading = () => {
   return (
@@ -70,7 +71,7 @@ export const StyledRefreshControl = (props: RefreshControlProps) => {
       colors={[theme.colors.orange]}
       progressBackgroundColor={theme.colors.orange}
       tintColor={theme.colors.orange}
-      title='Refreshing...'
+      title={i18n.t('other.refreshing')}
       titleColor={theme.colors.orange}
       {...props}
     />

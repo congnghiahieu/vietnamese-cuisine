@@ -7,6 +7,9 @@ import StyledText from '@/components/Styled/StyledText';
 import { SolidButton } from '@/components/Styled/StyledButton';
 import { StyledFlatList } from '@/components/Styled/StyledList';
 import StyledImage from '@/components/Styled/StyledImage';
+import { i18n } from '@/lib/i18n';
+import { useEffect, useMemo, useState } from 'react';
+import useI18nChangeEffect from '@/hooks/useI18nChangeEffect';
 
 type Game = {
   title: string;
@@ -15,32 +18,36 @@ type Game = {
   href: Route<string>;
 };
 
-const GAME_LIST: Game[] = [
-  {
-    title: 'Match Food',
-    imageUrl:
-      'https://cdn.tgdd.vn/Files/2021/07/27/1371175/huong-dan-3-cach-lam-banh-mi-bo-thom-ngon-de-lam-cho-bua-sang-du-chat-202201041019538628.jpg',
-    desc: 'Match Food is a classic memory game. Player takes turns flipping over two tiles at a time. If the two tiles match, they are removed from the board. If the tiles do not match, they are flipped back over.',
-    href: '/(sidebar)/games/match-food',
-  },
-  {
-    title: 'Pick Ingredients',
-    imageUrl:
-      'https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/filters:quality(95)/https://cms-prod.s3-sgn09.fptcloud.com/1_to_pho_bo_bao_nhieu_calo_9_762e002737.jpg',
-    desc: 'Pick Ingredients is a game challenge your knowledge. You need to find all main ingredients to make a Vietnamese dish in a provided set of ingredients. By dragging & dropping ingredients into a bag, you can win the game.',
-    href: '/(sidebar)/games/pick-ingredients',
-  },
-  {
-    title: 'Guess Food',
-    imageUrl: 'https://beptruong.edu.vn/wp-content/uploads/2018/05/bun-cha.jpg',
-    desc: 'PicQuiz - Guess Pics',
-    href: '/(sidebar)/games/guess-food',
-  },
-];
+const getGameList = () =>
+  [
+    {
+      title: i18n.t('games.matchFood.title'),
+      imageUrl:
+        'https://cdn.tgdd.vn/Files/2021/07/27/1371175/huong-dan-3-cach-lam-banh-mi-bo-thom-ngon-de-lam-cho-bua-sang-du-chat-202201041019538628.jpg',
+      desc: i18n.t('games.matchFood.desc'),
+      href: '/(sidebar)/games/match-food',
+    },
+    {
+      title: i18n.t('games.pickIngredients.title'),
+      imageUrl:
+        'https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/filters:quality(95)/https://cms-prod.s3-sgn09.fptcloud.com/1_to_pho_bo_bao_nhieu_calo_9_762e002737.jpg',
+      desc: i18n.t('games.pickIngredients.desc'),
+      href: '/(sidebar)/games/pick-ingredients',
+    },
+    {
+      title: i18n.t('games.guessFood.title'),
+      imageUrl: 'https://beptruong.edu.vn/wp-content/uploads/2018/05/bun-cha.jpg',
+      desc: i18n.t('games.guessFood.desc'),
+      href: '/(sidebar)/games/guess-food',
+    },
+  ] as Game[];
 
 const Games = () => {
   console.log('Games re-render');
-  return <GameList gameList={GAME_LIST} />;
+  const [gameList, setGameList] = useState<Game[]>(getGameList);
+  useI18nChangeEffect(() => setGameList(getGameList()));
+
+  return <GameList gameList={gameList} />;
 };
 
 type GameListProps = {
@@ -50,7 +57,7 @@ type GameListProps = {
 const GameList = ({ gameList }: GameListProps) => {
   return (
     <StyledFlatList
-      emptyTitle='No game available!'
+      emptyTitle={i18n.t('games.emptyList')}
       keyExtractor={({ title }) => title}
       horizontal={false}
       showsVerticalScrollIndicator={false}
@@ -81,7 +88,7 @@ const GameCard = ({ title, desc, imageUrl, href }: Game) => {
             {desc}
           </StyledText>
         </View>
-        <SolidButton title='Play now' onPress={() => router.push(href)} />
+        <SolidButton title={i18n.t('games.playNow')} onPress={() => router.push(href)} />
       </View>
     </View>
   );

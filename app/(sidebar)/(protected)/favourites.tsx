@@ -17,10 +17,11 @@ import { useAuth } from '@/context/AuthContext';
 import { hp } from '@/lib/utils';
 import { Food } from '@/config/model';
 import { STYLES } from '@/lib/constants';
+import { i18n } from '@/lib/i18n';
 
 const useFavouriteQuery = (email: string) =>
   useQuery<Food[]>({
-    queryKey: ['favourite', email],
+    queryKey: ['favourites', email],
     queryFn: async () => {
       if (!email) return [];
 
@@ -42,8 +43,8 @@ const useFavouriteQuery = (email: string) =>
   });
 
 const Favourites = () => {
-  console.log('Favourites re-render');
   const { user } = useAuth();
+  console.log('Favourites re-render');
   const { data, isPending, refetch, isFetching } = useFavouriteQuery(user?.email!);
 
   return isPending ? (
@@ -68,7 +69,7 @@ const FavouriteEmpty = () => {
 
   return (
     <EmptyList
-      title='No favourite dish'
+      title={i18n.t('favourites.emptyList')}
       subField={
         <StyledPressable onPress={() => router.push('/(sidebar)')}>
           <StyledText
@@ -77,7 +78,7 @@ const FavouriteEmpty = () => {
             style={{
               textDecorationLine: 'underline',
             }}>
-            Explore more Vietnamese food
+            {i18n.t('favourites.explore')}
           </StyledText>
         </StyledPressable>
       }
@@ -89,12 +90,21 @@ const FavouriteCard = ({ title, imageUrlList }: Food) => {
   const styles = useStyles();
   const router = useRouter();
 
+  const navigate = () =>
+    router.push({
+      pathname: '/information/[title]',
+      params: {
+        title,
+      },
+    });
+
   return (
     <View style={styles.card}>
       <StyledImage
         source={{
           uri: imageUrlList[0],
         }}
+        onPress={navigate}
         style={styles.cardImage}
       />
       <StyledPressable style={styles.cardDislikeButton}>
@@ -104,16 +114,7 @@ const FavouriteCard = ({ title, imageUrlList }: Food) => {
         <StyledText type='Heading_5' color='white'>
           {title}
         </StyledText>
-        <StyledPressable
-          style={styles.redirectButton}
-          onPress={() =>
-            router.push({
-              pathname: '/information/[title]',
-              params: {
-                title,
-              },
-            })
-          }>
+        <StyledPressable style={styles.redirectButton} onPress={navigate}>
           <ChevronRightIcon />
         </StyledPressable>
       </View>

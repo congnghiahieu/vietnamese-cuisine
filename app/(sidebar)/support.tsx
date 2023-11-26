@@ -8,6 +8,7 @@ import { hp, wp } from '@/lib/utils';
 import { GiftIcon } from '@/components/Icon';
 import Animated from 'react-native-reanimated';
 import { ReBounceIn, ReBounceInDown, ReFadeOutDown, ReFadeOutUp } from '@/components/Animated';
+import { i18n } from '@/lib/i18n';
 
 const Support = () => {
   console.log('Support re-render');
@@ -19,21 +20,19 @@ const Support = () => {
       </Animated.View>
       <Animated.View style={styles.block} entering={ReBounceInDown} exiting={ReFadeOutDown}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
-          Vietnamese Cuisine
+          {i18n.t('other.appName')}
         </StyledText>
         <StyledDivider orientation='horizontal' />
         <View style={styles.body}>
           <StyledText type='Body' color='grey' style={{ textAlign: 'justify' }}>
-            Vietnamese Cuisine is a small project with purpose introducing Vietnamese food, culture
-            throughout the world. This project still in development for new version and enhancement.
-            You can help us maintaining this project by actions.
+            {i18n.t('support.content')}
           </StyledText>
           <View
             style={{
               gap: STYLES.GAP.GAP_16,
             }}>
-            <SolidButton title={'Donate us'} icon={<GiftIcon />} iconPosition='left' />
-            <GithubButton title={'Contribute on Github'} />
+            <SolidButton title={i18n.t('support.donate')} icon={<GiftIcon />} iconPosition='left' />
+            <GithubButton title={i18n.t('support.contribute')} />
           </View>
         </View>
       </Animated.View>

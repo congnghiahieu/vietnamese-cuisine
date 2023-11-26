@@ -1,27 +1,14 @@
-import { View, TextInput, Image, KeyboardAvoidingView, ScrollView, FlatList } from 'react-native';
+import { View, KeyboardAvoidingView } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
-import {
-  ArrowLeftIcon,
-  AvatarIcon,
-  CommentIcon,
-  HeartFillIcon,
-  HeartIcon,
-  ImageIcon,
-  PencilPostIcon,
-  SendIcon,
-} from '@/components/Icon';
+import { AvatarIcon, CommentIcon, HeartFillIcon, SendIcon } from '@/components/Icon';
 import StyledText from '@/components/Styled/StyledText';
 import StyledDivider from '@/components/Styled/StyledDivider';
-import StyledPressable from '@/components/Styled/StyledPressable';
 import { useState } from 'react';
-import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
 import { SolidButton } from '@/components/Styled/StyledButton';
-import { dismissKeyboard, hp } from '@/lib/utils';
-import { useRouter } from 'expo-router';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import { StyledFlatList } from '@/components/Styled/StyledList';
-import { KeyboardView, SafeView } from '@/components/Styled/StyledView';
+import { i18n } from '@/lib/i18n';
 
 const WORD_LIMIT = 100;
 const COMMENT_LIST = [
@@ -82,7 +69,7 @@ const Comment = () => {
         behavior='padding'
         keyboardVerticalOffset={120}>
         <StyledFlatList
-          emptyTitle={`Be the first one \n comment this post`}
+          emptyTitle={i18n.t('community.comment.firstOne')}
           keyExtractor={({ id }) => id}
           data={COMMENT_LIST}
           renderItem={({ item }) => <CommentCard {...item} />}
@@ -110,7 +97,7 @@ const Comment = () => {
           </View>
           <View style={styles.yourComment}>
             <SearchInput
-              placeholder='Post your comment!'
+              placeholder={i18n.t('community.comment.postComment')}
               containerStyle={{
                 flex: 1,
               }}
@@ -166,7 +153,8 @@ const useStyles = makeStyles(theme => {
   return {
     container: {
       flex: 1,
-      backgroundColor: dT ? theme.colors.black : theme.colors.white,
+      // backgroundColor: dT ? theme.colors.black : theme.colors.white,
+      backgroundColor: dT ? theme.colors.background : theme.colors.background,
     },
     header: {
       marginHorizontal: STYLES.MARGIN.MARGIN_16,
@@ -215,7 +203,8 @@ const useStyles = makeStyles(theme => {
       flex: 1,
       paddingHorizontal: STYLES.PADDING.PADDING_16,
       paddingBottom: STYLES.PADDING.PADDING_4,
-      backgroundColor: dT ? theme.colors.background : theme.colors.white,
+      // backgroundColor: dT ? theme.colors.background : theme.colors.white,
+      backgroundColor: dT ? theme.colors.black : theme.colors.white,
       borderRadius: STYLES.RADIUS.RADIUS_10,
       ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8),
     },

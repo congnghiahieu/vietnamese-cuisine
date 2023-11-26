@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { Drawer as Sidebar } from 'expo-router/drawer';
-import { makeStyles, useTheme } from '@rneui/themed';
+import { makeStyles } from '@rneui/themed';
 import StyledHeader from '@/components/Styled/StyledHeader';
 import { AntDesign, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
@@ -16,19 +16,25 @@ import { AvatarIcon } from '@/components/Icon';
 import StyledText from '@/components/Styled/StyledText';
 import { OutlineButton } from '@/components/Styled/StyledButton';
 import { useRouter } from 'expo-router';
+import { i18n } from '@/lib/i18n';
+import { useState } from 'react';
+import useI18nChangeEffect from '@/hooks/useI18nChangeEffect';
 
 const SidebarLayout = () => {
   const sidebarOptions = useSidebarOptions();
+  const [key, setKey] = useState(Math.random());
+  useI18nChangeEffect(() => setKey(Math.random()));
 
   return (
     <Sidebar
+      key={key}
       initialRouteName='(home)'
       screenOptions={sidebarOptions}
       drawerContent={SidebarContent}>
       <Sidebar.Screen
         name='index'
         options={{
-          title: 'Home',
+          title: i18n.t('sidebar.home'),
           drawerIcon: ({ color }) => (
             <Ionicons name='home' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
           ),
@@ -38,7 +44,7 @@ const SidebarLayout = () => {
         name='(protected)/community'
         options={{
           headerShown: false,
-          title: 'Community',
+          title: i18n.t('sidebar.community'),
           drawerIcon: ({ color }) => (
             <Ionicons name='people' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
           ),
@@ -48,7 +54,7 @@ const SidebarLayout = () => {
         name='games'
         options={{
           headerShown: false,
-          title: 'Games',
+          title: i18n.t('sidebar.games'),
           drawerIcon: ({ color }) => (
             <Ionicons name='game-controller' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
           ),
@@ -57,7 +63,7 @@ const SidebarLayout = () => {
       <Sidebar.Screen
         name='(protected)/favourites'
         options={{
-          title: 'Favourites',
+          title: i18n.t('sidebar.favourites'),
           drawerIcon: ({ color }) => (
             <AntDesign name='heart' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
           ),
@@ -66,7 +72,7 @@ const SidebarLayout = () => {
       <Sidebar.Screen
         name='(protected)/profile'
         options={{
-          title: 'My Profile',
+          title: i18n.t('sidebar.profile'),
           drawerIcon: ({ color }) => (
             <AntDesign name='user' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
           ),
@@ -75,7 +81,7 @@ const SidebarLayout = () => {
       <Sidebar.Screen
         name='about'
         options={{
-          title: 'About Us',
+          title: i18n.t('sidebar.about'),
           drawerIcon: ({ color }) => (
             <AntDesign
               name='exclamationcircleo'
@@ -88,7 +94,7 @@ const SidebarLayout = () => {
       <Sidebar.Screen
         name='support'
         options={{
-          title: 'Support Us',
+          title: i18n.t('sidebar.support'),
           drawerIcon: ({ color }) => (
             <FontAwesome5
               name='hand-holding-heart'
@@ -101,7 +107,7 @@ const SidebarLayout = () => {
       <Sidebar.Screen
         name='settings'
         options={{
-          title: 'Settings',
+          title: i18n.t('sidebar.settings'),
           drawerIcon: ({ color }) => (
             <Ionicons name='settings' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
           ),
@@ -157,23 +163,23 @@ const SidebarContent = ({ descriptors, state, ...rest }: DrawerContentComponentP
         />
       </View>
       <StyledText type='Heading_3' color='orange' style={styles.title}>
-        Vietnamese Cuisine
+        {i18n.t('other.appName')}
       </StyledText>
       <View style={styles.user}>
         <AvatarIcon />
         <View style={styles.info}>
           <StyledText type='Heading_5' color='white'>
-            Welcome, User
+            {i18n.t('sidebar.welcome')}, User
           </StyledText>
           <View style={styles.navigate}>
             <OutlineButton
-              title='Sign In'
+              title={i18n.t('sidebar.signIn')}
               buttonStyle={styles.button}
               titleStyle={styles.buttonTitle}
               onPress={() => router.push('/login')}
             />
             <OutlineButton
-              title='Sign Up'
+              title={i18n.t('sidebar.signUp')}
               buttonStyle={styles.button}
               titleStyle={styles.buttonTitle}
               onPress={() => router.push('/register')}

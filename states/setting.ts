@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Language } from '@/lib/constants';
+import { Language } from '@/lib/i18n';
 
 type State = {
   darkMode: boolean;
@@ -15,28 +15,6 @@ type Actions = {
   setNotifications: (active: boolean) => void;
 };
 
-// const getDarkMode = async () => {
-//   const isDarkMode = await AsyncStorage.getItem(SETTINGS_KEYS.darkMode);
-//   return Boolean(isDarkMode);
-// };
-
-// const getLanguage = async (): Promise<Language> => {
-//   const lang = await AsyncStorage.getItem(SETTINGS_KEYS.language);
-//   if (lang) {
-//     return lang as Language;
-//   } else {
-//     return 'English';
-//   }
-// };
-// const getNotifications = async () => {
-//   const isNotifications = await AsyncStorage.getItem(SETTINGS_KEYS.darkMode);
-//   return Boolean(isNotifications);
-// };
-
-// const initialDarkMode = await getDarkMode();
-// const initialLanguage = await getLanguage();
-// const initialNotifications = await getNotifications();
-
 export const settingStates = create<State & Actions>()(
   persist(
     (set, get) => ({
@@ -45,7 +23,7 @@ export const settingStates = create<State & Actions>()(
         set({
           darkMode: active,
         }),
-      language: 'English',
+      language: 'en',
       setLanguage: language =>
         set({
           language,

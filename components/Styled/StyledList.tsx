@@ -1,3 +1,11 @@
+// Redecalare forwardRef
+declare module 'react' {
+  function forwardRef<T, P = {}>(
+    render: (props: P, ref: React.Ref<T>) => React.ReactElement | null,
+  ): (props: P & React.RefAttributes<T>) => React.ReactElement | null;
+}
+
+import { forwardRef, ForwardedRef } from 'react';
 import { View, FlatList, FlatListProps } from 'react-native';
 import StyledText from '@/components/Styled/StyledText';
 import { STYLES } from '@/lib/constants';
@@ -6,11 +14,15 @@ export type StyledFlatListProps<T> = FlatListProps<T> & {
   emptyTitle: string;
 };
 
-export const StyledFlatList = <T,>(props: StyledFlatListProps<T>) => {
+export const StyledFlatListWithRef = <T,>(
+  props: StyledFlatListProps<T>,
+  ref: ForwardedRef<FlatList<T>>,
+) => {
   const { data, contentContainerStyle, emptyTitle, ...otherProps } = props;
 
   return (
     <FlatList
+      ref={ref}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       ItemSeparatorComponent={ListSeparator}
@@ -28,6 +40,8 @@ export const StyledFlatList = <T,>(props: StyledFlatListProps<T>) => {
     />
   );
 };
+
+export const StyledFlatList = forwardRef(StyledFlatListWithRef);
 
 export const ListSeparator = () => {
   return (

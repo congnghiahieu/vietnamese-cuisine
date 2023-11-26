@@ -184,11 +184,3 @@ export type GapType = keyof typeof STYLES.GAP;
 export type PaddingType = keyof typeof STYLES.PADDING;
 export type RadiusType = keyof typeof STYLES.RADIUS;
 export type ShadowType = keyof typeof STYLES.SHADOW;
-
-export const I18N = {
-  'English': {},
-  'Vietnamese': {},
-} as const;
-
-export const LANGUAGE_LIST = Object.keys(I18N) as Array<Language>;
-export type Language = keyof typeof I18N;

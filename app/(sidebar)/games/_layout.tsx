@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { useTheme } from '@rneui/themed';
 import StyledHeader from '@/components/Styled/StyledHeader';
+import { i18n } from '@/lib/i18n';
 
 const GamesLayout = () => {
   const { theme } = useTheme();
@@ -17,7 +18,7 @@ const GamesLayout = () => {
       <Stack.Screen
         name='index'
         options={{
-          title: 'Games',
+          title: i18n.t('games.games'),
           animation: 'flip',
           header: ({ options }) => <StyledHeader title={options.title} />,
         }}

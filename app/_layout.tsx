@@ -15,6 +15,7 @@ import { FontsLoader } from '@/components/Theme/Text';
 import StyledToast from '@/components/Styled/StyledToast';
 import { useSettingStates } from '@/states/setting';
 import { AuthProvider } from '@/context/AuthContext';
+import { i18n } from '@/lib/i18n';
 
 // import { LogBox } from 'react-native';
 // LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
@@ -49,13 +50,16 @@ const NavigationThemeProvider = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-const DarkThemeProvider = ({ children }: React.PropsWithChildren) => {
-  const { darkMode } = useSettingStates();
+const SettingsProvider = ({ children }: React.PropsWithChildren) => {
+  const { darkMode, language } = useSettingStates();
   const { setMode } = useThemeMode();
 
   useFocusEffect(
     useCallback(() => {
       if (darkMode) setMode('dark');
+      if (i18n.locale != language) {
+        i18n.locale = language;
+      }
     }, []),
   );
 
@@ -130,14 +134,14 @@ export default function RootLayout() {
     <FontsLoader onFontsLoaded={SplashScreen.hideAsync}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <DarkThemeProvider>
+          <SettingsProvider>
             <NavigationThemeProvider>
               <AuthProvider>
                 <StackLayout />
               </AuthProvider>
             </NavigationThemeProvider>
             <StyledToast />
-          </DarkThemeProvider>
+          </SettingsProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </FontsLoader>

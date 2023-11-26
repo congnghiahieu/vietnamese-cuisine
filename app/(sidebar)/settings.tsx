@@ -1,6 +1,6 @@
-import { useRef, useMemo, useState, useCallback } from 'react';
+import { useRef, useMemo, useCallback } from 'react';
 import { View } from 'react-native';
-import { useThemeMode, useTheme, makeStyles, ListItem } from '@rneui/themed';
+import { useThemeMode, makeStyles, ListItem } from '@rneui/themed';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import StyledSwitch from '@/components/Styled/StyledSwitch';
 import StyledDivider from '@/components/Styled/StyledDivider';
@@ -9,11 +9,12 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import { StyledHandle } from '@/components/Styled/BottomSheet/StyledHandle';
 import { StyledBackdrop } from '@/components/Styled/BottomSheet/StyledBackdrop';
 import StyledBackground from '@/components/Styled/BottomSheet/StyledBackground';
-import { STYLES, LANGUAGE_LIST } from '@/lib/constants';
+import { STYLES } from '@/lib/constants';
 import { useSettingStates } from '@/states/setting';
 import { DarkModeIcon, LanguageIcon, NotificationsIcon } from '@/components/Icon';
 import StyledToast from '@/components/Styled/StyledToast';
 import { useFocusEffect } from 'expo-router';
+import { Language, i18n } from '@/lib/i18n';
 
 const Settings = () => {
   console.log('Settings re-render');
@@ -64,19 +65,25 @@ type LanguageSettingBottomSheetProps = {
 const LanguageSettingBottomSheet = ({ closeBottomSheet }: LanguageSettingBottomSheetProps) => {
   const styles = useStyles();
   const { setLanguage } = useSettingStates();
+  const LANG_MAP: Record<Language, string> = {
+    'en': i18n.t('settings.english'),
+    'vi': i18n.t('settings.vietnamese'),
+  } as const;
 
   return (
     <BottomSheetView>
-      {LANGUAGE_LIST.map((lang, i, arr) => {
+      {Object.entries(LANG_MAP).map(([langKey, lang], i, arr) => {
         return (
           <StyledPressable
             key={i}
             onPress={() => {
-              setLanguage(lang);
+              setLanguage(langKey as Language);
+              i18n.locale = langKey;
+
               closeBottomSheet();
               StyledToast.show({
                 type: 'success',
-                text1: `Change language to ${lang} `,
+                text1: i18n.t('settings.changeTo'),
                 visibilityTime: 1000,
               });
             }}>
@@ -104,18 +111,22 @@ type LanguageSettingOptionProps = {
 const LanguageSettingOption = ({ onLanguageTitlePress }: LanguageSettingOptionProps) => {
   const styles = useStyles();
   const { language } = useSettingStates();
+  const LANG_MAP: Record<Language, string> = {
+    'en': i18n.t('settings.english'),
+    'vi': i18n.t('settings.vietnamese'),
+  } as const;
 
   return (
     <View style={styles.optionContainer}>
       <View style={styles.labelContainer}>
         <LanguageIcon />
         <StyledText type='Heading_5' color='blackGrey'>
-          Language
+          {i18n.t('settings.label.language')}
         </StyledText>
       </View>
       <StyledPressable onPress={onLanguageTitlePress}>
         <StyledText type='Placeholder' color='grey'>
-          {language}
+          {LANG_MAP[language]}
         </StyledText>
       </StyledPressable>
     </View>
@@ -133,7 +144,7 @@ const ThemeSettingOption = () => {
       <View style={styles.labelContainer}>
         <DarkModeIcon active={dT} />
         <StyledText type='Heading_5' color='blackGrey'>
-          Dark mode
+          {i18n.t('settings.label.darkMode')}
         </StyledText>
       </View>
       <StyledSwitch
@@ -156,7 +167,7 @@ const NotificationSettingOption = () => {
       <View style={styles.labelContainer}>
         <NotificationsIcon active={notifications} />
         <StyledText type='Heading_5' color='blackGrey'>
-          Notifications
+          {i18n.t('settings.label.notifications')}
         </StyledText>
       </View>
       <StyledSwitch active={notifications} onChange={active => setNotifications(active)} />

@@ -15,7 +15,8 @@ const CommunityLayout = () => {
       initialRouteName='index'
       screenOptions={{
         headerStyle: {
-          backgroundColor: dT ? theme.colors.black : theme.colors.white,
+          // backgroundColor: dT ? theme.colors.black : theme.colors.white,
+          backgroundColor: dT ? theme.colors.background : theme.colors.white,
         },
       }}>
       <Stack.Screen
@@ -39,14 +40,15 @@ const CommunityLayout = () => {
               <CloseIcon />
             </StyledPressable>
           ),
-          ...Platform.select({
-            android: {
-              animation: 'slide_from_bottom',
-            },
-            ios: {
-              presentation: 'modal',
-            },
-          }),
+          // ...Platform.select({
+          //   android: {
+          //     animation: 'slide_from_bottom',
+          //   },
+          //   ios: {
+          //     presentation: 'modal',
+          //   },
+          // }),
+          animation: 'slide_from_bottom',
         }}
       />
       <Stack.Screen
@@ -62,14 +64,15 @@ const CommunityLayout = () => {
               <CloseIcon />
             </StyledPressable>
           ),
-          ...Platform.select({
-            android: {
-              animation: 'slide_from_bottom',
-            },
-            ios: {
-              presentation: 'modal',
-            },
-          }),
+          // ...Platform.select({
+          //   android: {
+          //     animation: 'slide_from_bottom',
+          //   },
+          //   ios: {
+          //     presentation: 'modal',
+          //   },
+          // }),
+          animation: 'slide_from_bottom',
         }}
       />
     </Stack>

@@ -23,8 +23,9 @@ import {
   ReFadeOutLeft,
   ReFadeOutUp,
 } from '@/components/Animated';
-import { dismissKeyboard } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
+import { dismissKeyboard } from '@/lib/utils';
+import { i18n } from '@/lib/i18n';
 
 type RegisterFormInput = {
   fullname: string;
@@ -72,7 +73,7 @@ const Register = () => {
     onSuccess: () => {
       StyledToast.show({
         type: 'success',
-        text1: 'Register sucessfully. Redirecting ...',
+        text1: i18n.t('register.toast.register.success'),
         onHide: () => {
           router.push('/login');
         },
@@ -82,8 +83,8 @@ const Register = () => {
     onError: () => {
       StyledToast.show({
         type: 'error',
-        text1: 'Fail to register',
-        text2: 'Email already in use',
+        text1: i18n.t('register.toast.register.error.text1'),
+        text2: i18n.t('register.toast.register.error.text2'),
       });
     },
     onSettled: () => cleanUp(),
@@ -98,7 +99,7 @@ const Register = () => {
     onSuccess: () => {
       StyledToast.show({
         type: 'success',
-        text1: 'Register sucessfully. Redirecting ...',
+        text1: i18n.t('register.toast.google.success'),
         onHide: () => {
           router.push('/(sidebar)/');
         },
@@ -108,8 +109,8 @@ const Register = () => {
     onError: () => {
       StyledToast.show({
         type: 'error',
-        text1: 'Fail to register via Google',
-        text2: 'Please try again',
+        text1: i18n.t('register.toast.google.error.text1'),
+        text2: i18n.t('register.toast.google.error.text2'),
       });
     },
     onSettled: () => cleanUp(),
@@ -127,10 +128,10 @@ const Register = () => {
         <Animated.View entering={ReFadeInUp} exiting={ReFadeOutUp}>
           <View style={styles.heading}>
             <StyledText type='Heading_2' color='blackGrey'>
-              Welcome 👋
+              {i18n.t('register.welcome')} 👋
             </StyledText>
             <StyledText type='Body' color='blackGrey'>
-              Pleases fill out information to create an account
+              {i18n.t('register.please')}
             </StyledText>
           </View>
         </Animated.View>
@@ -142,13 +143,13 @@ const Register = () => {
               rules={{
                 required: {
                   value: true,
-                  message: 'Your full name is required',
+                  message: i18n.t('register.error.fullname.required'),
                 },
               }}
               render={({ field: { value, onChange, onBlur } }) => (
                 <FormInput
                   type='normal'
-                  placeholder='Fullname'
+                  placeholder={i18n.t('register.placeholder.fullname')}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -163,19 +164,19 @@ const Register = () => {
               rules={{
                 required: {
                   value: true,
-                  message: 'Email is required',
+                  message: i18n.t('register.error.email.required'),
                 },
                 pattern: {
                   value:
                     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: 'Please fill in valid email',
+                  message: i18n.t('register.error.email.pattern'),
                 },
               }}
               render={({ field: { value, onChange, onBlur } }) => (
                 <FormInput
                   inputMode='email'
                   type='normal'
-                  placeholder='Email'
+                  placeholder={i18n.t('register.placeholder.email')}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -189,17 +190,17 @@ const Register = () => {
               rules={{
                 required: {
                   value: true,
-                  message: 'Password is required',
+                  message: i18n.t('register.error.password.required'),
                 },
                 minLength: {
                   value: 6,
-                  message: 'Password contains at least 6 character',
+                  message: i18n.t('register.error.password.minLength'),
                 },
               }}
               render={({ field: { value, onChange, onBlur } }) => (
                 <FormInput
                   type='password'
-                  placeholder='Password'
+                  placeholder={i18n.t('register.placeholder.password')}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -214,15 +215,17 @@ const Register = () => {
               rules={{
                 required: {
                   value: true,
-                  message: 'Please confirm your password',
+                  message: i18n.t('register.error.confirmPassword.required'),
                 },
                 validate: (value, formValues) =>
-                  value === formValues.password ? true : 'Confirm password not match',
+                  value === formValues.password
+                    ? true
+                    : i18n.t('register.error.confirmPassword.notMatch'),
               }}
               render={({ field: { value, onChange, onBlur } }) => (
                 <FormInput
                   type='password'
-                  placeholder='Confirm Password'
+                  placeholder={i18n.t('register.placeholder.confirmPassword')}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -237,7 +240,7 @@ const Register = () => {
                 router.push('/(sidebar)/');
               }}>
               <StyledText type='SubInputField' color='orange'>
-                Back to home
+                {i18n.t('register.backToHome')}
               </StyledText>
             </StyledPressable>
           </View>
@@ -245,7 +248,7 @@ const Register = () => {
         <Animated.View entering={ReFadeInDown} exiting={ReFadeOutDown}>
           <View style={styles.button}>
             <SolidButton
-              title='Sign Up'
+              title={i18n.t('register.signUp')}
               icon={<ArrowRightIcon />}
               iconPosition='right'
               onPress={handleSubmit(data => registerMutation.mutate(data))}
@@ -259,10 +262,10 @@ const Register = () => {
           </View>
           <View style={styles.footer}>
             <StyledText type='SubInputField' color='blackGrey'>
-              Already have an account?
+              {i18n.t('register.already')}
             </StyledText>
             <StyledPressable onPress={() => router.push('/login')}>
-              <StyledText style={styles.redirectText}>SIGN IN</StyledText>
+              <StyledText style={styles.redirectText}>{i18n.t('register.signIn')}</StyledText>
             </StyledPressable>
           </View>
         </Animated.View>

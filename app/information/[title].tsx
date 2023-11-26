@@ -206,9 +206,9 @@ const InformationBottomSheetBody = ({
   videoLink,
   loved,
 }: Food) => {
+  const { user } = useAuth();
   const styles = useStyles();
   const router = useRouter();
-  const { user } = useAuth();
   const [love, setLove] = useState(loved || false);
   const { playSound } = useSound(require('../../assets/sound/love-sound.mp3'));
   const queryClient = useQueryClient();
@@ -237,7 +237,7 @@ const InformationBottomSheetBody = ({
         queryKey: ['food', 'list'],
       });
       queryClient.resetQueries({
-        queryKey: ['favourite', user?.email],
+        queryKey: ['favourites', user?.email],
       });
     },
     onError: () => {

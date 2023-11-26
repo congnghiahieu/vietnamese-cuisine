@@ -12,11 +12,13 @@ import { signOut } from 'firebase/auth';
 import StyledToast from '@/components/Styled/StyledToast';
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
+import { i18n } from '@/lib/i18n';
 
 const Profile = () => {
+  const { user } = useAuth();
+
   console.log('Profile re-render');
   const styles = useStyles();
-  const { user } = useAuth();
   const router = useRouter();
   const signOutMutation = useMutation({
     mutationFn: async () => {
@@ -25,7 +27,7 @@ const Profile = () => {
     onSuccess: () =>
       StyledToast.show({
         type: 'success',
-        text1: 'Sign out successfully. Redirecting...',
+        text1: i18n.t('profile.toast.success'),
         visibilityTime: 1000,
         onHide: () => {
           router.push('/login');
@@ -34,8 +36,8 @@ const Profile = () => {
     onError: () =>
       StyledToast.show({
         type: 'error',
-        text1: 'Fail to sign out',
-        text2: 'Please try again',
+        text1: i18n.t('profile.toast.error.text1'),
+        text2: i18n.t('profile.toast.error.text2'),
       }),
     onSettled: () => {
       signOutMutation.reset();
@@ -54,7 +56,7 @@ const Profile = () => {
         <View style={styles.info}>
           <View style={styles.label}>
             <StyledText type='Heading_5' color='blackGrey'>
-              Name
+              {i18n.t('profile.label.name')}
             </StyledText>
           </View>
           <View style={styles.value}>
@@ -69,7 +71,7 @@ const Profile = () => {
         <View style={styles.info}>
           <View style={styles.label}>
             <StyledText type='Heading_5' color='blackGrey'>
-              Email
+              {i18n.t('profile.label.email')}
             </StyledText>
           </View>
           <View style={styles.value}>
@@ -81,7 +83,7 @@ const Profile = () => {
         <View style={styles.info}>
           <View style={styles.label}>
             <StyledText type='Heading_5' color='blackGrey'>
-              Password
+              {i18n.t('profile.label.password')}
             </StyledText>
           </View>
           <View style={styles.value}>
@@ -94,7 +96,7 @@ const Profile = () => {
           </StyledPressable>
         </View>
         <SolidButton
-          title='Sign out'
+          title={i18n.t('profile.label.signOut')}
           icon={<SignOutIcon />}
           iconPosition='left'
           containerStyle={{

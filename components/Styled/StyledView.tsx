@@ -9,6 +9,7 @@ import { EmptyList } from './StyledList';
 import StyledPressable from './StyledPressable';
 import StyledText from './StyledText';
 import { useRouter } from 'expo-router';
+import { i18n } from '@/lib/i18n';
 
 export const KeyboardView = ({ children, style, ...otherProps }: KeyboardAwareScrollViewProps) => {
   return (
@@ -63,12 +64,13 @@ export const LoadingView = ({ LoadingComponent = RandomLoading }: LoadingViewPro
 type ErrorViewProps = {
   errorMessage?: string;
 };
-export const ErrorView = ({ errorMessage = 'Some errors occurred' }: ErrorViewProps) => {
+
+export const ErrorView = ({ errorMessage = i18n.t('other.errorOccur') }: ErrorViewProps) => {
   const router = useRouter();
 
   return (
     <EmptyList
-      title={errorMessage}
+      title={errorMessage!}
       subField={
         <StyledPressable onPress={() => router.back()}>
           <StyledText
@@ -77,7 +79,7 @@ export const ErrorView = ({ errorMessage = 'Some errors occurred' }: ErrorViewPr
             style={{
               textDecorationLine: 'underline',
             }}>
-            Go back
+            {i18n.t('other.goBack')}
           </StyledText>
         </StyledPressable>
       }

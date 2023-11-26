@@ -25,6 +25,7 @@ import {
 } from '@/components/Animated';
 import { dismissKeyboard } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
+import { i18n } from '@/lib/i18n';
 
 type LoginFormInput = {
   email: string;
@@ -49,7 +50,7 @@ const Login = () => {
   const loginSuccess = useCallback(() => {
     StyledToast.show({
       type: 'success',
-      text1: 'Login sucessfully. Redirecting ...',
+      text1: i18n.t('login.toast.login.success'),
       onHide: () => {
         router.push('/(sidebar)');
       },
@@ -69,8 +70,8 @@ const Login = () => {
     onError: () => {
       StyledToast.show({
         type: 'error',
-        text1: 'Fail to login',
-        text2: 'Invalid email or password',
+        text1: i18n.t('login.toast.login.error.text1'),
+        text2: i18n.t('login.toast.login.error.text2'),
       });
     },
     onSettled: () => {
@@ -87,8 +88,8 @@ const Login = () => {
     onError: () => {
       StyledToast.show({
         type: 'error',
-        text1: 'Fail to login via Google',
-        text2: 'Please try again',
+        text1: i18n.t('login.toast.google.error.text1'),
+        text2: i18n.t('login.toast.google.error.text2'),
       });
     },
     onSettled: () => {
@@ -114,7 +115,7 @@ const Login = () => {
           </View>
           <View style={styles.heading}>
             <StyledText type='Heading_3' color='orange'>
-              Vietnamese Cuisine
+              {i18n.t('other.appName')}
             </StyledText>
           </View>
         </Animated.View>
@@ -126,19 +127,19 @@ const Login = () => {
               rules={{
                 required: {
                   value: true,
-                  message: 'Email is required',
+                  message: i18n.t('login.error.email.required'),
                 },
                 pattern: {
                   value:
                     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: 'Please fill in valid email',
+                  message: i18n.t('login.error.email.pattern'),
                 },
               }}
               render={({ field: { value, onChange, onBlur } }) => (
                 <FormInput
                   inputMode='email'
                   type='normal'
-                  placeholder='Email'
+                  placeholder={i18n.t('login.placeholder.email')}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -153,13 +154,13 @@ const Login = () => {
               rules={{
                 required: {
                   value: true,
-                  message: 'Password is required',
+                  message: i18n.t('login.error.password.required'),
                 },
               }}
               render={({ field: { value, onChange, onBlur } }) => (
                 <FormInput
                   type='password'
-                  placeholder='Password'
+                  placeholder={i18n.t('login.placeholder.password')}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -174,12 +175,12 @@ const Login = () => {
                 router.push('/(sidebar)/');
               }}>
               <StyledText type='SubInputField' color='orange'>
-                Back to home
+                {i18n.t('login.backToHome')}
               </StyledText>
             </StyledPressable>
             <StyledPressable onPress={() => {}}>
               <StyledText type='SubInputField' color='orange'>
-                Forgot password?
+                {i18n.t('login.forgot')}
               </StyledText>
             </StyledPressable>
           </View>
@@ -187,7 +188,7 @@ const Login = () => {
         <Animated.View entering={ReFadeInRight} exiting={ReFadeOutLeft}>
           <View style={styles.button}>
             <SolidButton
-              title='Sign In'
+              title={i18n.t('login.signIn')}
               icon={<ArrowRightIcon />}
               iconPosition='right'
               onPress={handleSubmit(data => loginMutation.mutate(data))}
@@ -201,10 +202,10 @@ const Login = () => {
           </View>
           <View style={styles.footer}>
             <StyledText type='SubInputField' color='blackGrey'>
-              Don't have an account?
+              {i18n.t('login.dont')}
             </StyledText>
             <StyledPressable onPress={() => router.push('/register')}>
-              <StyledText style={styles.redirectText}>SIGN UP</StyledText>
+              <StyledText style={styles.redirectText}>{i18n.t('login.signUp')}</StyledText>
             </StyledPressable>
           </View>
         </Animated.View>

@@ -10,7 +10,7 @@ import {
   OutlineButton,
   SolidButton,
 } from '@/components/Styled/StyledButton';
-import Animated, { FadeInLeft, FadeInRight, FadeOutRight } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import {
   ReFadeInDown,
   ReFadeOutUp,
@@ -19,6 +19,7 @@ import {
   ReLightSpeedOutLeft,
   ReLightSpeedOutRight,
 } from '@/components/Animated';
+import { i18n } from '@/lib/i18n';
 
 const About = () => {
   console.log('About re-render');
@@ -30,17 +31,20 @@ const About = () => {
         entering={ReLightSpeedInLeft}
         exiting={ReLightSpeedOutRight}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
-          Vietnamese Cuisine
+          {i18n.t('other.appName')}
         </StyledText>
         <StyledDivider orientation='horizontal' />
         <View style={styles.body}>
           <StyledText type='Heading_2' color='grey' style={{ textAlign: 'center' }}>
-            V1.0
+            {i18n.t('about.version')}
           </StyledText>
           <View style={styles.versionButtonContainer}>
-            <SolidButton title={'Change log'} containerStyle={styles.versionButton} />
+            <SolidButton
+              title={i18n.t('about.button.changeLog')}
+              containerStyle={styles.versionButton}
+            />
             <OutlineButton
-              title={'License'}
+              title={i18n.t('about.button.license')}
               containerStyle={styles.versionButton}
               buttonStyle={styles.versionButton}
             />
@@ -53,24 +57,24 @@ const About = () => {
         entering={ReLightSpeedInRight}
         exiting={ReLightSpeedOutLeft}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
-          Social Media
+          {i18n.t('about.social')}
         </StyledText>
         <StyledDivider orientation='horizontal' />
         <View style={[styles.body, { gap: STYLES.GAP.GAP_24 }]}>
-          <FaceBookButton title={'Like us on Facebook'} />
+          <FaceBookButton title={i18n.t('about.button.facebook')} />
           <GithubButton
-            title={'Star us on Github'}
+            title={i18n.t('about.button.github')}
             titleStyle={{
               marginHorizontal: STYLES.MARGIN.MARGIN_16,
             }}
           />
-          <TwitterButton title={'Follow us on Twitter'} />
+          <TwitterButton title={i18n.t('about.button.twitter')} />
         </View>
       </Animated.View>
 
       <Animated.View style={styles.block} entering={ReFadeInDown} exiting={ReFadeOutUp}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>
-          Disclaimer
+          {i18n.t('about.disclaimer')}
         </StyledText>
         <StyledDivider orientation='horizontal' />
         <View style={styles.body}>
@@ -80,8 +84,7 @@ const About = () => {
             style={{
               textAlign: 'justify',
             }}>
-            Vietnamese Cuisine is unofficial, made by a small group of developer and is NOT
-            affiliated to any organization. {'\n'} Some images used in this app are not copyrighted.
+            {i18n.t('about.content')}
           </StyledText>
         </View>
       </Animated.View>

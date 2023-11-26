@@ -16,7 +16,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { useSound } from '@/hooks/useSound';
-import { forwardRef, useReducer, useRef } from 'react';
+import { useRef } from 'react';
 
 type SidebarHeaderProps = {
   title: string | undefined;

@@ -31,6 +31,7 @@ import StyledToast from '@/components/Styled/StyledToast';
 import { useAuth } from '@/context/AuthContext';
 import { Food, User } from '@/config/model';
 import { useSound } from '@/hooks/useSound';
+import { i18n } from '@/lib/i18n';
 
 const useFoodListQuery = (email: string) =>
   useQuery<Food[]>({
@@ -55,22 +56,21 @@ const useFoodListQuery = (email: string) =>
   });
 
 const Home = () => {
+  const { user } = useAuth();
+
   console.log('Home re-render');
   const styles = useStyles();
-
-  const { user } = useAuth();
   const { data, isPending, refetch, isFetching } = useFoodListQuery(user?.email || '');
 
   return (
     <View style={styles.container} onStartShouldSetResponder={dismissKeyboard}>
       <View>
         <StyledText type='Heading_4' color='grey'>
-          Let's find your favourite {'\n'}
-          Vietnamese food
+          {i18n.t('home.find')}
         </StyledText>
       </View>
       <SearchInput
-        placeholder='Search'
+        placeholder={i18n.t('home.search')}
         rightIcon={
           <StyledPressable style={styles.searchButton}>
             <SearchIcon />
@@ -81,7 +81,7 @@ const Home = () => {
         <LoadingView />
       ) : (
         <StyledFlatList
-          emptyTitle='No dish available!'
+          emptyTitle={i18n.t('home.emptyList')}
           refreshControl={<StyledRefreshControl refreshing={isFetching} onRefresh={refetch} />}
           contentContainerStyle={{
             paddingHorizontal: 0,
@@ -99,9 +99,9 @@ const Home = () => {
 };
 
 const FoodCard = ({ title, imageUrlList, loved }: Food) => {
+  const { user } = useAuth();
   const styles = useStyles();
   const router = useRouter();
-  const { user } = useAuth();
   const [love, setLove] = useState(loved || false);
   const { playSound } = useSound(require('../../assets/sound/love-sound.mp3'));
   const queryClient = useQueryClient();
@@ -111,7 +111,7 @@ const FoodCard = ({ title, imageUrlList, loved }: Food) => {
       if (!user || !user?.email) {
         StyledToast.show({
           type: 'warning',
-          text1: 'This action requires authentication',
+          text1: i18n.t('home.toast.warning'),
         });
         router.push('/login');
         return;
@@ -130,7 +130,7 @@ const FoodCard = ({ title, imageUrlList, loved }: Food) => {
         queryKey: ['food', title],
       });
       queryClient.resetQueries({
-        queryKey: ['favourite', user?.email],
+        queryKey: ['favourites', user?.email],
       });
     },
     onError: err => {
@@ -138,8 +138,8 @@ const FoodCard = ({ title, imageUrlList, loved }: Food) => {
       console.log(err);
       StyledToast.show({
         type: 'error',
-        text1: `Fail to love ${title}`,
-        text2: 'Please try again',
+        text1: i18n.t('home.error.text1'),
+        text2: i18n.t('home.error.text2'),
       });
     },
   });

@@ -19,7 +19,7 @@ import { SolidButton } from '@/components/Styled/StyledButton';
 import StyledDivider from '@/components/Styled/StyledDivider';
 import { PaginationItem } from '@/components/Styled/StyledCarousel';
 import StyledImage from '@/components/Styled/StyledImage';
-import { getCurrentTimeString, hp, wp } from '@/lib/utils';
+import { hp, wp } from '@/lib/utils';
 import { STYLES } from '@/lib/constants';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
@@ -27,45 +27,53 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { v4 as uuid } from 'uuid';
 import { addDoc, collection } from 'firebase/firestore';
 import { FIREBASE_STORAGE, FIREBASE_DB } from '@/config/firebase';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import StyledToast from '@/components/Styled/StyledToast';
+import { i18n } from '@/lib/i18n';
+
+const usePublishMutation = ({ email }: { email: string }) =>
+  useMutation({
+    mutationFn: async ({ imageUriList, thought }: { imageUriList: string[]; thought: string }) => {
+      let firestoreImageUrls: string[];
+      if (imageUriList.length === 0) {
+        firestoreImageUrls = [];
+      } else {
+        firestoreImageUrls = await Promise.all(
+          imageUriList.map(async uri => {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const tempRef = ref(FIREBASE_STORAGE, `images/${uuid()}`);
+            await uploadBytes(tempRef, blob);
+            // console.log('Image uploaded successfully!');
+            const downloadURL = await getDownloadURL(tempRef);
+            return downloadURL;
+          }),
+        );
+      }
+      const docRef = await addDoc(collection(FIREBASE_DB, 'posts'), {
+        userId: email,
+        content: thought,
+        imageUrlList: firestoreImageUrls,
+        loveNumber: 0,
+        comments: [],
+        createdAt: new Date().toISOString(),
+      });
+    },
+  });
 
 const WORD_LIMIT = 500;
 const Publish = () => {
+  const { user } = useAuth();
   const styles = useStyles();
   const { theme } = useTheme();
   const [thought, setThought] = useState('');
   const [, requestLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
   const [, requestCameraPermission] = ImagePicker.useCameraPermissions();
   const [imageAssetList, setImageAssetList] = useState<ImagePicker.ImagePickerAsset[]>([]);
-  const { user } = useAuth();
-
-  const publishPost = async () => {
-    // Add a new post with a generated id.
-    try {
-      const urls = [];
-      for (const image of imageAssetList) {
-        const response = await fetch(image.uri);
-        const blob = await response.blob();
-
-        const tempRef = ref(FIREBASE_STORAGE, `images/${uuid()}`);
-        await uploadBytes(tempRef, blob);
-        console.log('Image uploaded successfully!');
-        const downloadURL = await getDownloadURL(tempRef);
-        urls.push(downloadURL);
-      }
-
-      const docRef = await addDoc(collection(FIREBASE_DB, 'posts'), {
-        userId: user?.email,
-        content: 'just fake content',
-        imageUrlList: urls,
-        loveNumber: 0,
-        comments: [],
-        createdAt: getCurrentTimeString(),
-      });
-      console.log('publish successfully');
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const queryClient = useQueryClient();
+  const publishMutation = usePublishMutation({
+    email: user?.email!,
+  });
 
   const pickImages = async () => {
     const permission = await requestLibraryPermission();
@@ -99,6 +107,48 @@ const Publish = () => {
     }
   };
 
+  const handlePublish = () => {
+    if (!thought.trim()) {
+      console.log('empty');
+      StyledToast.show({
+        type: 'warning',
+        text1: i18n.t('community.publish.toast.warning'),
+        visibilityTime: 2000,
+      });
+    } else {
+      publishMutation.mutate(
+        {
+          imageUriList: imageAssetList.map(asset => asset.uri),
+          thought,
+        },
+        {
+          onSuccess: () => {
+            queryClient.resetQueries({
+              queryKey: ['community'],
+              exact: false,
+            });
+            StyledToast.show({
+              type: 'success',
+              text1: i18n.t('community.publish.toast.success'),
+            });
+          },
+          onError: () => {
+            StyledToast.show({
+              type: 'error',
+              text1: i18n.t('community.publish.toast.error.text1'),
+              text2: i18n.t('community.publish.toast.error.text2'),
+            });
+          },
+          onSettled: () => {
+            publishMutation.reset();
+            setThought('');
+            setImageAssetList([]);
+          },
+        },
+      );
+    }
+  };
+
   return (
     <>
       <Stack.Screen
@@ -108,7 +158,9 @@ const Publish = () => {
               return null;
             }
             return (
-              <StyledPressable onPress={() => setImageAssetList([])}>
+              <StyledPressable
+                onPress={() => setImageAssetList([])}
+                disabled={publishMutation.isPending}>
                 <BroomIcon />
               </StyledPressable>
             );
@@ -122,7 +174,10 @@ const Publish = () => {
           <StyledText type='Heading_4' color='orange'>
             Cong Nghia Hieu
           </StyledText>
-          <StyledPressable style={styles.imageButton} onPress={takePhoto}>
+          <StyledPressable
+            style={styles.imageButton}
+            onPress={takePhoto}
+            disabled={publishMutation.isPending}>
             <CameraIconGreen />
           </StyledPressable>
         </View>
@@ -131,7 +186,7 @@ const Publish = () => {
             {thought.length} / {WORD_LIMIT}
           </StyledText>
           <TextInput
-            placeholder='Write your thought'
+            placeholder={i18n.t('community.publish.writeThought')}
             placeholderTextColor={theme.colors.whiteGrey}
             multiline
             maxLength={WORD_LIMIT}
@@ -139,28 +194,34 @@ const Publish = () => {
             style={styles.input}
             value={thought}
             onChangeText={setThought}
+            editable={!publishMutation.isPending}
           />
         </View>
         <View style={styles.imageContainer}>
           {imageAssetList.length ? (
             <ImageList imageUrlList={imageAssetList.map(asset => asset.uri)} />
           ) : (
-            <StyledPressable style={styles.imagePlaceholder} onPress={pickImages}>
+            <StyledPressable
+              style={styles.imagePlaceholder}
+              onPress={pickImages}
+              disabled={publishMutation.isPending}>
               <StyledText type='Heading_2' color='blackGrey'>
-                Pick some images
+                {i18n.t('community.publish.pick')}
               </StyledText>
               <UploadIcon />
             </StyledPressable>
           )}
         </View>
         <SolidButton
-          title='Publish this post'
+          title={i18n.t('community.publish.publishPost')}
           icon={<PencilPostIcon />}
           iconPosition='left'
           containerStyle={{
             borderRadius: STYLES.RADIUS.RADIUS_10,
             marginTop: STYLES.MARGIN.MARGIN_16,
           }}
+          onPress={handlePublish}
+          loading={publishMutation.isPending}
         />
       </ScrollView>
     </>
@@ -237,7 +298,8 @@ const useStyles = makeStyles(theme => {
   return {
     container: {
       flex: 1,
-      backgroundColor: dT ? theme.colors.black : theme.colors.white,
+      // backgroundColor: dT ? theme.colors.black : theme.colors.white,
+      backgroundColor: theme.colors.background,
       paddingHorizontal: STYLES.PADDING.PADDING_16,
       paddingTop: STYLES.PADDING.PADDING_8,
     },

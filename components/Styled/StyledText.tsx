@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Text, TextProps } from '@rneui/themed';
 import { makeStyles } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
+import { i18n } from '@/lib/i18n';
 
 export type StyledTextProps = TextProps & {
   lengthLimit?: number;
@@ -26,7 +27,7 @@ export const ContinueWithText = () => {
   return (
     <View style={styles.continueContainer}>
       <Line />
-      <StyledText style={styles.continueText}>or continue with</StyledText>
+      <StyledText style={styles.continueText}>{i18n.t('other.continueWith')}</StyledText>
       <Line />
     </View>
   );
