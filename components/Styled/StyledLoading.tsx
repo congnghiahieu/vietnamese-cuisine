@@ -35,7 +35,7 @@ export const StyledImageLoading = () => {
   );
 };
 
-export const StyledCircleLoading = () => {
+export const StyledCircleLoading = ({ color }: { color?: string }) => {
   const { theme } = useTheme();
   const initalScale = useSharedValue(1);
   const timingConfig = useMemo<WithTimingConfig>(
@@ -59,7 +59,7 @@ export const StyledCircleLoading = () => {
 
   return (
     <Animated.View style={[animatedStyle]}>
-      <ActivityIndicator animating color={theme.colors.orange} size='large' />
+      <ActivityIndicator animating color={color || theme.colors.orange} size='large' />
     </Animated.View>
   );
 };

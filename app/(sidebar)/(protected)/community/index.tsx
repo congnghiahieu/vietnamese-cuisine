@@ -8,12 +8,12 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import { AvatarIcon, CommentIcon, HeartIcon, PostIcon } from '@/components/Icon';
 import StyledText from '@/components/Styled/StyledText';
 import StyledDivider from '@/components/Styled/StyledDivider';
-import { hp } from '@/lib/utils';
+import { hp, timeSorter, wp } from '@/lib/utils';
 import { StyledFlatList } from '@/components/Styled/StyledList';
 import StyledImage from '@/components/Styled/StyledImage';
 import { HoldingView, LoadingView } from '@/components/Styled/StyledView';
 import { useAuth } from '@/context/AuthContext';
-import Animated from 'react-native-reanimated';
+import Animated, { useSharedValue } from 'react-native-reanimated';
 import { ReFadeIn, ReFadeOut } from '@/components/Animated';
 import { FIREBASE_DB } from '@/config/firebase';
 import { query, collection, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
@@ -21,6 +21,8 @@ import { i18n } from '@/lib/i18n';
 import { useQuery } from '@tanstack/react-query';
 import { StyledRefreshControl } from '@/components/Styled/StyledLoading';
 import { useSound } from '@/hooks/useSound';
+import Carousel from 'react-native-reanimated-carousel';
+import { PaginationItem } from '@/components/Styled/StyledCarousel';
 
 type Page = 'MyFeed' | 'MyWall';
 
@@ -39,13 +41,19 @@ const usePostQuery = (page: Page) =>
     queryKey: ['community', page],
     queryFn: async () => {
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'posts'));
-      return querySnapshot.docs.map(
+      const postNoSorted = querySnapshot.docs.map(
         doc =>
           ({
             postId: doc.id,
             ...doc.data(),
           } as Post),
       );
+      const postSorted = timeSorter({
+        arr: postNoSorted,
+        key: 'createdAt',
+        sortType: 'DESC',
+      });
+      return postSorted;
     },
     staleTime: 0,
   });
@@ -59,25 +67,27 @@ const MyFeed = () => {
   const { data, isPending, refetch, isFetching } = usePostQuery(page);
   const flatListRef = useRef<FlatList<Post>>(null);
 
-  useEffect(() => {
-    flatListRef.current?.scrollToOffset({
-      offset: 0,
-      animated: true,
-    });
-  }, [page]);
+  // useEffect(() => {
+  //   flatListRef.current?.scrollToOffset({
+  //     offset: 0,
+  //     animated: true,
+  //   });
+  // }, [page]);
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <NavigateButton page={page} setPage={setPage} />
-        <WannaPost />
-      </View>
       {isPending ? (
         <LoadingView />
       ) : (
         <StyledFlatList
           ref={flatListRef}
           emptyTitle={i18n.t('community.wall.emptyList')}
+          ListHeaderComponent={
+            <View style={styles.header}>
+              <NavigateButton page={page} setPage={setPage} />
+              <WannaPost />
+            </View>
+          }
           refreshControl={<StyledRefreshControl refreshing={isFetching} onRefresh={refetch} />}
           keyExtractor={({ postId }) => postId}
           data={data}
@@ -159,6 +169,20 @@ const PostCard = ({ userId, createdAt, content, imageUrlList }: Post) => {
   const router = useRouter();
   const { playSound } = useSound(require('../../../../assets/sound/love-sound.mp3'));
 
+  const image =
+    imageUrlList.length === 0 ? (
+      <StyledDivider orientation='horizontal' />
+    ) : imageUrlList.length === 1 ? (
+      <StyledImage
+        source={{
+          uri: imageUrlList[0],
+        }}
+        style={styles.image}
+      />
+    ) : (
+      <ImageList imageUrlList={imageUrlList} />
+    );
+
   return (
     <View style={styles.card}>
       <View style={styles.header}>
@@ -169,7 +193,9 @@ const PostCard = ({ userId, createdAt, content, imageUrlList }: Post) => {
               {userId}
             </StyledText>
             <StyledText type='Placeholder' color='blackGrey'>
-              {createdAt}
+              {i18n.distanceOfTimeInWords(createdAt, Date.now(), {
+                includeSeconds: true,
+              })}
             </StyledText>
           </View>
         </View>
@@ -177,12 +203,7 @@ const PostCard = ({ userId, createdAt, content, imageUrlList }: Post) => {
           {content}
         </StyledText>
       </View>
-      <StyledImage
-        source={{
-          uri: imageUrlList[0],
-        }}
-        style={styles.image}
-      />
+      {image}
       <View style={styles.footer}>
         <StyledPressable
           onPress={() => {
@@ -208,6 +229,70 @@ const PostCard = ({ userId, createdAt, content, imageUrlList }: Post) => {
           <CommentIcon />
           <StyledText>{i18n.t('community.wall.comments')}</StyledText>
         </StyledPressable>
+      </View>
+    </View>
+  );
+};
+
+const ImageList = ({ imageUrlList }: { imageUrlList: string[] }) => {
+  const carouselWidth = wp(100);
+  const carouselHeight = hp(40);
+  const progressValue = useSharedValue<number>(0);
+
+  return (
+    <View
+      style={{
+        position: 'relative',
+      }}>
+      <Carousel
+        mode='horizontal-stack'
+        modeConfig={{}}
+        // autoPlay
+        // autoPlayReverse
+        // autoPlayInterval={2000}
+        scrollAnimationDuration={STYLES.DURATION.DURATION_1000 / 2}
+        loop
+        pagingEnabled
+        snapEnabled
+        onProgressChange={(_, absoluteProgress) => {
+          // console.log(absoluteProgress);
+          progressValue.value = absoluteProgress;
+        }}
+        width={carouselWidth}
+        height={carouselHeight}
+        data={imageUrlList}
+        renderItem={({ item }) => {
+          return (
+            <StyledImage
+              source={{
+                uri: item,
+              }}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            />
+          );
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          bottom: STYLES.MARGIN.MARGIN_16,
+          flexDirection: 'row',
+          alignSelf: 'center',
+          gap: STYLES.GAP.GAP_4,
+        }}>
+        {imageUrlList.map((_, index) => {
+          return (
+            <PaginationItem
+              key={index}
+              index={index}
+              length={imageUrlList.length}
+              animatedValue={progressValue}
+            />
+          );
+        })}
       </View>
     </View>
   );
@@ -265,14 +350,14 @@ const useCardStyles = makeStyles(theme => {
     infoText: {
       marginLeft: STYLES.MARGIN.MARGIN_32,
     },
-    image: {
-      width: '100%',
-      height: hp(40),
-    },
     footer: {
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: STYLES.PADDING.PADDING_8,
+    },
+    image: {
+      width: wp(100),
+      height: hp(40),
     },
     button: {
       flex: 1,

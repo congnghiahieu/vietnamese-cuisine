@@ -7,12 +7,28 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import StyledText from '@/components/Styled/StyledText';
 import { wp } from '@/lib/utils';
 import { SolidButton } from '@/components/Styled/StyledButton';
-import { FIREBASE_AUTH } from '@/config/firebase';
+import { FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
 import { signOut } from 'firebase/auth';
 import StyledToast from '@/components/Styled/StyledToast';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
 import { i18n } from '@/lib/i18n';
+import { doc, getDoc } from 'firebase/firestore';
+import { ErrorView, LoadingView } from '@/components/Styled/StyledView';
+import { User } from '@/config/model';
+
+const useProfileQuery = ({ email }: { email: string }) =>
+  useQuery<User>({
+    queryKey: ['profile', email],
+    queryFn: async () => {
+      const docRef = doc(FIREBASE_DB, 'users', email);
+      const userDoc = await getDoc(docRef);
+      if (!userDoc.exists()) throw new Error(i18n.t('other.errorOccurr'));
+
+      const user = userDoc.data() as User;
+      return user;
+    },
+  });
 
 const Profile = () => {
   const { user } = useAuth();
@@ -20,6 +36,7 @@ const Profile = () => {
   console.log('Profile re-render');
   const styles = useStyles();
   const router = useRouter();
+  const { data: dbUser, isPending, isError, error } = useProfileQuery({ email: user?.email! });
   const signOutMutation = useMutation({
     mutationFn: async () => {
       await signOut(FIREBASE_AUTH);
@@ -44,6 +61,13 @@ const Profile = () => {
     },
   });
 
+  if (isPending) {
+    return <LoadingView />;
+  }
+  if (isError) {
+    return <ErrorView errorMessage={error.message} />;
+  }
+
   return (
     <View style={styles.container}>
       <StyledPressable
@@ -61,7 +85,7 @@ const Profile = () => {
           </View>
           <View style={styles.value}>
             <StyledText type='Placeholder' color='grey'>
-              Cong Nghia Hieu
+              {dbUser.fullname}
             </StyledText>
           </View>
           <StyledPressable style={styles.editButton}>
@@ -76,7 +100,7 @@ const Profile = () => {
           </View>
           <View style={styles.value}>
             <StyledText type='Placeholder' color='grey'>
-              info@gmail.com
+              {dbUser.email}
             </StyledText>
           </View>
         </View>

@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { Drawer as Sidebar } from 'expo-router/drawer';
 import { makeStyles } from '@rneui/themed';
 import StyledHeader from '@/components/Styled/StyledHeader';
@@ -19,6 +19,28 @@ import { useRouter } from 'expo-router';
 import { i18n } from '@/lib/i18n';
 import { useState } from 'react';
 import useI18nChangeEffect from '@/hooks/useI18nChangeEffect';
+import { User } from '@/config/model';
+import { useQuery } from '@tanstack/react-query';
+import { FIREBASE_DB } from '@/config/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { useAuth } from '@/context/AuthContext';
+import { LoadingView } from '@/components/Styled/StyledView';
+import { StyledCircleLoading } from '@/components/Styled/StyledLoading';
+
+const useProfileQuery = ({ email }: { email: string }) =>
+  useQuery<User>({
+    queryKey: ['profile', email],
+    queryFn: async () => {
+      if (!email) throw new Error();
+
+      const docRef = doc(FIREBASE_DB, 'users', email);
+      const userDoc = await getDoc(docRef);
+      if (!userDoc.exists()) throw new Error(i18n.t('other.errorOccurr'));
+
+      const user = userDoc.data() as User;
+      return user;
+    },
+  });
 
 const SidebarLayout = () => {
   const sidebarOptions = useSidebarOptions();
@@ -72,7 +94,7 @@ const SidebarLayout = () => {
       <Sidebar.Screen
         name='(protected)/profile'
         options={{
-          title: i18n.t('sidebar.profile'),
+          title: i18n.t('sidebar.myProfile'),
           drawerIcon: ({ color }) => (
             <AntDesign name='user' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
           ),
@@ -147,7 +169,6 @@ const SidebarContent = ({ descriptors, state, ...rest }: DrawerContentComponentP
   const focusedOptions = focusedDescriptor.options;
   const { drawerContentStyle, drawerContentContainerStyle } = focusedOptions;
   const styles = useStyles();
-  const router = useRouter();
 
   return (
     <DrawerContentScrollView
@@ -165,30 +186,86 @@ const SidebarContent = ({ descriptors, state, ...rest }: DrawerContentComponentP
       <StyledText type='Heading_3' color='orange' style={styles.title}>
         {i18n.t('other.appName')}
       </StyledText>
-      <View style={styles.user}>
-        <AvatarIcon />
-        <View style={styles.info}>
-          <StyledText type='Heading_5' color='white'>
-            {i18n.t('sidebar.welcome')}, User
-          </StyledText>
-          <View style={styles.navigate}>
-            <OutlineButton
-              title={i18n.t('sidebar.signIn')}
-              buttonStyle={styles.button}
-              titleStyle={styles.buttonTitle}
-              onPress={() => router.push('/login')}
-            />
-            <OutlineButton
-              title={i18n.t('sidebar.signUp')}
-              buttonStyle={styles.button}
-              titleStyle={styles.buttonTitle}
-              onPress={() => router.push('/register')}
-            />
-          </View>
-        </View>
-      </View>
+      <SidebarUserContent />
       <DrawerItemList descriptors={descriptors} state={state} {...rest} />
     </DrawerContentScrollView>
+  );
+};
+
+const SidebarUserContent = () => {
+  const { user } = useAuth();
+  const {
+    data: dbUser,
+    isPending,
+    error,
+  } = useProfileQuery({
+    email: user?.email || '',
+  });
+  const styles = useStyles();
+  const router = useRouter();
+  let content: React.ReactNode;
+  if (isPending) {
+    content = (
+      <ActivityIndicator
+        animating
+        color='white'
+        size='small'
+        style={{
+          paddingVertical: STYLES.PADDING.PADDING_16,
+        }}
+      />
+    );
+  } else if (error) {
+    content = (
+      <>
+        <StyledText type='Heading_5' color='white'>
+          {i18n.t('sidebar.welcome')}, User
+        </StyledText>
+        <View style={styles.navigate}>
+          <OutlineButton
+            title={i18n.t('sidebar.signIn')}
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonTitle}
+            onPress={() => router.push('/login')}
+          />
+          <OutlineButton
+            title={i18n.t('sidebar.signUp')}
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonTitle}
+            onPress={() => router.push('/register')}
+          />
+        </View>
+      </>
+    );
+  } else {
+    content = (
+      <>
+        <StyledText type='Heading_5' color='white'>
+          {i18n.t('sidebar.welcome')}, {dbUser.fullname.split(' ')[-1]}
+        </StyledText>
+        <View style={styles.navigate}>
+          {/* <OutlineButton
+            title={i18n.t('sidebar.signOut')}
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonTitle}
+            onPress={() => router.push('/register')}
+          /> */}
+          <OutlineButton
+            title={i18n.t('sidebar.profile')}
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonTitle}
+            onPress={() => router.push('/(sidebar)/(protected)/profile')}
+          />
+        </View>
+      </>
+    );
+  }
+
+  return (
+    <View style={styles.user}>
+      <AvatarIcon />
+      <View style={styles.info}>{content}</View>
+    </View>
   );
 };
 
@@ -230,6 +307,7 @@ const useStyles = makeStyles(theme => {
       paddingVertical: STYLES.PADDING.PADDING_8,
     },
     info: {
+      flex: 1,
       marginLeft: STYLES.MARGIN.MARGIN_16,
       gap: STYLES.GAP.GAP_4,
     },

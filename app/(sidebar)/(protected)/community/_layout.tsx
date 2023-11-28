@@ -5,6 +5,7 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import StyledText from '@/components/Styled/StyledText';
 import { Stack, useRouter } from 'expo-router';
 import { useTheme } from '@rneui/themed';
+import { i18n } from '@/lib/i18n';
 
 const CommunityLayout = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const CommunityLayout = () => {
         name='index'
         options={{
           header: ({ options }) => <StyledHeader title={options.title} />,
-          title: 'Community',
+          title: i18n.t('sidebar.community'),
           animation: 'default',
         }}
       />
@@ -32,7 +33,7 @@ const CommunityLayout = () => {
         options={{
           headerTitle: () => (
             <StyledText type='Heading_3' color='blackGrey'>
-              Make a Post
+              {i18n.t('community.publish.makePost')}
             </StyledText>
           ),
           headerLeft: () => (
@@ -56,7 +57,7 @@ const CommunityLayout = () => {
         options={{
           headerTitle: () => (
             <StyledText type='Heading_3' color='blackGrey'>
-              Comments
+              {i18n.t('community.comment.comments')}
             </StyledText>
           ),
           headerLeft: () => (

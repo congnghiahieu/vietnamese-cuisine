@@ -1,4 +1,6 @@
 import { I18n } from 'i18n-js';
+import viVn from 'i18n-js/json/vi.json';
+import enUs from 'i18n-js/json/en-US.json';
 
 type Translations = {
   other: {
@@ -125,13 +127,15 @@ type SidebarTranslations = {
   community: string;
   games: string;
   favourites: string;
-  profile: string;
+  myProfile: string;
   about: string;
   support: string;
   settings: string;
   welcome: string;
   signIn: string;
   signUp: string;
+  signOut: string;
+  profile: string;
 };
 
 type Game = {
@@ -173,12 +177,14 @@ type CommunityTranslations = {
     emptyList: string;
   };
   publish: {
+    makePost: string;
     toast: ToastTranslations;
     writeThought: string;
     pick: string;
     publishPost: string;
   };
   comment: {
+    comments: string;
     firstOne: string;
     postComment: string;
   };
@@ -331,13 +337,15 @@ const englishTranslations: Translations = {
     community: 'Community',
     games: 'Games',
     favourites: 'Favourites',
-    profile: 'My Profile',
+    myProfile: 'My Profile',
     about: 'About Us',
     support: 'Support Us',
     settings: 'Settings',
     welcome: 'Welcome',
     signIn: 'Sign In',
     signUp: 'Sign Up',
+    signOut: 'Sign Out',
+    profile: 'Profile',
   },
   games: {
     games: 'Games',
@@ -385,6 +393,7 @@ const englishTranslations: Translations = {
       emptyList: 'No post available',
     },
     publish: {
+      makePost: 'Make a Post',
       toast: {
         success: 'Publish your post successfully',
         error: {
@@ -398,6 +407,7 @@ const englishTranslations: Translations = {
       publishPost: 'Publish this post',
     },
     comment: {
+      comments: 'Comments',
       firstOne: 'Be the first one \ncomment this post',
       postComment: 'Post your comment!',
     },
@@ -527,7 +537,7 @@ const vietnameseTranslations: Translations = {
   },
   home: {
     find: 'Hãy tìm kiếm món ăn\nViệt Nam yêu thích',
-    search: 'Tìm kiêm',
+    search: 'Tìm kiếm',
     emptyList: 'Không có món ăn nào!',
     toast: {
       error: {
@@ -542,13 +552,15 @@ const vietnameseTranslations: Translations = {
     community: 'Cộng đồng',
     games: 'Trò chơi',
     favourites: 'Yêu thích',
-    profile: 'Hồ sơ của tôi',
+    myProfile: 'Hồ sơ của tôi',
     about: 'Giới thiệu',
     support: 'Hỗ trợ',
     settings: 'Cài đặt',
     welcome: 'Xin chào',
     signIn: 'Đăng nhập',
     signUp: 'Đăng ký',
+    signOut: 'Đăng xuất',
+    profile: 'Hồ sơ',
   },
   games: {
     games: 'Trò chơi',
@@ -596,6 +608,7 @@ const vietnameseTranslations: Translations = {
       emptyList: 'Chưa có bài viết nào',
     },
     publish: {
+      makePost: 'Tạo bài viết',
       toast: {
         success: 'Đăng bài viết thành công',
         error: {
@@ -609,6 +622,7 @@ const vietnameseTranslations: Translations = {
       publishPost: 'Đăng bài viết này',
     },
     comment: {
+      comments: 'Bình luận',
       firstOne: 'Hãy là người đầu tiên\nbình luận bài viết này',
       postComment: 'Bình luận của bạn',
     },
@@ -618,8 +632,14 @@ const vietnameseTranslations: Translations = {
 export type Language = 'en' | 'vi';
 
 export const translations: Record<Language, Translations> = {
-  en: englishTranslations,
-  vi: vietnameseTranslations,
+  en: {
+    ...enUs['en-US'],
+    ...englishTranslations,
+  },
+  vi: {
+    ...viVn.vi,
+    ...vietnameseTranslations,
+  },
 };
 
 export const i18n = new I18n(translations, {

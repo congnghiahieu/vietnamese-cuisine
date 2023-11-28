@@ -16,6 +16,7 @@ import StyledToast from '@/components/Styled/StyledToast';
 import { useSettingStates } from '@/states/setting';
 import { AuthProvider } from '@/context/AuthContext';
 import { i18n } from '@/lib/i18n';
+import { StatusBar } from 'react-native';
 
 // import { LogBox } from 'react-native';
 // LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
@@ -67,39 +68,45 @@ const SettingsProvider = ({ children }: React.PropsWithChildren) => {
 };
 
 const StackLayout = () => {
+  const { theme } = useTheme();
+  const dT = theme.mode === 'dark';
+
   return (
-    <Stack
-      initialRouteName='(sidebar)'
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Stack.Screen name='(sidebar)' />
-      <Stack.Screen
-        name='login'
-        options={{
-          title: 'Login',
-        }}
-      />
-      <Stack.Screen
-        name='register'
-        options={{
-          title: 'Register',
-        }}
-      />
-      <Stack.Screen
-        name='onboard'
-        options={{
-          title: 'Onboard',
-        }}
-      />
-      <Stack.Screen
-        name='information/[title]'
-        options={{
-          title: 'Information',
-          animation: 'slide_from_right',
-        }}
-      />
-    </Stack>
+    <>
+      <StatusBar barStyle={dT ? 'light-content' : 'dark-content'} />
+      <Stack
+        initialRouteName='(sidebar)'
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name='(sidebar)' />
+        <Stack.Screen
+          name='login'
+          options={{
+            title: 'Login',
+          }}
+        />
+        <Stack.Screen
+          name='register'
+          options={{
+            title: 'Register',
+          }}
+        />
+        <Stack.Screen
+          name='onboard'
+          options={{
+            title: 'Onboard',
+          }}
+        />
+        <Stack.Screen
+          name='information/[title]'
+          options={{
+            title: 'Information',
+            animation: 'slide_from_right',
+          }}
+        />
+      </Stack>
+    </>
   );
 };
 

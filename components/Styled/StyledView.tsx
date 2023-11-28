@@ -35,7 +35,7 @@ export const SafeView = ({ children, style, ...otherProps }: SafeAreaViewProps) 
 
 type LoadingViewProps = {
   LoadingComponent?: () => React.ReactNode;
-};
+} & ViewProps;
 
 export const HoldingView = ({ style, children, ...otherProps }: ViewProps) => {
   return (
@@ -53,9 +53,12 @@ export const HoldingView = ({ style, children, ...otherProps }: ViewProps) => {
   );
 };
 
-export const LoadingView = ({ LoadingComponent = RandomLoading }: LoadingViewProps) => {
+export const LoadingView = ({
+  LoadingComponent = RandomLoading,
+  ...otherProps
+}: LoadingViewProps) => {
   return (
-    <HoldingView>
+    <HoldingView {...otherProps}>
       <LoadingComponent />
     </HoldingView>
   );
