@@ -115,7 +115,7 @@ export const getDefaultTextStyleType = (
 });
 
 type FontsLoaderProps = React.PropsWithChildren & {
-  onFontsLoaded: () => void;
+  onFontsLoaded?: () => void;
 };
 
 export const FontsLoader = (props: FontsLoaderProps) => {
@@ -128,7 +128,7 @@ export const FontsLoader = (props: FontsLoaderProps) => {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && onFontsLoaded) {
       onFontsLoaded();
     }
   }, [loaded]);

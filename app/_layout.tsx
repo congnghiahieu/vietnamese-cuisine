@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack, useFocusEffect } from 'expo-router';
 import { ThemeProvider, useTheme, useThemeMode } from '@rneui/themed';
@@ -17,6 +17,7 @@ import { useSettingStates } from '@/states/setting';
 import { AuthProvider } from '@/context/AuthContext';
 import { i18n } from '@/lib/i18n';
 import { StatusBar } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import { LogBox } from 'react-native';
 // LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
@@ -70,12 +71,31 @@ const SettingsProvider = ({ children }: React.PropsWithChildren) => {
 const StackLayout = () => {
   const { theme } = useTheme();
   const dT = theme.mode === 'dark';
+  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const checkAlreadyOnboarded = async () => {
+    const onboarded = await AsyncStorage.getItem('Vietnamese Cuisine Onboard');
+    console.log(onboarded);
+    setShowOnboarding(onboarded === 'true' ? false : true);
+    setIsLoading(false);
+    SplashScreen.hideAsync();
+  };
+
+  useEffect(() => {
+    checkAlreadyOnboarded();
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
+
+  console.log(showOnboarding);
 
   return (
     <>
       <StatusBar barStyle={dT ? 'light-content' : 'dark-content'} />
       <Stack
-        initialRouteName='(sidebar)'
+        initialRouteName={showOnboarding ? '(onboard)' : '(sidebar)'}
         screenOptions={{
           headerShown: false,
         }}>
@@ -93,7 +113,7 @@ const StackLayout = () => {
           }}
         />
         <Stack.Screen
-          name='onboard'
+          name='(onboard)'
           options={{
             title: 'Onboard',
           }}
@@ -138,7 +158,7 @@ onlineManager.setEventListener(setOnline => {
 
 export default function RootLayout() {
   return (
-    <FontsLoader onFontsLoaded={SplashScreen.hideAsync}>
+    <FontsLoader>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <SettingsProvider>

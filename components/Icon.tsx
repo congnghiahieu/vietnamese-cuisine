@@ -20,9 +20,8 @@ import Animated, {
   withDelay,
   withRepeat,
 } from 'react-native-reanimated';
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { useAppearSoundEffect } from '@/hooks/useSound';
-import { Audio } from 'expo-av';
 
 export const SidebarHomeIcon = () => {
   const styles = useStyles();
