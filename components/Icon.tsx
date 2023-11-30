@@ -83,6 +83,11 @@ export const BroomIcon = () => {
   );
 };
 
+export const QuestionIcon = () => {
+  const styles = useStyles();
+  return <FontAwesome5 name='question' style={styles.baseIcon} />;
+};
+
 export const GiftIcon = () => {
   const styles = useStyles();
   return <MaterialCommunityIcons name='gift' style={styles.baseIcon} />;

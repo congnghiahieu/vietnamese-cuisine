@@ -25,20 +25,20 @@ const getGameList = () =>
       imageUrl:
         'https://cdn.tgdd.vn/Files/2021/07/27/1371175/huong-dan-3-cach-lam-banh-mi-bo-thom-ngon-de-lam-cho-bua-sang-du-chat-202201041019538628.jpg',
       desc: i18n.t('games.matchFood.desc'),
-      href: '/(sidebar)/games/match-food',
+      href: '/(app)/(sidebar)/games/match-food',
     },
     {
       title: i18n.t('games.pickIngredients.title'),
       imageUrl:
         'https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/filters:quality(95)/https://cms-prod.s3-sgn09.fptcloud.com/1_to_pho_bo_bao_nhieu_calo_9_762e002737.jpg',
       desc: i18n.t('games.pickIngredients.desc'),
-      href: '/(sidebar)/games/pick-ingredients',
+      href: '/(app)/(sidebar)/games/pick-ingredients',
     },
     {
       title: i18n.t('games.guessFood.title'),
       imageUrl: 'https://beptruong.edu.vn/wp-content/uploads/2018/05/bun-cha.jpg',
       desc: i18n.t('games.guessFood.desc'),
-      href: '/(sidebar)/games/guess-food',
+      href: '/(app)/(sidebar)/games/guess-food',
     },
   ] as Game[];
 

@@ -179,7 +179,7 @@ const SidebarContent = ({ descriptors, state, ...rest }: DrawerContentComponentP
       showsHorizontalScrollIndicator={false}>
       <View style={{ alignItems: 'center' }}>
         <StyledImage
-          source={require('../../assets/images/adaptive-icon.png')}
+          source={require('../../../assets/images/adaptive-icon.png')}
           style={styles.icon}
         />
       </View>
@@ -254,7 +254,7 @@ const SidebarUserContent = () => {
             title={i18n.t('sidebar.profile')}
             buttonStyle={styles.button}
             titleStyle={styles.buttonTitle}
-            onPress={() => router.push('/(sidebar)/(protected)/profile')}
+            onPress={() => router.push('/(app)/(sidebar)/(protected)/profile')}
           />
         </View>
       </>

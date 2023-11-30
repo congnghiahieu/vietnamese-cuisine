@@ -38,22 +38,22 @@ type OnboardItem = {
 const onboardList: OnboardItem[] = [
   {
     title: 'Greeting,\nVietnamese Cuisine here',
-    imageSource: require('../../assets/images/onboard/banh-mi.jpeg'),
+    imageSource: require('../assets/images/onboard/banh-mi.jpeg'),
     color: LIGHT_COLORS.redPink,
   },
   {
     title: 'You wanna find our \nmore about Vietnam?',
-    imageSource: require('../../assets/images/onboard/bun-cha-1.jpg'),
+    imageSource: require('../assets/images/onboard/bun-cha-1.jpg'),
     color: DARK_COLORS.yellow,
   },
   {
     title: 'Discover Vietnamese \nthrough tasty foods',
-    imageSource: require('../../assets/images/onboard/spring-roll-1.webp'),
+    imageSource: require('../assets/images/onboard/spring-roll-1.webp'),
     color: '#9ADE7B',
   },
   {
     title: "What're you waiting for?\nLet's explore now",
-    imageSource: require('../../assets/images/onboard/pho-3.jpg'),
+    imageSource: require('../assets/images/onboard/pho-3.jpg'),
     color: LIGHT_COLORS.orange,
   },
 ];
@@ -227,8 +227,8 @@ const CustomButton = ({ flatListRef, flatListIndex, dataLength, x }: CustomButto
           flatListRef.current?.scrollToIndex({ index: flatListIndex.value + 1 });
           return;
         }
-        // AsyncStorage.setItem('Vietnamese Cuisine Onboard', 'true');
-        router.push('/(sidebar)/');
+        AsyncStorage.setItem('Vietnamese Cuisine Onboard', 'true');
+        router.push('/(app)/(sidebar)/');
       }}>
       <Animated.View style={[styles.buttonContainer, buttonAnimationStyle, animatedColor]}>
         <Animated.Text style={[styles.textButton, textAnimationStyle]}>Get Started</Animated.Text>

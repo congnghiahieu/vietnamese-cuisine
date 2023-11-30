@@ -154,7 +154,7 @@ const WannaPost = () => {
   return (
     <StyledPressable
       style={styles.createPostButton}
-      onPress={() => router.push('/(sidebar)/(protected)/community/publish')}>
+      onPress={() => router.push('/(app)/(sidebar)/(protected)/community/publish')}>
       <StyledText type='Placeholder' color='whiteGrey'>
         {i18n.t('community.wall.wannaPost')}
       </StyledText>
@@ -167,7 +167,7 @@ const PostCard = ({ userId, createdAt, content, imageUrlList }: Post) => {
   const styles = useCardStyles();
   const [love, setLove] = useState(false);
   const router = useRouter();
-  const { playSound } = useSound(require('../../../../assets/sound/love-sound.mp3'));
+  const { playSound } = useSound(require('../../../../../assets/sound/love-sound.mp3'));
 
   const image =
     imageUrlList.length === 0 ? (
@@ -225,7 +225,7 @@ const PostCard = ({ userId, createdAt, content, imageUrlList }: Post) => {
         <StyledDivider orientation='vertical' />
         <StyledPressable
           style={styles.button}
-          onPress={() => router.push('/(sidebar)/(protected)/community/comment')}>
+          onPress={() => router.push('/(app)/(sidebar)/(protected)/community/comment')}>
           <CommentIcon />
           <StyledText>{i18n.t('community.wall.comments')}</StyledText>
         </StyledPressable>

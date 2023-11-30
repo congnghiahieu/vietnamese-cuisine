@@ -210,7 +210,7 @@ const InformationBottomSheetBody = ({
   const styles = useStyles();
   const router = useRouter();
   const [love, setLove] = useState(loved || false);
-  const { playSound } = useSound(require('../../assets/sound/love-sound.mp3'));
+  const { playSound } = useSound(require('../../../assets/sound/love-sound.mp3'));
   const queryClient = useQueryClient();
 
   const loveMutation = useMutation({

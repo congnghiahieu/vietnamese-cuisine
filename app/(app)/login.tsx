@@ -52,7 +52,7 @@ const Login = () => {
       type: 'success',
       text1: i18n.t('login.toast.login.success'),
       onHide: () => {
-        router.push('/(sidebar)');
+        router.push('/(app)/(sidebar)');
       },
       visibilityTime: 1000,
     });
@@ -109,7 +109,7 @@ const Login = () => {
         <Animated.View entering={ReFadeInUp} exiting={ReFadeOutUp}>
           <View style={{ alignItems: 'center' }}>
             <StyledImage
-              source={require('../assets/images/adaptive-icon.png')}
+              source={require('../../assets/images/adaptive-icon.png')}
               style={styles.icon}
             />
           </View>
@@ -172,7 +172,7 @@ const Login = () => {
           <View style={styles.subField}>
             <StyledPressable
               onPress={() => {
-                router.push('/(sidebar)/');
+                router.push('/(app)/(sidebar)/');
               }}>
               <StyledText type='SubInputField' color='orange'>
                 {i18n.t('login.backToHome')}

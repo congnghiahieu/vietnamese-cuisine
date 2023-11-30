@@ -71,7 +71,7 @@ const FavouriteEmpty = () => {
     <EmptyList
       title={i18n.t('favourites.emptyList')}
       subField={
-        <StyledPressable onPress={() => router.push('/(sidebar)')}>
+        <StyledPressable onPress={() => router.push('/(app)/(sidebar)')}>
           <StyledText
             type='SubInputField'
             color='orange'
@@ -92,7 +92,7 @@ const FavouriteCard = ({ title, imageUrlList }: Food) => {
 
   const navigate = () =>
     router.push({
-      pathname: '/information/[title]',
+      pathname: '/(app)/information/[title]',
       params: {
         title,
       },

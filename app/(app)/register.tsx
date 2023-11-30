@@ -101,7 +101,7 @@ const Register = () => {
         type: 'success',
         text1: i18n.t('register.toast.google.success'),
         onHide: () => {
-          router.push('/(sidebar)/');
+          router.push('/(app)/(sidebar)/');
         },
         visibilityTime: 1000,
       });
@@ -237,7 +237,7 @@ const Register = () => {
           <View style={styles.subField}>
             <StyledPressable
               onPress={() => {
-                router.push('/(sidebar)/');
+                router.push('/(app)/(sidebar)/');
               }}>
               <StyledText type='SubInputField' color='orange'>
                 {i18n.t('register.backToHome')}

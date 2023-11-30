@@ -103,7 +103,7 @@ const FoodCard = ({ title, imageUrlList, loved }: Food) => {
   const styles = useStyles();
   const router = useRouter();
   const [love, setLove] = useState(loved || false);
-  const { playSound } = useSound(require('../../assets/sound/love-sound.mp3'));
+  const { playSound } = useSound(require('../../../assets/sound/love-sound.mp3'));
   const queryClient = useQueryClient();
 
   const loveMutation = useMutation({
@@ -146,7 +146,7 @@ const FoodCard = ({ title, imageUrlList, loved }: Food) => {
 
   const navigateToInformation = () =>
     router.push({
-      pathname: '/information/[title]',
+      pathname: '/(app)/information/[title]',
       params: { title },
     });
 

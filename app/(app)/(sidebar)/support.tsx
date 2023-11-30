@@ -16,7 +16,7 @@ const Support = () => {
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
       <Animated.View style={{ alignItems: 'center' }} entering={ReBounceIn} exiting={ReFadeOutUp}>
-        <Image source={require('../../assets/images/adaptive-icon.png')} style={styles.icon} />
+        <Image source={require('../../../assets/images/adaptive-icon.png')} style={styles.icon} />
       </Animated.View>
       <Animated.View style={styles.block} entering={ReBounceInDown} exiting={ReFadeOutDown}>
         <StyledText type='Heading_3' color='orange' style={styles.header}>

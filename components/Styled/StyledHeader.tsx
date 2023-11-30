@@ -27,9 +27,9 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const dT = theme.mode === 'dark';
-  // const onAvatarPress = () => router.push('/(sidebar)/profile');
+  // const onAvatarPress = () => router.push('/(app)/(sidebar)/profile');
   const onMenuPress = () => navigation.dispatch(DrawerActions.openDrawer());
-  const onAvatarPress = () => router.push('/(sidebar)/(protected)/profile');
+  const onAvatarPress = () => router.push('/(app)/(sidebar)/(protected)/profile');
 
   return (
     <Header
