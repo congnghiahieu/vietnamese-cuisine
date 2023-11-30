@@ -22,7 +22,7 @@ import Animated, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StyledImage from '@/components/Styled/StyledImage';
 import StyledText from '@/components/Styled/StyledText';
-import { RefObject, useCallback, useRef } from 'react';
+import { RefObject, useRef } from 'react';
 import { ArrowRightIcon } from '@/components/Icon';
 import { wp } from '@/lib/utils';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
@@ -43,17 +43,17 @@ const onboardList: OnboardItem[] = [
   },
   {
     title: 'You wanna find our \nmore about Vietnam?',
-    imageSource: require('../assets/images/onboard/bun-cha-1.jpg'),
+    imageSource: require('../assets/images/onboard/bun-cha.jpg'),
     color: DARK_COLORS.yellow,
   },
   {
     title: 'Discover Vietnamese \nthrough tasty foods',
-    imageSource: require('../assets/images/onboard/spring-roll-1.webp'),
+    imageSource: require('../assets/images/onboard/spring-roll.webp'),
     color: '#9ADE7B',
   },
   {
     title: "What're you waiting for?\nLet's explore now",
-    imageSource: require('../assets/images/onboard/pho-3.jpg'),
+    imageSource: require('../assets/images/onboard/pho.jpg'),
     color: LIGHT_COLORS.orange,
   },
 ];

@@ -78,6 +78,7 @@ const GameCard = ({ title, desc, imageUrl, href }: Game) => {
           uri: imageUrl,
         }}
         style={styles.cardImage}
+        onPress={() => router.push(href)}
       />
       <View style={styles.cardContent}>
         <View>

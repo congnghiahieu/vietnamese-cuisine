@@ -38,3 +38,20 @@ export const timeSorter = <T extends Record<string, any>>({
     (a, b) => SORT_TYPE_MAP[sortType] * (new Date(a[key]).getTime() - new Date(b[key]).getTime()),
   );
 };
+
+export const shuffleArray = <T>(array: T[]) => {
+  const copied = Array.from(array);
+  let counter = array.length;
+  // While there are elements in the array
+  while (counter > 0) {
+    // Pick a random index
+    const randomIndex = Math.floor(Math.random() * counter);
+    // Decrease counter by 1
+    counter--;
+    // And swap the last element with it
+    const temp = copied[counter];
+    copied[counter] = copied[randomIndex];
+    copied[randomIndex] = temp;
+  }
+  return copied;
+};

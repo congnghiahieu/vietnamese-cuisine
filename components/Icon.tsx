@@ -332,6 +332,11 @@ export const PencilEditIcon = () => {
   return <MaterialCommunityIcons name='pencil' style={[styles.baseIcon, styles.green]} />;
 };
 
+export const LifeIcon = () => {
+  const styles = useStyles();
+  return <AntDesign name='heart' style={[styles.baseIcon, styles.orange]} />;
+};
+
 export const LockIcon = () => {
   const styles = useStyles();
   return <Entypo name='lock' style={[styles.baseIcon, styles.green]} />;

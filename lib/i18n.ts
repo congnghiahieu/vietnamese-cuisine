@@ -157,7 +157,9 @@ type GamesTranslations = {
   reset: string;
   cancel: string;
   matchFood: Game;
-  guessFood: Game;
+  guessFood: Game & {
+    whatDish: string;
+  };
   pickIngredients: Game;
   playNow: string;
 };
@@ -382,6 +384,7 @@ const englishTranslations: Translations = {
     guessFood: {
       title: 'Guess Food',
       desc: 'PicQuiz - Guess Pics',
+      whatDish: 'What is this dish',
     },
   },
   profile: {
@@ -607,6 +610,7 @@ const vietnameseTranslations: Translations = {
     guessFood: {
       title: 'Đoán món ăn',
       desc: 'Nhìn hình đoán món ăn',
+      whatDish: 'Đây là món ăn gì',
     },
   },
   profile: {

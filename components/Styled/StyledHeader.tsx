@@ -30,7 +30,8 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
   const dT = theme.mode === 'dark';
   // const onAvatarPress = () => router.push('/(app)/(sidebar)/profile');
   const onMenuPress = () => navigation.dispatch(DrawerActions.openDrawer());
-  const onAvatarPress = () => router.push('/(app)/(sidebar)/(protected)/profile');
+  // const onAvatarPress = () => router.push('/(app)/(sidebar)/(protected)/profile');
+  const onAvatarPress = () => router.push('/test');
 
   return (
     <Header

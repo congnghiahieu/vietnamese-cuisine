@@ -4,8 +4,8 @@ import { Stack, useRouter } from 'expo-router';
 import StyledDivider from '@/components/Styled/StyledDivider';
 import { GameHeaderRight } from '@/components/Styled/StyledHeader';
 import { makeStyles, useTheme } from '@rneui/themed';
-import { QuestionIcon } from '@/components/Icon';
-import { hp } from '@/lib/utils';
+import { LifeIcon, QuestionIcon } from '@/components/Icon';
+import { hp, shuffleArray } from '@/lib/utils';
 import StyledText from '@/components/Styled/StyledText';
 import { STYLES } from '@/lib/constants';
 import StyledImage from '@/components/Styled/StyledImage';
@@ -20,16 +20,16 @@ const COLS = 4;
 const FACE_UP_LIMIT = 2;
 const MAX_LIFE = 30;
 const IMAGES: ImageSourcePropType[] = [
-  require('../../../../assets/images/onboard/banh-mi.jpeg'),
-  require('../../../../assets/images/onboard/bun-cha-1.jpg'),
-  require('../../../../assets/images/onboard/bun-cha-2.webp'),
-  require('../../../../assets/images/onboard/bun-cha-3.jpg'),
-  require('../../../../assets/images/onboard/goi-cuon.jpg'),
-  require('../../../../assets/images/onboard/pho-1.webp'),
-  require('../../../../assets/images/onboard/pho-2.webp'),
-  require('../../../../assets/images/onboard/pho-3.jpg'),
-  require('../../../../assets/images/onboard/spring-roll-1.webp'),
-  require('../../../../assets/images/onboard/spring-roll-2.jpg'),
+  require('../../../../assets/images/match-food/banh-mi.jpeg'),
+  require('../../../../assets/images/match-food/bun-cha-1.jpg'),
+  require('../../../../assets/images/match-food/bun-cha-2.webp'),
+  require('../../../../assets/images/match-food/bun-cha-3.jpg'),
+  require('../../../../assets/images/match-food/goi-cuon.jpg'),
+  require('../../../../assets/images/match-food/pho-1.webp'),
+  require('../../../../assets/images/match-food/pho-2.webp'),
+  require('../../../../assets/images/match-food/pho-3.jpg'),
+  require('../../../../assets/images/match-food/spring-roll-1.webp'),
+  require('../../../../assets/images/match-food/spring-roll-2.jpg'),
 ];
 
 type RowColProps = {
@@ -60,23 +60,6 @@ const getFaces = ({ rows, cols }: RowColProps) => {
   }
   const shuffled = shuffleArray(faces);
   return shuffled;
-};
-
-const shuffleArray = <T,>(array: T[]) => {
-  const copied = Array.from(array);
-  let counter = array.length;
-  // While there are elements in the array
-  while (counter > 0) {
-    // Pick a random index
-    const randomIndex = Math.floor(Math.random() * counter);
-    // Decrease counter by 1
-    counter--;
-    // And swap the last element with it
-    const temp = copied[counter];
-    copied[counter] = copied[randomIndex];
-    copied[randomIndex] = temp;
-  }
-  return copied;
 };
 
 const getTileGrid = ({ rows, cols }: RowColProps) => {
@@ -249,8 +232,8 @@ const MatchFood = () => {
         setCurrentFaceUp([]);
       } else {
         setTimeout(() => {
+          setCurrentLife(prev => (prev > 0 ? prev - 1 : 0));
           if (soundOn) {
-            setCurrentLife(prev => (prev > 0 ? prev - 1 : 0));
             playNotMatchSound();
           }
         }, 500);
@@ -349,7 +332,7 @@ const MatchFood = () => {
                 <StyledText type='Heading_4' color='orange'>
                   {currentLife}
                 </StyledText>
-                <AntDesign name='heart' style={styles.lifeIcon} />
+                <LifeIcon />
               </View>
             );
           },
@@ -410,6 +393,9 @@ const useStyles = makeStyles(theme => {
       position: 'relative',
       paddingHorizontal: 0,
       paddingVertical: 0,
+      backgroundColor: 'white',
+      borderRadius: STYLES.RADIUS.RADIUS_10,
+      ...(dT ? STYLES.SHADOW.SHADOW_WHITE_8 : STYLES.SHADOW.SHADOW_BLACK_8),
     },
     tilePlaceholder: {
       flex: 1,
@@ -423,15 +409,6 @@ const useStyles = makeStyles(theme => {
       height: '100%',
       objectFit: 'cover',
       borderRadius: STYLES.RADIUS.RADIUS_10,
-    },
-    navigate: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: STYLES.GAP.GAP_16,
-    },
-    navigateButton: {
-      borderRadius: STYLES.RADIUS.RADIUS_10,
-      flex: 1,
     },
   };
 });
