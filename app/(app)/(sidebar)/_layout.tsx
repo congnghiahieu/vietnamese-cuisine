@@ -40,6 +40,7 @@ const useProfileQuery = ({ email }: { email: string }) =>
       const user = userDoc.data() as User;
       return user;
     },
+    retry: 0,
   });
 
 const SidebarLayout = () => {

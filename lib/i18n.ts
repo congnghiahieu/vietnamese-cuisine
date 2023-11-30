@@ -146,6 +146,16 @@ type Game = {
 type GamesTranslations = {
   games: string;
   emptyList: string;
+  win: string;
+  lose: string;
+  gameplayReset: string;
+  wannaPlayAgain: string;
+  wannaReset: string;
+  playAgain: string;
+  retry: string;
+  quit: string;
+  reset: string;
+  cancel: string;
   matchFood: Game;
   guessFood: Game;
   pickIngredients: Game;
@@ -351,6 +361,16 @@ const englishTranslations: Translations = {
     games: 'Games',
     emptyList: 'No game available!',
     playNow: 'Play now',
+    lose: 'You lose 😭',
+    win: 'You win 🥳',
+    gameplayReset: 'Gameplay reset 🤔',
+    wannaReset: 'Do you wanna reset your gameplay?',
+    playAgain: 'Play again',
+    wannaPlayAgain: 'Do you wanna play again?',
+    retry: 'Retry',
+    quit: 'Quit',
+    reset: 'Reset',
+    cancel: 'Cancel',
     matchFood: {
       title: 'Match Food',
       desc: 'Match Food is a classic memory game. Player takes turns flipping over two tiles at a time. If the two tiles match, they are removed from the board. If the tiles do not match, they are flipped back over.',
@@ -566,6 +586,16 @@ const vietnameseTranslations: Translations = {
     games: 'Trò chơi',
     emptyList: 'Không có trò chơi nào',
     playNow: 'Chơi ngay',
+    lose: 'Thất bại 😭',
+    win: 'Chiến thắng 🥳',
+    gameplayReset: 'Bắt đầu lại trò chơi 🤔',
+    wannaPlayAgain: 'Bạn có muốn chơi lại?',
+    wannaReset: 'Bạn có muốn chơi lại từ đầu?',
+    playAgain: 'Chơi lại',
+    retry: 'Thử lại',
+    quit: 'Thoát',
+    cancel: 'Hủy',
+    reset: 'Bắt đầu lại',
     matchFood: {
       title: 'Nối đồ ăn',
       desc: 'Nối đồ ăn là dạng trò chơi cổ điển giúp rèn luyện trí nhớ. Người chơi bắt đầu bằng việc lật 2 thẻ trong 1 lượt. Nếu 2 thẻ giống nhau, người chơi sẽ được cộng điểm và thẻ sẽ biến mất. Nếu 2 thẻ không giống nhau, thẻ sẽ bị úp lại',

@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 import { Header, makeStyles, useTheme } from '@rneui/themed';
 import { AntDesign } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSound } from '@/hooks/useSound';
 import { useRef } from 'react';
+import { i18n } from '@/lib/i18n';
 
 type SidebarHeaderProps = {
   title: string | undefined;
@@ -90,19 +91,31 @@ type GameHeaderRightProps = {
 
 export const GameHeaderRight = ({ soundOn, onSoundPress, onResetPress }: GameHeaderRightProps) => {
   const styles = useStyles();
+  const { playSound } = useSound(require('../../assets/sound/on-sound.mp3'));
 
   return (
     <View style={styles.headerRightContainer}>
-      <StyledPressable onPress={onSoundPress} style={styles.pressable}>
+      <StyledPressable
+        onPress={() => {
+          if (!soundOn) {
+            playSound();
+          }
+          onSoundPress();
+        }}
+        style={styles.pressable}>
         <SoundIcon active={soundOn} />
       </StyledPressable>
-      <AnimatedResetIcon onResetPress={onResetPress} />
+      <AnimatedResetIcon onResetPress={onResetPress} soundOn={soundOn} />
     </View>
   );
 };
 
-export const AnimatedResetIcon = ({ onResetPress }: Pick<GameHeaderRightProps, 'onResetPress'>) => {
+export const AnimatedResetIcon = ({
+  onResetPress,
+  soundOn,
+}: Pick<GameHeaderRightProps, 'onResetPress' | 'soundOn'>) => {
   const styles = useStyles();
+  const { theme } = useTheme();
   const pressTime = useRef<number>(0);
   const { playSound } = useSound(require('../../assets/sound/wind-sound.mp3'));
   const duration = 200;
@@ -142,12 +155,37 @@ export const AnimatedResetIcon = ({ onResetPress }: Pick<GameHeaderRightProps, '
   };
 
   const handleResetPress = () => {
-    playSound();
+    Alert.alert(
+      i18n.t('games.gameplayReset'),
+      i18n.t('games.wannaReset'),
+      [
+        {
+          isPreferred: false,
+          onPress: () => {},
+          style: 'destructive',
+          text: i18n.t('games.cancel'),
+        },
+        {
+          isPreferred: true,
+          onPress: () => {
+            if (soundOn) {
+              playSound();
+            }
 
-    pressTime.current += 1;
-    onAnimate();
+            onResetPress();
 
-    onResetPress();
+            pressTime.current += 1;
+            onAnimate();
+          },
+          style: 'default',
+          text: i18n.t('games.reset'),
+        },
+      ],
+      {
+        cancelable: false,
+        userInterfaceStyle: theme.mode === 'dark' ? 'dark' : 'light',
+      },
+    );
   };
   return (
     <Animated.View style={[animatedStyle]}>

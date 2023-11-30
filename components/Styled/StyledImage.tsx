@@ -11,10 +11,13 @@ const StyledImage = (props: ImageProps) => {
       PlaceholderContent={<StyledImageLoading />}
       containerStyle={[
         {
-          // backgroundColor: 'red',
+          // backgroundColor: "red"
         },
         containerStyle,
       ]}
+      placeholderStyle={{
+        overflow: 'hidden',
+      }}
       {...otherProps}
     />
   );

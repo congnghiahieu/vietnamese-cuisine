@@ -485,8 +485,6 @@ const AnimatedSoundOnIcon = () => {
     );
   }, []);
 
-  useAppearSoundEffect(require('../assets/sound/on-sound.mp3'));
-
   return <AnimatedSoundOnIconComponent style={animatedStyle} />;
 };
 export const SoundIcon = ({ active }: ActiveIconProps) => {

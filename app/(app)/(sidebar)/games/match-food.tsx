@@ -1,71 +1,331 @@
-import { useState } from 'react';
-import { Text, View } from 'react-native';
-import { Stack } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ImageSourcePropType, View, Alert } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
 import StyledDivider from '@/components/Styled/StyledDivider';
 import { GameHeaderRight } from '@/components/Styled/StyledHeader';
-import { ThemeConsumer, makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import { QuestionIcon } from '@/components/Icon';
 import { hp } from '@/lib/utils';
 import StyledText from '@/components/Styled/StyledText';
 import { STYLES } from '@/lib/constants';
+import StyledImage from '@/components/Styled/StyledImage';
+import StyledPressable from '@/components/Styled/StyledPressable';
+import { v4 as uuid } from 'uuid';
+import { useSound } from '@/hooks/useSound';
+import { AntDesign } from '@expo/vector-icons';
+import { i18n } from '@/lib/i18n';
 
-type TileProps = {
-  x: number;
-  y: number;
-};
-const Tile = ({ x, y }: TileProps) => {
-  const styles = useStyles();
+const ROWS = 5;
+const COLS = 4;
+const FACE_UP_LIMIT = 2;
+const MAX_LIFE = 30;
+const IMAGES: ImageSourcePropType[] = [
+  require('../../../../assets/images/onboard/banh-mi.jpeg'),
+  require('../../../../assets/images/onboard/bun-cha-1.jpg'),
+  require('../../../../assets/images/onboard/bun-cha-2.webp'),
+  require('../../../../assets/images/onboard/bun-cha-3.jpg'),
+  require('../../../../assets/images/onboard/goi-cuon.jpg'),
+  require('../../../../assets/images/onboard/pho-1.webp'),
+  require('../../../../assets/images/onboard/pho-2.webp'),
+  require('../../../../assets/images/onboard/pho-3.jpg'),
+  require('../../../../assets/images/onboard/spring-roll-1.webp'),
+  require('../../../../assets/images/onboard/spring-roll-2.jpg'),
+];
 
-  return (
-    <View style={styles.tileContainer}>
-      <StyledText>
-        {x},{y}
-      </StyledText>
-      <QuestionIcon />
-    </View>
-  );
-};
-
-type MatchFoodGameProps = {
+type RowColProps = {
   rows: number;
   cols: number;
 };
 
-const MatchFoodGame = ({ rows, cols }: MatchFoodGameProps) => {
-  const styles = useStyles();
-  const [tileGrid] = useState(() => {
-    const tileGrid: TileProps[][] = [];
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        const tile: TileProps = { x: j, y: i };
-        if (!tileGrid[i]) {
-          tileGrid[i] = [];
-        }
-        tileGrid[i].push(tile);
-      }
-    }
-    return tileGrid;
+type Face = {
+  faceId: string;
+  source: ImageSourcePropType;
+};
+
+const getFaces = ({ rows, cols }: RowColProps) => {
+  // copy array
+  const images = Array.from(IMAGES);
+  const faces: Face[] = [];
+  for (let i = 0; i < (rows * cols) / 2; i++) {
+    // Randomly pick one from the array of faces
+    const randomIndex = Math.floor(Math.random() * images.length);
+    const face: Face = {
+      faceId: uuid(),
+      source: images[randomIndex],
+    };
+    // Push 2 copies onto array
+    faces.push(face, face);
+    // Remove from faces array so we don't re-pick
+    images.splice(randomIndex, 1);
+  }
+  const shuffled = shuffleArray(faces);
+  return shuffled;
+};
+
+const shuffleArray = <T,>(array: T[]) => {
+  const copied = Array.from(array);
+  let counter = array.length;
+  // While there are elements in the array
+  while (counter > 0) {
+    // Pick a random index
+    const randomIndex = Math.floor(Math.random() * counter);
+    // Decrease counter by 1
+    counter--;
+    // And swap the last element with it
+    const temp = copied[counter];
+    copied[counter] = copied[randomIndex];
+    copied[randomIndex] = temp;
+  }
+  return copied;
+};
+
+const getTileGrid = ({ rows, cols }: RowColProps) => {
+  const tileGrid: TileProps[][] = [];
+  const faces = getFaces({
+    rows,
+    cols,
   });
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (!tileGrid[i]) {
+        tileGrid[i] = [];
+      }
+      tileGrid[i].push({
+        id: uuid(),
+        x: j,
+        y: i,
+        face: faces.pop()!,
+        isFaceUp: false,
+        isDiscover: false,
+      });
+    }
+  }
+  return tileGrid;
+};
+
+type TileProps = {
+  id: string;
+  x: number;
+  y: number;
+  face: Face;
+  isFaceUp: boolean;
+  isDiscover: boolean;
+};
+
+type TilePropsEvent = {
+  isLimit: boolean;
+  onFacePress: (x: number, y: number, isFacingUp: boolean, faceId: string) => void;
+};
+
+const Tile = ({
+  x,
+  y,
+  face,
+  isFaceUp,
+  isDiscover,
+  onFacePress,
+  isLimit,
+}: TileProps & TilePropsEvent) => {
+  const styles = useStyles();
+
+  const background =
+    isFaceUp || isDiscover ? (
+      <StyledImage source={face.source} style={styles.tileFace} />
+    ) : (
+      <View style={styles.tilePlaceholder}>
+        <QuestionIcon />
+      </View>
+    );
 
   return (
-    <View style={styles.gameContainer}>
-      {tileGrid.map((row, i) => {
-        return (
-          <View style={styles.rowContainer} key={i}>
-            {row.map((tile, j) => {
-              return <Tile {...tile} key={(i + 1) * (j + 1)} />;
-            })}
-          </View>
-        );
-      })}
-    </View>
+    <StyledPressable
+      style={styles.tileContainer}
+      onPress={() => onFacePress(x, y, isFaceUp, face.faceId)}
+      disabled={(!isFaceUp && isLimit) || isDiscover}>
+      <StyledText
+        style={{
+          position: 'absolute',
+          top: STYLES.MARGIN.MARGIN_8,
+        }}>
+        {y},{x}
+      </StyledText>
+      {background}
+    </StyledPressable>
   );
 };
 
 const MatchFood = () => {
   const styles = useStyles();
+  const router = useRouter();
+  const { theme } = useTheme();
+  const [currentFaceUp, setCurrentFaceUp] = useState<
+    Array<Pick<TileProps, 'x' | 'y'> & Pick<Face, 'faceId'>>
+  >([]);
+  const [currentLife, setCurrentLife] = useState(MAX_LIFE);
+  const [tileGrid, setTileGrid] = useState(
+    getTileGrid({
+      rows: ROWS,
+      cols: COLS,
+    }),
+  );
   const [soundOn, setSoundOn] = useState(true);
-  const reset = () => {};
+  const { playSound: playFlipSound } = useSound(
+    require('../../../../assets/sound/flip-sound-1.mp3'),
+  );
+  const { playSound: playMatchSound } = useSound(
+    require('../../../../assets/sound/sparkle-sound.mp3'),
+  );
+  const { playSound: playNotMatchSound } = useSound(
+    require('../../../../assets/sound/wrong-answer-sound.wav'),
+  );
+  const reset = () => {
+    setTileGrid(
+      getTileGrid({
+        rows: ROWS,
+        cols: COLS,
+      }),
+    );
+    setCurrentFaceUp([]);
+    setCurrentLife(MAX_LIFE);
+  };
+
+  const onFacePress: TilePropsEvent['onFacePress'] = (x, y, isFacingUp, faceId) => {
+    if (soundOn) {
+      playFlipSound();
+    }
+
+    if (
+      (currentFaceUp.length < FACE_UP_LIMIT && !isFacingUp) ||
+      (currentFaceUp.length == FACE_UP_LIMIT - 1 && isFacingUp) ||
+      (currentFaceUp.length == FACE_UP_LIMIT && isFacingUp)
+    ) {
+      setTileGrid(prev => {
+        const copy = Array.from(prev);
+        copy[y][x] = {
+          ...copy[y][x],
+          isFaceUp: !copy[y][x].isFaceUp,
+        };
+        return copy;
+      });
+      setCurrentFaceUp(prev => {
+        if (!isFacingUp) {
+          return [
+            ...prev,
+            {
+              x,
+              y,
+              faceId,
+            },
+          ];
+        }
+        return prev.filter(tile => tile.x !== x || tile.y !== y);
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (currentFaceUp.length === 2) {
+      const firstX = currentFaceUp[0].x;
+      const firstY = currentFaceUp[0].y;
+      const secondX = currentFaceUp[1].x;
+      const secondY = currentFaceUp[1].y;
+
+      if (currentFaceUp[0].faceId === currentFaceUp[1].faceId) {
+        setTileGrid(prev => {
+          const copy = Array.from(prev);
+          copy[firstY][firstX] = {
+            ...copy[firstY][firstX],
+            isDiscover: true,
+          };
+          copy[secondY][secondX] = {
+            ...copy[secondY][secondX],
+            isDiscover: true,
+          };
+          return copy;
+        });
+        if (soundOn) {
+          playMatchSound();
+        }
+        setCurrentFaceUp([]);
+      } else {
+        setTimeout(() => {
+          if (soundOn) {
+            setCurrentLife(prev => (prev > 0 ? prev - 1 : 0));
+            playNotMatchSound();
+          }
+        }, 500);
+        setTimeout(() => {
+          setTileGrid(prev => {
+            const copy = Array.from(prev);
+            copy[firstY][firstX] = {
+              ...copy[firstY][firstX],
+              isFaceUp: false,
+            };
+            copy[secondY][secondX] = {
+              ...copy[secondY][secondX],
+              isFaceUp: false,
+            };
+            return copy;
+          });
+          setCurrentFaceUp([]);
+        }, 1000);
+      }
+    }
+  }, [currentFaceUp.length]);
+
+  useEffect(() => {
+    if (currentLife == 0) {
+      Alert.alert(
+        i18n.t('games.lose'),
+        i18n.t('games.wannaPlayAgain'),
+        [
+          {
+            isPreferred: false,
+            onPress: () => router.back(),
+            style: 'destructive',
+            text: i18n.t('games.quit'),
+          },
+          {
+            isPreferred: true,
+            onPress: reset,
+            style: 'default',
+            text: i18n.t('games.retry'),
+          },
+        ],
+        {
+          cancelable: false,
+          userInterfaceStyle: theme.mode === 'dark' ? 'dark' : 'light',
+        },
+      );
+    }
+  }, [currentLife]);
+
+  useEffect(() => {
+    if (tileGrid.every(row => row.every(tile => tile.isDiscover))) {
+      Alert.alert(
+        i18n.t('games.win'),
+        i18n.t('games.wannaPlayAgain'),
+        [
+          {
+            isPreferred: false,
+            onPress: () => router.back(),
+            style: 'destructive',
+            text: i18n.t('games.quit'),
+          },
+          {
+            isPreferred: true,
+            onPress: reset,
+            style: 'default',
+            text: i18n.t('games.playAgain'),
+          },
+        ],
+        {
+          cancelable: false,
+          userInterfaceStyle: theme.mode === 'dark' ? 'dark' : 'light',
+        },
+      );
+    }
+  }, [tileGrid]);
 
   return (
     <>
@@ -78,13 +338,42 @@ const MatchFood = () => {
               onResetPress={reset}
             />
           ),
+          headerTitle: () => {
+            return (
+              <View style={styles.lifeContainer}>
+                {/* {Array(currentLife)
+                  .fill(0)
+                  .map((_, i) => {
+                    return <AntDesign name='heart' style={styles.lifeIcon} key={i} />;
+                  })} */}
+                <StyledText type='Heading_4' color='orange'>
+                  {currentLife}
+                </StyledText>
+                <AntDesign name='heart' style={styles.lifeIcon} />
+              </View>
+            );
+          },
         }}
       />
       <StyledDivider orientation='horizontal' />
-      <View>
-        <Text>MatchFood</Text>
+      <View style={styles.gameContainer}>
+        {tileGrid.map((row, i) => {
+          return (
+            <View style={styles.rowContainer} key={i}>
+              {row.map(tile => {
+                return (
+                  <Tile
+                    {...tile}
+                    key={tile.id}
+                    onFacePress={onFacePress}
+                    isLimit={currentFaceUp.length == FACE_UP_LIMIT}
+                  />
+                );
+              })}
+            </View>
+          );
+        })}
       </View>
-      <MatchFoodGame rows={5} cols={4} />
     </>
   );
 };
@@ -95,6 +384,15 @@ const useStyles = makeStyles(theme => {
   const dT = theme.mode === 'dark';
 
   return {
+    lifeContainer: {
+      gap: STYLES.GAP.GAP_4,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    lifeIcon: {
+      fontSize: STYLES.FONT_SIZE.FONT_SIZE_24,
+      color: theme.colors.orange,
+    },
     gameContainer: {
       flex: 1,
       gap: STYLES.GAP.GAP_16,
@@ -109,10 +407,31 @@ const useStyles = makeStyles(theme => {
     tileContainer: {
       flex: 1,
       height: hp(15),
+      position: 'relative',
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+    },
+    tilePlaceholder: {
+      flex: 1,
+      backgroundColor: theme.colors.orange,
+      borderRadius: STYLES.RADIUS.RADIUS_10,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: theme.colors.orange,
-      borderRadius: STYLES.RADIUS.RADIUS_20,
+    },
+    tileFace: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      borderRadius: STYLES.RADIUS.RADIUS_10,
+    },
+    navigate: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: STYLES.GAP.GAP_16,
+    },
+    navigateButton: {
+      borderRadius: STYLES.RADIUS.RADIUS_10,
+      flex: 1,
     },
   };
 });
