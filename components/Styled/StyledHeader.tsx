@@ -31,7 +31,7 @@ const StyledHeader = ({ title }: SidebarHeaderProps) => {
   // const onAvatarPress = () => router.push('/(app)/(sidebar)/profile');
   const onMenuPress = () => navigation.dispatch(DrawerActions.openDrawer());
   // const onAvatarPress = () => router.push('/(app)/(sidebar)/(protected)/profile');
-  const onAvatarPress = () => router.push('/test');
+  const onAvatarPress = () => router.push('/haptics');
 
   return (
     <Header

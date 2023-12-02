@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, ImageSourcePropType, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { GameHeaderRight } from '@/components/Styled/StyledHeader';
@@ -12,8 +12,10 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import { hp, shuffleArray, wp } from '@/lib/utils';
 import { i18n } from '@/lib/i18n';
 import { useSound } from '@/hooks/useSound';
+import StyledDivider from '@/components/Styled/StyledDivider';
 
 const MAX_LIFE = 3;
+const THROTTLE_TIME = 1500;
 type Question = {
   image: ImageSourcePropType;
   question: string;
@@ -300,10 +302,12 @@ const GuessFood = () => {
   const [questions, setQuestions] = useState(shuffleArray(QUESTIONS));
   const [currentLife, setCurrentLife] = useState(MAX_LIFE);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const previousAnswerTime = useRef(0);
   const reset = () => {
     setQuestions(shuffleArray(QUESTIONS));
     setCurrentLife(MAX_LIFE);
     setCurrentQuestion(0);
+    previousAnswerTime.current = 0;
   };
   const { playSound: playCorrectSound } = useSound(
     require('../../../../assets/sound/correct-answer-sound.mp3'),
@@ -313,41 +317,42 @@ const GuessFood = () => {
   );
 
   const handleAnswer = (isCorrectAnswer: boolean) => {
-    if (isCorrectAnswer) {
-      if (soundOn) {
-        playCorrectSound();
-      }
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion(prev => prev + 1);
-      } else if (currentQuestion === questions.length - 1) {
-        Alert.alert(
-          i18n.t('games.win'),
-          i18n.t('games.wannaPlayAgain'),
-          [
-            {
-              isPreferred: false,
-              onPress: () => router.back(),
-              style: 'destructive',
-              text: i18n.t('games.quit'),
-            },
-            {
-              isPreferred: true,
-              onPress: reset,
-              style: 'default',
-              text: i18n.t('games.playAgain'),
-            },
-          ],
-          {
-            cancelable: false,
-            userInterfaceStyle: theme.mode === 'dark' ? 'dark' : 'light',
-          },
-        );
-      }
-    } else {
+    if (!isCorrectAnswer) {
       if (soundOn) {
         playWrongSound();
       }
       setCurrentLife(prev => (prev > 0 ? prev - 1 : 0));
+      return;
+    }
+
+    if (soundOn) {
+      playCorrectSound();
+    }
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    } else if (currentQuestion === questions.length - 1) {
+      Alert.alert(
+        i18n.t('games.win'),
+        i18n.t('games.wannaPlayAgain'),
+        [
+          {
+            isPreferred: false,
+            onPress: () => router.back(),
+            style: 'destructive',
+            text: i18n.t('games.quit'),
+          },
+          {
+            isPreferred: true,
+            onPress: reset,
+            style: 'default',
+            text: i18n.t('games.playAgain'),
+          },
+        ],
+        {
+          cancelable: false,
+          userInterfaceStyle: theme.mode === 'dark' ? 'dark' : 'light',
+        },
+      );
     }
   };
 
@@ -401,7 +406,7 @@ const GuessFood = () => {
           },
         }}
       />
-      {/* <StyledDivider orientation='horizontal' /> */}
+      <StyledDivider orientation='horizontal' />
       <View style={styles.gameContainer}>
         <View style={styles.imageContainer}>
           <StyledImage source={questions[currentQuestion].image} style={styles.image} />
@@ -416,6 +421,7 @@ const GuessFood = () => {
           {i18n.t('games.guessFood.whatDish')}
         </StyledText>
         <StyledFlatList
+          scrollEnabled={false}
           emptyTitle=''
           data={Object.keys(questions[currentQuestion].answers)}
           keyExtractor={item => item}
@@ -423,7 +429,12 @@ const GuessFood = () => {
             return (
               <StyledPressable
                 style={styles.answerContainer}
-                onPress={() => handleAnswer(questions[currentQuestion].answers[item])}>
+                onPress={() => {
+                  if (Date.now() - previousAnswerTime.current < THROTTLE_TIME) return;
+
+                  previousAnswerTime.current = Date.now();
+                  handleAnswer(questions[currentQuestion].answers[item]);
+                }}>
                 <StyledText type='Heading_4' color='white'>
                   {item}
                 </StyledText>

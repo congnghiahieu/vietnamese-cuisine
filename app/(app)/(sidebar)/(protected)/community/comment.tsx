@@ -153,8 +153,7 @@ const useStyles = makeStyles(theme => {
   return {
     container: {
       flex: 1,
-      // backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      backgroundColor: dT ? theme.colors.background : theme.colors.background,
+      backgroundColor: dT ? theme.colors.background : theme.colors.white,
     },
     header: {
       marginHorizontal: STYLES.MARGIN.MARGIN_16,

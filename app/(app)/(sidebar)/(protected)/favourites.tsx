@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { makeStyles } from '@rneui/themed';
-import { doc, getDoc } from 'firebase/firestore';
-import { useQuery } from '@tanstack/react-query';
+import { arrayRemove, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import StyledText from '@/components/Styled/StyledText';
 import { EmptyList, StyledFlatList } from '@/components/Styled/StyledList';
@@ -18,6 +18,7 @@ import { hp } from '@/lib/utils';
 import { Food } from '@/config/model';
 import { STYLES } from '@/lib/constants';
 import { i18n } from '@/lib/i18n';
+import StyledToast from '@/components/Styled/StyledToast';
 
 const useFavouriteQuery = (email: string) =>
   useQuery<Food[]>({
@@ -89,6 +90,7 @@ const FavouriteEmpty = () => {
 const FavouriteCard = ({ title, imageUrlList }: Food) => {
   const styles = useStyles();
   const router = useRouter();
+  const { user } = useAuth();
 
   const navigate = () =>
     router.push({
@@ -97,6 +99,36 @@ const FavouriteCard = ({ title, imageUrlList }: Food) => {
         title,
       },
     });
+
+  const queryClient = useQueryClient();
+
+  const dislikeMutation = useMutation({
+    mutationFn: async () => {
+      const docRef = doc(FIREBASE_DB, 'users', user?.email!);
+      await updateDoc(docRef, {
+        favouritedFoods: arrayRemove(title),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['favourites'],
+      });
+      queryClient.resetQueries({
+        queryKey: ['food', 'list'],
+      });
+      queryClient.resetQueries({
+        queryKey: ['food', title],
+      });
+    },
+    onError: err => {
+      console.log(err);
+      StyledToast.show({
+        type: 'error',
+        text1: i18n.t('favourites.toast.error.text1', { title }),
+        text2: i18n.t('favourites.toast.error.text2'),
+      });
+    },
+  });
 
   return (
     <View style={styles.card}>
@@ -107,7 +139,10 @@ const FavouriteCard = ({ title, imageUrlList }: Food) => {
         onPress={navigate}
         style={styles.cardImage}
       />
-      <StyledPressable style={styles.cardDislikeButton}>
+      <StyledPressable
+        style={styles.cardDislikeButton}
+        onPress={() => dislikeMutation.mutate()}
+        disabled={dislikeMutation.isPending}>
         <HeartDislikeIcon />
       </StyledPressable>
       <View style={styles.cardFooter}>

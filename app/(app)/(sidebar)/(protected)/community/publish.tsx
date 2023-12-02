@@ -109,7 +109,6 @@ const Publish = () => {
 
   const handlePublish = () => {
     if (!thought.trim()) {
-      console.log('empty');
       StyledToast.show({
         type: 'warning',
         text1: i18n.t('community.publish.toast.warning'),
@@ -123,7 +122,7 @@ const Publish = () => {
         },
         {
           onSuccess: () => {
-            queryClient.resetQueries({
+            queryClient.invalidateQueries({
               queryKey: ['community'],
               exact: false,
             });
@@ -190,6 +189,7 @@ const Publish = () => {
             placeholderTextColor={theme.colors.whiteGrey}
             multiline
             maxLength={WORD_LIMIT}
+            keyboardAppearance={theme.mode === 'dark' ? 'dark' : 'light'}
             // numberOfLines={DEFAULT_LINE}
             style={styles.input}
             value={thought}
@@ -298,8 +298,7 @@ const useStyles = makeStyles(theme => {
   return {
     container: {
       flex: 1,
-      // backgroundColor: dT ? theme.colors.black : theme.colors.white,
-      backgroundColor: theme.colors.background,
+      backgroundColor: dT ? theme.colors.background : theme.colors.white,
       paddingHorizontal: STYLES.PADDING.PADDING_16,
       paddingTop: STYLES.PADDING.PADDING_8,
     },

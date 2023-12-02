@@ -150,6 +150,7 @@ const useStyles = makeStyles(theme => {
       borderRadius: STYLES.RADIUS.RADIUS_20,
       ...shadow,
       gap: STYLES.GAP.GAP_16,
+      marginTop: STYLES.MARGIN.MARGIN_8,
     },
     info: {
       flexDirection: 'row',

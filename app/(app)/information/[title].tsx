@@ -27,6 +27,7 @@ import StyledImage from '@/components/Styled/StyledImage';
 import { PaginationItem } from '@/components/Styled/StyledCarousel';
 import { Food, User } from '@/config/model';
 import { useSound } from '@/hooks/useSound';
+import { i18n } from '@/lib/i18n';
 
 const useFoodQuery = ({ title, email }: { title: string; email: string }) =>
   useQuery<Food>({
@@ -35,7 +36,7 @@ const useFoodQuery = ({ title, email }: { title: string; email: string }) =>
       const docRef = doc(FIREBASE_DB, 'foods', title);
       const docSnap = await getDoc(docRef);
       if (!docSnap.exists()) {
-        throw new Error(`Information not available`);
+        throw new Error(i18n.t('information.notAvailable'));
       }
       let food = docSnap.data() as Food;
       if (!email) return food;
@@ -218,7 +219,7 @@ const InformationBottomSheetBody = ({
       if (!user || !user?.email) {
         StyledToast.show({
           type: 'warning',
-          text1: 'This action requires authentication',
+          text1: i18n.t('home.toast.warning'),
         });
         router.push('/login');
         return;
@@ -237,15 +238,15 @@ const InformationBottomSheetBody = ({
         queryKey: ['food', 'list'],
       });
       queryClient.resetQueries({
-        queryKey: ['favourites', user?.email],
+        queryKey: ['favourites'],
       });
     },
     onError: () => {
       setLove(prev => !prev);
       StyledToast.show({
         type: 'error',
-        text1: `Fail to love ${title}`,
-        text2: 'Please try again',
+        text1: `${i18n.t('home.error.text1')} ${title}`,
+        text2: i18n.t('home.error.text2'),
       });
     },
   });
@@ -267,7 +268,7 @@ const InformationBottomSheetBody = ({
       </View>
       <View style={styles.story}>
         <StyledText type='Heading_3' color='orange'>
-          Story
+          {i18n.t('information.story')}
         </StyledText>
         <AudioControl introduce={introduce} />
         <StyledText type='Body' color='grey' style={{ textAlign: 'justify' }}>
@@ -276,18 +277,20 @@ const InformationBottomSheetBody = ({
       </View>
       <View>
         <StyledText type='Heading_3' color='orange'>
-          Ingredients
+          {i18n.t('information.ingredients')}
         </StyledText>
         <IngredientList ingredients={ingredientList} />
       </View>
       <View>
         <StyledText type='Heading_3' color='orange'>
-          Steps
+          {i18n.t('information.steps')}
         </StyledText>
         <StepList steps={steps} />
       </View>
       <SolidButton
-        title='How to make Pho'
+        title={`${i18n.t('information.howToMake')} ${
+          title.length <= 10 ? title : title.slice(0, 10) + '...'
+        }`}
         icon={<PlayCircleIcon />}
         iconPosition='right'
         containerStyle={{

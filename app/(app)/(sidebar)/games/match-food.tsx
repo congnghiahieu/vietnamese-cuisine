@@ -12,8 +12,8 @@ import StyledImage from '@/components/Styled/StyledImage';
 import StyledPressable from '@/components/Styled/StyledPressable';
 import { v4 as uuid } from 'uuid';
 import { useSound } from '@/hooks/useSound';
-import { AntDesign } from '@expo/vector-icons';
 import { i18n } from '@/lib/i18n';
+import Animated, { CurvedTransition } from 'react-native-reanimated';
 
 const ROWS = 5;
 const COLS = 4;
@@ -125,13 +125,6 @@ const Tile = ({
       style={styles.tileContainer}
       onPress={() => onFacePress(x, y, isFaceUp, face.faceId)}
       disabled={(!isFaceUp && isLimit) || isDiscover}>
-      <StyledText
-        style={{
-          position: 'absolute',
-          top: STYLES.MARGIN.MARGIN_8,
-        }}>
-        {y},{x}
-      </StyledText>
       {background}
     </StyledPressable>
   );

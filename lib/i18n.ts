@@ -16,6 +16,7 @@ type Translations = {
   settings: SettingsTranslations;
   about: AboutTranslations;
   home: HomeTranslations;
+  information: InformationTranslations;
   sidebar: SidebarTranslations;
   games: GamesTranslations;
   profile: ProfileTranslations;
@@ -122,6 +123,14 @@ type HomeTranslations = {
   toast: Omit<ToastTranslations, 'success'>;
 };
 
+type InformationTranslations = {
+  notAvailable: string;
+  story: string;
+  ingredients: string;
+  steps: string;
+  howToMake: string;
+};
+
 type SidebarTranslations = {
   home: string;
   community: string;
@@ -177,6 +186,7 @@ type ProfileTranslations = {
 type FavouritesTranslations = {
   emptyList: string;
   explore: string;
+  toast: Pick<ToastTranslations, 'error'>;
 };
 
 type CommunityTranslations = {
@@ -338,11 +348,18 @@ const englishTranslations: Translations = {
     emptyList: 'No dish available!',
     toast: {
       error: {
-        text1: 'Fail to love',
+        text1: 'Fail to love %{title}',
         text2: 'Please try again',
       },
       warning: 'This action requires authentication',
     },
+  },
+  information: {
+    story: 'Story',
+    ingredients: 'Ingredients',
+    steps: 'Steps',
+    notAvailable: 'Information not available',
+    howToMake: 'How to make',
   },
   sidebar: {
     home: 'Home',
@@ -405,6 +422,12 @@ const englishTranslations: Translations = {
   favourites: {
     emptyList: 'No favourite dish',
     explore: 'Explore more Vietnamese food',
+    toast: {
+      error: {
+        text1: 'Fail to unlike %{title}',
+        text2: 'Please try again',
+      },
+    },
   },
   community: {
     wall: {
@@ -564,11 +587,18 @@ const vietnameseTranslations: Translations = {
     emptyList: 'Không có món ăn nào!',
     toast: {
       error: {
-        text1: 'Yêu thích món ăn thất bại',
+        text1: 'Yêu thích %{title} món ăn thất bại',
         text2: 'Hãy thử lại',
       },
       warning: 'Hành động yêu cầu xác thực',
     },
+  },
+  information: {
+    story: 'Câu chuyện',
+    ingredients: 'Nguyên liệu',
+    steps: 'Cách làm',
+    notAvailable: 'Không có thông tin',
+    howToMake: 'Xem cách làm',
   },
   sidebar: {
     home: 'Trang chủ',
@@ -631,6 +661,12 @@ const vietnameseTranslations: Translations = {
   favourites: {
     emptyList: 'Bạn chưa có món ăn yêu thích',
     explore: 'Hãy khám phá nhiều hơn về ẩm thực Việt',
+    toast: {
+      error: {
+        text1: 'Bỏ yêu thích %{title} thất bại',
+        text2: 'Hãy thử lại',
+      },
+    },
   },
   community: {
     wall: {

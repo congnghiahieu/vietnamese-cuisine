@@ -35,6 +35,9 @@ export const StyledFlatListWithRef = <T,>(
         },
         contentContainerStyle,
       ]}
+      style={{
+        flexGrow: data?.length === 0 ? 1 : 0,
+      }}
       data={data}
       {...otherProps}
     />

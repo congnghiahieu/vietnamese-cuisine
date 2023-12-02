@@ -127,10 +127,10 @@ const FoodCard = ({ title, imageUrlList, loved }: Food) => {
     },
     onSuccess: () => {
       queryClient.resetQueries({
-        queryKey: ['food', title],
+        queryKey: ['favourites'],
       });
       queryClient.resetQueries({
-        queryKey: ['favourites', user?.email],
+        queryKey: ['food', title],
       });
     },
     onError: err => {
@@ -138,8 +138,8 @@ const FoodCard = ({ title, imageUrlList, loved }: Food) => {
       console.log(err);
       StyledToast.show({
         type: 'error',
-        text1: i18n.t('home.error.text1'),
-        text2: i18n.t('home.error.text2'),
+        text1: i18n.t('home.toast.error.text1', { title }),
+        text2: i18n.t('home.toast.error.text2'),
       });
     },
   });
