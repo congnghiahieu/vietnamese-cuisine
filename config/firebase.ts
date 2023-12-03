@@ -15,7 +15,6 @@ const firebaseConfig: FirebaseOptions = {
   appId: Constants.expoConfig?.extra?.firebaseAppId,
 };
 
-// Initialize Firebase
 const FIREBASE_APP = initializeApp(firebaseConfig);
 const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(AsyncStorage),
