@@ -25,11 +25,28 @@ import { Stack } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { v4 as uuid } from 'uuid';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { FIREBASE_STORAGE, FIREBASE_DB } from '@/config/firebase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import StyledToast from '@/components/Styled/StyledToast';
 import { i18n } from '@/lib/i18n';
+import { User } from '@/config/model';
+
+const useProfileQuery = ({ email }: { email: string }) =>
+  useQuery<User>({
+    queryKey: ['profile', email],
+    queryFn: async () => {
+      if (!email) throw new Error();
+
+      const docRef = doc(FIREBASE_DB, 'users', email);
+      const userDoc = await getDoc(docRef);
+      if (!userDoc.exists()) throw new Error(i18n.t('other.errorOccurr'));
+
+      const user = userDoc.data() as User;
+      return user;
+    },
+    retry: 0,
+  });
 
 const usePublishMutation = ({ email }: { email: string }) =>
   useMutation({
@@ -64,8 +81,17 @@ const usePublishMutation = ({ email }: { email: string }) =>
 const WORD_LIMIT = 500;
 const Publish = () => {
   const { user } = useAuth();
-  const styles = useStyles();
   const { theme } = useTheme();
+  const styles = useStyles();
+
+  const {
+    data: dbUser,
+    isPending,
+    error,
+  } = useProfileQuery({
+    email: user?.email || '',
+  });
+
   const [thought, setThought] = useState('');
   const [, requestLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
   const [, requestCameraPermission] = ImagePicker.useCameraPermissions();
@@ -131,7 +157,8 @@ const Publish = () => {
               text1: i18n.t('community.publish.toast.success'),
             });
           },
-          onError: () => {
+          onError: err => {
+            console.log(err);
             StyledToast.show({
               type: 'error',
               text1: i18n.t('community.publish.toast.error.text1'),
@@ -171,7 +198,7 @@ const Publish = () => {
         <View style={styles.contentHeader}>
           <AvatarIcon />
           <StyledText type='Heading_4' color='orange'>
-            Cong Nghia Hieu
+            {dbUser?.fullname}
           </StyledText>
           <StyledPressable
             style={styles.imageButton}

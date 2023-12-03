@@ -195,6 +195,9 @@ const SidebarContent = ({ descriptors, state, ...rest }: DrawerContentComponentP
 
 const SidebarUserContent = () => {
   const { user } = useAuth();
+  const styles = useStyles();
+  const router = useRouter();
+
   const {
     data: dbUser,
     isPending,
@@ -202,8 +205,7 @@ const SidebarUserContent = () => {
   } = useProfileQuery({
     email: user?.email || '',
   });
-  const styles = useStyles();
-  const router = useRouter();
+
   let content: React.ReactNode;
   if (isPending) {
     content = (
@@ -242,7 +244,7 @@ const SidebarUserContent = () => {
     content = (
       <>
         <StyledText type='Heading_5' color='white'>
-          {i18n.t('sidebar.welcome')}, {dbUser.fullname.split(' ')[-1]}
+          {i18n.t('sidebar.welcome')}, {dbUser.fullname.split(' ').reverse()[0]}
         </StyledText>
         <View style={styles.navigate}>
           {/* <OutlineButton
