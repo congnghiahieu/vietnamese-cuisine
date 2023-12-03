@@ -15,7 +15,6 @@ export const SolidButton = (props: StyledButtonProps) => {
     disabledStyle,
     disabledTitleStyle,
     iconContainerStyle,
-    loadingStyle,
     titleStyle,
     ...otherProps
   } = props;
@@ -72,7 +71,6 @@ export const OutlineButton = (props: StyledButtonProps) => {
     disabledStyle,
     disabledTitleStyle,
     iconContainerStyle,
-    loadingStyle,
     titleStyle,
     ...otherProps
   } = props;

@@ -206,6 +206,7 @@ type CommunityTranslations = {
     publishPost: string;
   };
   comment: {
+    toast: Omit<ToastTranslations, 'success'>;
     comments: string;
     firstOne: string;
     postComment: string;
@@ -456,6 +457,13 @@ const englishTranslations: Translations = {
       comments: 'Comments',
       firstOne: 'Be the first one \ncomment this post',
       postComment: 'Post your comment!',
+      toast: {
+        error: {
+          text1: 'Fail to post your comment',
+          text2: 'Please try again',
+        },
+        warning: 'Write your comment!',
+      },
     },
   },
 };
@@ -695,6 +703,13 @@ const vietnameseTranslations: Translations = {
       comments: 'Bình luận',
       firstOne: 'Hãy là người đầu tiên\nbình luận bài viết này',
       postComment: 'Bình luận của bạn',
+      toast: {
+        error: {
+          text1: 'Không thể đăng bình luận của bạn',
+          text2: 'Vui lòng thử lại',
+        },
+        warning: 'Hãy viết bình luận của bạn!',
+      },
     },
   },
 };

@@ -53,7 +53,7 @@ const CommunityLayout = () => {
         }}
       />
       <Stack.Screen
-        name='comment'
+        name='comment/[postId]'
         options={{
           headerTitle: () => (
             <StyledText type='Heading_3' color='blackGrey'>
