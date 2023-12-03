@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useRef, memo } from 'react';
 import { View, Image, FlatList } from 'react-native';
 import { Redirect, useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles, useTheme } from '@rneui/themed';
@@ -27,7 +27,7 @@ import { Post } from '@/config/model';
 
 type Page = 'MyFeed' | 'MyWall';
 
-const usePostQuery = (page: Page) =>
+const usePostQuery = ({ page, email }: { page: Page; email: string }) =>
   useQuery<Post[]>({
     queryKey: ['community', page],
     queryFn: async () => {
@@ -39,12 +39,17 @@ const usePostQuery = (page: Page) =>
             ...doc.data(),
           } as Post),
       );
-      const postSorted = timeSorter({
+      let postSorted = timeSorter({
         arr: postNoSorted,
         key: 'createdAt',
         sortType: 'DESC',
       });
+
       return postSorted;
+    },
+    select: data => {
+      if (page === 'MyFeed') return data;
+      return data.filter(post => post.userId === email);
     },
     staleTime: 0,
   });
@@ -55,7 +60,7 @@ const MyFeed = () => {
   console.log('Community re-render');
   const styles = useStyles();
   const [page, setPage] = useState<Page>('MyFeed');
-  const { data, isPending, refetch, isFetching } = usePostQuery(page);
+  const { data, isPending, refetch, isFetching } = usePostQuery({ page, email: user?.email || '' });
   const flatListRef = useRef<FlatList<Post>>(null);
 
   return (
@@ -72,6 +77,8 @@ const MyFeed = () => {
               <WannaPost />
             </View>
           }
+          // removeClippedSubviews
+          initialNumToRender={data?.length}
           refreshControl={<StyledRefreshControl refreshing={isFetching} onRefresh={refetch} />}
           keyExtractor={({ postId }) => postId}
           data={data}

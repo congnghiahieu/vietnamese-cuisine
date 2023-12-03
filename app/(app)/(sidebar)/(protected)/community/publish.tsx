@@ -151,7 +151,7 @@ const Publish = () => {
         },
         {
           onSuccess: () => {
-            queryClient.invalidateQueries({
+            queryClient.resetQueries({
               queryKey: ['community'],
               exact: false,
             });
