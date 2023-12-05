@@ -59,6 +59,7 @@ const Favourites = () => {
       }}
       keyExtractor={({ title }) => title}
       data={data}
+      initialNumToRender={data?.length}
       renderItem={({ item }) => <FavouriteCard {...item} />}
       ListEmptyComponent={FavouriteEmpty}
     />

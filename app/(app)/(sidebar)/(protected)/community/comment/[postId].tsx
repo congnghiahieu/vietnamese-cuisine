@@ -4,7 +4,7 @@ import { STYLES } from '@/lib/constants';
 import { AvatarIcon, CommentIcon, HeartFillIcon, SendIcon } from '@/components/Icon';
 import StyledText from '@/components/Styled/StyledText';
 import StyledDivider from '@/components/Styled/StyledDivider';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { SolidButton } from '@/components/Styled/StyledButton';
 import { SearchInput } from '@/components/Styled/StyledInput';
 import { StyledFlatList } from '@/components/Styled/StyledList';
@@ -165,6 +165,7 @@ const CommentComponent = () => {
             style={{
               flexGrow: 1,
             }}
+            initialNumToRender={data?.length}
             data={data}
             renderItem={({ item }) => <CommentCard {...item} />}
           />
@@ -225,30 +226,33 @@ const CommentComponent = () => {
   );
 };
 
-const CommentCard = ({ username, content, createdAt }: Comment) => {
-  const styles = useStyles();
+const CommentCard = memo(
+  ({ username, content, createdAt }: Comment) => {
+    const styles = useStyles();
 
-  return (
-    <View style={styles.card}>
-      <AvatarIcon />
-      <View style={styles.content}>
-        <View style={styles.meta}>
-          <StyledText type='Heading_5' color='orange'>
-            {username}
-          </StyledText>
-          <StyledText type='Placeholder' color='blackGrey'>
-            {i18n.distanceOfTimeInWords(createdAt, getCurrentTimeISO(), {
-              includeSeconds: true,
-            })}
+    return (
+      <View style={styles.card}>
+        <AvatarIcon />
+        <View style={styles.content}>
+          <View style={styles.meta}>
+            <StyledText type='Heading_5' color='orange'>
+              {username}
+            </StyledText>
+            <StyledText type='Placeholder' color='blackGrey'>
+              {i18n.distanceOfTimeInWords(createdAt, getCurrentTimeISO(), {
+                includeSeconds: true,
+              })}
+            </StyledText>
+          </View>
+          <StyledText type='Comment' color='grey'>
+            {content}
           </StyledText>
         </View>
-        <StyledText type='Comment' color='grey'>
-          {content}
-        </StyledText>
       </View>
-    </View>
-  );
-};
+    );
+  },
+  (prev, next) => prev.commentId === next.commentId,
+);
 
 const useStyles = makeStyles(theme => {
   const dT = theme.mode === 'dark';

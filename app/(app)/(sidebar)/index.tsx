@@ -25,7 +25,7 @@ import {
 } from 'firebase/firestore';
 import { dismissKeyboard } from '@/lib/utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { KeyboardView, LoadingView } from '@/components/Styled/StyledView';
+import { LoadingView } from '@/components/Styled/StyledView';
 import { StyledRefreshControl } from '@/components/Styled/StyledLoading';
 import StyledToast from '@/components/Styled/StyledToast';
 import { useAuth } from '@/context/AuthContext';
@@ -37,7 +37,6 @@ const useFoodListQuery = ({ email, filterKey = '' }: { email: string; filterKey:
   useQuery<Food[]>({
     queryKey: ['food', 'list', email],
     queryFn: async () => {
-      console.log(email);
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'foods'));
       let foodList = querySnapshot.docs.map(doc => doc.data()) as Food[];
       if (!email) {
@@ -78,14 +77,10 @@ const Home = () => {
   });
 
   return (
-    <KeyboardView
-      contentContainerStyle={styles.container}
-      onStartShouldSetResponder={dismissKeyboard}>
-      <View>
-        <StyledText type='Heading_4' color='grey'>
-          {i18n.t('home.find')}
-        </StyledText>
-      </View>
+    <View style={styles.container} onStartShouldSetResponder={dismissKeyboard}>
+      <StyledText type='Heading_4' color='grey'>
+        {i18n.t('home.find')}
+      </StyledText>
       <SearchInput
         placeholder={i18n.t('home.search')}
         rightIcon={
@@ -95,6 +90,7 @@ const Home = () => {
         }
         value={searchKey}
         onChangeText={setSearchKey}
+        disabled={isPending || isFetching}
       />
       {isPending ? (
         <LoadingView />
@@ -110,10 +106,11 @@ const Home = () => {
           numColumns={2}
           columnWrapperStyle={styles.foodListColumn}
           data={data}
+          initialNumToRender={data?.length}
           renderItem={({ item }) => <FoodCard {...item} />}
         />
       )}
-    </KeyboardView>
+    </View>
   );
 };
 

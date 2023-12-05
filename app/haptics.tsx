@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { useRouter } from 'expo-router';
 
 export default function App() {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <Text>Haptics.selectionAsync</Text>
@@ -38,6 +40,7 @@ export default function App() {
           title='Heavy'
           onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)}
         />
+        <Button title='Back' onPress={() => router.back()} />
       </View>
     </View>
   );

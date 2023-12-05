@@ -423,6 +423,7 @@ const GuessFood = () => {
         <StyledFlatList
           scrollEnabled={false}
           emptyTitle=''
+          initialNumToRender={Object.keys(questions[currentQuestion].answers).length}
           data={Object.keys(questions[currentQuestion].answers)}
           keyExtractor={item => item}
           renderItem={({ item }) => {

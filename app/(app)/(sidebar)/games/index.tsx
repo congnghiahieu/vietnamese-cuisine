@@ -62,6 +62,7 @@ const GameList = ({ gameList }: GameListProps) => {
       horizontal={false}
       showsVerticalScrollIndicator={false}
       data={gameList}
+      initialNumToRender={gameList.length}
       renderItem={({ item }) => <GameCard {...item} />}
     />
   );
