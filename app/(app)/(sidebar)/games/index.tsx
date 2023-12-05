@@ -61,8 +61,8 @@ const GameList = ({ gameList }: GameListProps) => {
       keyExtractor={({ title }) => title}
       horizontal={false}
       showsVerticalScrollIndicator={false}
-      data={gameList}
       initialNumToRender={gameList.length}
+      data={gameList}
       renderItem={({ item }) => <GameCard {...item} />}
     />
   );

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, ImageSourcePropType, View } from 'react-native';
+import { Alert, ImageSourcePropType, ListRenderItem, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { GameHeaderRight } from '@/components/Styled/StyledHeader';
 import StyledImage from '@/components/Styled/StyledImage';
@@ -423,16 +423,15 @@ const GuessFood = () => {
         <StyledFlatList
           scrollEnabled={false}
           emptyTitle=''
+          keyExtractor={item => item}
           initialNumToRender={Object.keys(questions[currentQuestion].answers).length}
           data={Object.keys(questions[currentQuestion].answers)}
-          keyExtractor={item => item}
           renderItem={({ item }) => {
             return (
               <StyledPressable
                 style={styles.answerContainer}
                 onPress={() => {
                   if (Date.now() - previousAnswerTime.current < THROTTLE_TIME) return;
-
                   previousAnswerTime.current = Date.now();
                   handleAnswer(questions[currentQuestion].answers[item]);
                 }}>

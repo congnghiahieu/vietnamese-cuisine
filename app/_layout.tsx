@@ -16,7 +16,7 @@ import { useSettingStates } from '@/states/setting';
 import { AuthProvider } from '@/context/AuthContext';
 import { i18n } from '@/lib/i18n';
 
-import { LogBox } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 // LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 LogBox.ignoreAllLogs();
 

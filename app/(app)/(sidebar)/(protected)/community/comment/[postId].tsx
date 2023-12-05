@@ -1,4 +1,4 @@
-import { View, KeyboardAvoidingView } from 'react-native';
+import { View, KeyboardAvoidingView, ListRenderItem } from 'react-native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { STYLES } from '@/lib/constants';
 import { AvatarIcon, CommentIcon, HeartFillIcon, SendIcon } from '@/components/Icon';
@@ -167,7 +167,7 @@ const CommentComponent = () => {
             }}
             initialNumToRender={data?.length}
             data={data}
-            renderItem={({ item }) => <CommentCard {...item} />}
+            renderItem={RenderItem}
           />
           <StyledDivider orientation='horizontal' />
           <View style={styles.footer}>
@@ -225,6 +225,8 @@ const CommentComponent = () => {
     </>
   );
 };
+
+const RenderItem: ListRenderItem<Comment> = ({ item }) => <CommentCard {...item} />;
 
 const CommentCard = memo(
   ({ username, content, createdAt }: Comment) => {

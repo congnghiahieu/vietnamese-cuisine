@@ -1,6 +1,6 @@
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { Drawer as Sidebar } from 'expo-router/drawer';
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import StyledHeader from '@/components/Styled/StyledHeader';
 import { AntDesign, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { TEXT_STYLE_TYPE_MAP } from '@/components/Theme/Text';
@@ -15,15 +15,17 @@ import StyledImage from '@/components/Styled/StyledImage';
 import { AvatarIcon } from '@/components/Icon';
 import StyledText from '@/components/Styled/StyledText';
 import { OutlineButton } from '@/components/Styled/StyledButton';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { i18n } from '@/lib/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useI18nChangeEffect from '@/hooks/useI18nChangeEffect';
 import { User } from '@/config/model';
 import { useQuery } from '@tanstack/react-query';
 import { FIREBASE_DB } from '@/config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SplashScreen from 'expo-splash-screen';
 import { LoadingView } from '@/components/Styled/StyledView';
 import { StyledCircleLoading } from '@/components/Styled/StyledLoading';
 
@@ -45,98 +47,124 @@ const useProfileQuery = ({ email }: { email: string }) =>
 
 const SidebarLayout = () => {
   const sidebarOptions = useSidebarOptions();
+  const { theme } = useTheme();
   const [key, setKey] = useState(Math.random());
   useI18nChangeEffect(() => setKey(Math.random()));
+  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const checkAlreadyOnboarded = async () => {
+    const onboarded = await AsyncStorage.getItem('Vietnamese Cuisine Onboard');
+    console.log(onboarded);
+    setShowOnboarding(onboarded === 'true' ? false : true);
+    setIsLoading(false);
+    SplashScreen.hideAsync();
+  };
+
+  useEffect(() => {
+    checkAlreadyOnboarded();
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (showOnboarding) {
+    console.log('Show Onboard Screen');
+    return <Redirect href='/onboard' />;
+  }
 
   return (
-    <Sidebar
-      key={key}
-      initialRouteName='(home)'
-      screenOptions={sidebarOptions}
-      drawerContent={SidebarContent}>
-      <Sidebar.Screen
-        name='index'
-        options={{
-          title: i18n.t('sidebar.home'),
-          drawerIcon: ({ color }) => (
-            <Ionicons name='home' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
-          ),
-        }}
-      />
-      <Sidebar.Screen
-        name='(protected)/community'
-        options={{
-          headerShown: false,
-          title: i18n.t('sidebar.community'),
-          drawerIcon: ({ color }) => (
-            <Ionicons name='people' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
-          ),
-        }}
-      />
-      <Sidebar.Screen
-        name='games'
-        options={{
-          headerShown: false,
-          title: i18n.t('sidebar.games'),
-          drawerIcon: ({ color }) => (
-            <Ionicons name='game-controller' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
-          ),
-        }}
-      />
-      <Sidebar.Screen
-        name='(protected)/favourites'
-        options={{
-          title: i18n.t('sidebar.favourites'),
-          drawerIcon: ({ color }) => (
-            <AntDesign name='heart' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
-          ),
-        }}
-      />
-      <Sidebar.Screen
-        name='(protected)/profile'
-        options={{
-          title: i18n.t('sidebar.myProfile'),
-          drawerIcon: ({ color }) => (
-            <AntDesign name='user' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
-          ),
-        }}
-      />
-      <Sidebar.Screen
-        name='about'
-        options={{
-          title: i18n.t('sidebar.about'),
-          drawerIcon: ({ color }) => (
-            <AntDesign
-              name='exclamationcircleo'
-              size={STYLES.ICON_SIZE.ICON_SIZE_24}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Sidebar.Screen
-        name='support'
-        options={{
-          title: i18n.t('sidebar.support'),
-          drawerIcon: ({ color }) => (
-            <FontAwesome5
-              name='hand-holding-heart'
-              size={STYLES.ICON_SIZE.ICON_SIZE_24}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Sidebar.Screen
-        name='settings'
-        options={{
-          title: i18n.t('sidebar.settings'),
-          drawerIcon: ({ color }) => (
-            <Ionicons name='settings' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
-          ),
-        }}
-      />
-    </Sidebar>
+    <>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} />
+      <Sidebar
+        key={key}
+        initialRouteName='(home)'
+        screenOptions={sidebarOptions}
+        drawerContent={SidebarContent}>
+        <Sidebar.Screen
+          name='index'
+          options={{
+            title: i18n.t('sidebar.home'),
+            drawerIcon: ({ color }) => (
+              <Ionicons name='home' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+            ),
+          }}
+        />
+        <Sidebar.Screen
+          name='(protected)/community'
+          options={{
+            headerShown: false,
+            title: i18n.t('sidebar.community'),
+            drawerIcon: ({ color }) => (
+              <Ionicons name='people' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+            ),
+          }}
+        />
+        <Sidebar.Screen
+          name='games'
+          options={{
+            headerShown: false,
+            title: i18n.t('sidebar.games'),
+            drawerIcon: ({ color }) => (
+              <Ionicons name='game-controller' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+            ),
+          }}
+        />
+        <Sidebar.Screen
+          name='(protected)/favourites'
+          options={{
+            title: i18n.t('sidebar.favourites'),
+            drawerIcon: ({ color }) => (
+              <AntDesign name='heart' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+            ),
+          }}
+        />
+        <Sidebar.Screen
+          name='(protected)/profile'
+          options={{
+            title: i18n.t('sidebar.myProfile'),
+            drawerIcon: ({ color }) => (
+              <AntDesign name='user' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+            ),
+          }}
+        />
+        <Sidebar.Screen
+          name='about'
+          options={{
+            title: i18n.t('sidebar.about'),
+            drawerIcon: ({ color }) => (
+              <AntDesign
+                name='exclamationcircleo'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Sidebar.Screen
+          name='support'
+          options={{
+            title: i18n.t('sidebar.support'),
+            drawerIcon: ({ color }) => (
+              <FontAwesome5
+                name='hand-holding-heart'
+                size={STYLES.ICON_SIZE.ICON_SIZE_24}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Sidebar.Screen
+          name='settings'
+          options={{
+            title: i18n.t('sidebar.settings'),
+            drawerIcon: ({ color }) => (
+              <Ionicons name='settings' size={STYLES.ICON_SIZE.ICON_SIZE_24} color={color} />
+            ),
+          }}
+        />
+      </Sidebar>
+    </>
   );
 };
 

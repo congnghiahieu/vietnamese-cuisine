@@ -1,13 +1,7 @@
 import { FIREBASE_APP, FIREBASE_AUTH, FIREBASE_DB } from '@/config/firebase';
 import { query, collection, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 
-/* await setDoc(doc(FIREBASE_DB, "users", "duyngo@gmail.com"), {
-    fullname: "Ngo Hoang Duy",
-    email: "duyngo@gmail.com",
-    favouritedFoods: [],
-    lovePosts: [],
-});
- */
+// Dung
 await setDoc(doc(FIREBASE_DB, 'foods', 'Bánh cuốn'), {
   title: 'Bánh cuốn',
   subTitle: 'Vietnamese traditional dish',
@@ -337,6 +331,8 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Bún bò Huế'), {
   videoLink: 'https://youtu.be/qWK_HYlKrAA?si=f2dDggdrh-GTqs4b',
 });
 
+// Duy Ngo
+
 await setDoc(doc(FIREBASE_DB, 'foods', 'Cơm tấm'), {
   title: 'Cơm tấm',
   subTitle: 'Vietnamese traditional dish',
@@ -348,8 +344,8 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cơm tấm'), {
     'https://statics.vinpearl.com/com-tam-ngon-o-sai-gon-5_1630562815.jpg',
   ],
 
-  introduce: 
-  'Ban đầu, Cơm tấm là một món ăn phổ biến của những người nông dân, công nhân tại vùng đồng bằng sông Cửu Long. Vào các năm mùa màng đói kém, nhiều người thường không có đủ gạo ngon để bán, vì vậy họ đã dùng gạo tấm để nấu ăn vì nó luôn có sẵn trong nhà của nhiều hộ gia đình cũng như có tác dụng làm no lâu.Từ khi Việt Nam đô thị hóa vào nửa đầu thế kỷ 20, Cơm tấm đã trở nên phổ biến ở hầu khắp các tỉnh Nam Bộ, trong đó có Sài Gòn',
+  introduce:
+    'Ban đầu, Cơm tấm là một món ăn phổ biến của những người nông dân, công nhân tại vùng đồng bằng sông Cửu Long. Vào các năm mùa màng đói kém, nhiều người thường không có đủ gạo ngon để bán, vì vậy họ đã dùng gạo tấm để nấu ăn vì nó luôn có sẵn trong nhà của nhiều hộ gia đình cũng như có tác dụng làm no lâu.Từ khi Việt Nam đô thị hóa vào nửa đầu thế kỷ 20, Cơm tấm đã trở nên phổ biến ở hầu khắp các tỉnh Nam Bộ, trong đó có Sài Gòn',
   ingredientList: [
     '4 miếng sườn cốt lết heo vừa',
     '300g gạo tấm',
@@ -365,8 +361,7 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cơm tấm'), {
   steps: [
     {
       title: 'Bước 1: Nấu cơm',
-      content:
-        'Gạo tấm mua về vo sạch qua 2 - 3 lần và nấu trong nồi cơm điện như bình thường.',
+      content: 'Gạo tấm mua về vo sạch qua 2 - 3 lần và nấu trong nồi cơm điện như bình thường.',
     },
     {
       title: 'Bước 2: Làm phần sườn cốt lết nướng',
@@ -420,11 +415,11 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Bánh xèo'), {
     'https://static.vinwonders.com/2022/10/banh-xeo-nha-trang-5.jpeg',
     'https://static.vinwonders.com/2022/10/banh-xeo-nha-trang-6.jpg',
     'https://static.vinwonders.com/2022/10/banh-xeo-nha-trang-7.jpg',
-    'https://static.vinwonders.com/2022/10/banh-xeo-nha-trang-9.jpeg'
+    'https://static.vinwonders.com/2022/10/banh-xeo-nha-trang-9.jpeg',
   ],
 
-  introduce: 
-  'Bánh xèo không chỉ là món ăn truyền thống của Việt Nam mà còn là một biểu tượng đặc trưng của ẩm thực miền Trung và miền Nam. Món ăn này có nguồn gốc từ vùng Trung Bộ và đã đi vào lòng người từ Nghệ An đến Huế và khắp các tỉnh thành cả nước',
+  introduce:
+    'Bánh xèo không chỉ là món ăn truyền thống của Việt Nam mà còn là một biểu tượng đặc trưng của ẩm thực miền Trung và miền Nam. Món ăn này có nguồn gốc từ vùng Trung Bộ và đã đi vào lòng người từ Nghệ An đến Huế và khắp các tỉnh thành cả nước',
   ingredientList: [
     '200gr bột gạo khô',
     '10gr bột nghệ',
@@ -456,7 +451,6 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Bánh xèo'), {
       content:
         'Bắc chảo lên bếp và cho vào một lớp dầu mỏng. Sau khi dầu nóng, bạn múc muỗng canh bột vừa và tráng đều chảo. Đổ một lớp bột vừa phải đủ để tráng hết mặt chảo nhưng đừng quá dày vì lớp bột dày làm bánh xèo không còn được giòn nữa. Sau đó, bạn chiên từ từ với lửa nhỏ để nước trong bột bốc hơi đi, thì bánh xèo của chúng ta sẽ giòn ngon vô cùng.Sau đó, cho thêm một ít nhân và giá vào. Để lửa nhỏ, đợi khoảng 2 phút cho vỏ bánh khô giòn rồi bạn gấp đôi bánh lại hong thêm một chút và để bánh ra dĩa.',
     },
-   
   ],
   videoLink: 'https://www.youtube.com/watch?v=hxI-i5jAeB8',
 });
@@ -471,8 +465,8 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Sủi dìn'), {
     'https://statics.vinpearl.com/sui-din-10_1630468302.jpg',
   ],
 
-  introduce: 
-  'Món sủi dìn là thức ăn đường phố vào mùa đông, là món ăn nóng hổi bắt nguồn từ cộng đồng người Hoa ở Hải Phòng xưa, lấy cảm hứng từ món bánh trôi nước.',
+  introduce:
+    'Món sủi dìn là thức ăn đường phố vào mùa đông, là món ăn nóng hổi bắt nguồn từ cộng đồng người Hoa ở Hải Phòng xưa, lấy cảm hứng từ món bánh trôi nước.',
   ingredientList: [
     '100 g vừng đen',
     '50 g lạc rang',
@@ -509,7 +503,6 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Sủi dìn'), {
       content:
         'Khi ăn cho bánh vào bát chan nước gừng nóng, rắc lạc và dừa sợi lên trên. Món ăn phải dùng nóng mới ngon.',
     },
-   
   ],
   videoLink: 'https://www.youtube.com/watch?v=kP3K63hr01c',
 });
@@ -522,11 +515,11 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Chả rươi'), {
     'https://static.vinwonders.com/production/cha-ruoi-ha-noi-2.jpg',
     'https://static.vinwonders.com/production/cha-ruoi-ha-noi-10.jpg',
     'https://static.vinwonders.com/production/cha-ruoi-ha-noi-11.jpg',
-    'https://static.vinwonders.com/production/cha-ruoi-ha-noi-14.jpg'
+    'https://static.vinwonders.com/production/cha-ruoi-ha-noi-14.jpg',
   ],
 
-  introduce: 
-  'Món sủi dìn là thức ăn đường phố vào mùa đông, là món ăn nóng hổi bắt nguồn từ cộng đồng người Hoa ở Hải Phòng xưa, lấy cảm hứng từ món bánh trôi nước.',
+  introduce:
+    'Món sủi dìn là thức ăn đường phố vào mùa đông, là món ăn nóng hổi bắt nguồn từ cộng đồng người Hoa ở Hải Phòng xưa, lấy cảm hứng từ món bánh trôi nước.',
   ingredientList: [
     '500gr rươi tươi (hoặc rươi đông lạnh)',
     '100gr thịt vai xay',
@@ -556,7 +549,6 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Chả rươi'), {
       content:
         'Sau hoàn thành hãy thưởng thức khi còn nóng. Hương vị đậm đà, ngon miệng của những chiếc chả rươi vàng ruộm độc đáo tạo nên một món ăn tuyệt vời!',
     },
-   
   ],
   videoLink: 'https://www.youtube.com/watch?v=BfRxXz972ng',
 });
@@ -568,11 +560,11 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Bánh đa cua'), {
     'https://statics.vinpearl.com/banh-da-cua-ha-noi-7_1680941572.jpg',
     'https://statics.vinpearl.com/banh-da-cua-ha-noi-9_1680941958.jpg',
     'https://statics.vinpearl.com/banh-da-cua-ha-noi-1_1680940620.jpg',
-    'https://statics.vinpearl.com/banh-da-cua-ha-noi-2_1680940820.jpg'
+    'https://statics.vinpearl.com/banh-da-cua-ha-noi-2_1680940820.jpg',
   ],
 
-  introduce: 
-  'Bánh đa cua là món ăn nổi tiếng, là nét văn hóa đặc trưng của ẩm thực thành phố Hải Phòng. Bánh đa cua Hải Phòng sử dụng sợi bánh đa đỏ, sợi bánh dẹt, dai, không dễ bị bở hay nát như phở, miến.',
+  introduce:
+    'Bánh đa cua là món ăn nổi tiếng, là nét văn hóa đặc trưng của ẩm thực thành phố Hải Phòng. Bánh đa cua Hải Phòng sử dụng sợi bánh đa đỏ, sợi bánh dẹt, dai, không dễ bị bở hay nát như phở, miến.',
   ingredientList: [
     'Bánh đa đỏ/ bánh đa trắng tùy sở thích: 400 gram',
     'Cua đồng xay 400 gram',
@@ -612,7 +604,6 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Bánh đa cua'), {
       content:
         'Sau khi sườn chín mềm, vớt sườn ra một chiếc bát để riêng, sau đó đổ phần nước lọc cua vào nồi nước sườn, thêm 2 lít nước vào, đun sôi. Khi sôi trụng tôm khô vào nồi cho mềm và vớt ra. Sau đó, thêm cà chua đã xào vào cùng và nêm thêm nước mắm và hạt nêm sao cho vừa ăn. Trụng sơ bánh đa với nước sôi cho chín tới (dùng một nồi nước riêng), sau đó cho vào tô, thêm chả lá lốt, gạch cua, tôm, rau muống, hành và mùi ăn kèm vào, sau đó chan nước dùng vào bánh đa.',
     },
-   
   ],
   videoLink: 'https://www.youtube.com/watch?v=vpFPeerlv84',
 });
@@ -627,8 +618,8 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Hủ tiếu'), {
     'https://digifood.vn/blog/wp-content/uploads/2021/08/hu-tieu-2.jpg',
   ],
 
-  introduce: 
-  'Hủ tiếu còn được viết là hủ tíu là món ăn dùng chế phẩm gạo dạng sợi của người Triều Châu và người Mân Nam được truyền nhập tới nhiều vùng ở trong và ngoài nước Trung Quốc, trở thành món ăn thường gặp ở vùng Đông Nam Á như ở miền Nam Việt Nam, Campuchia, Lào, Thái Lan. Hủ tiếu phát triển rất mạnh ở miền Nam Việt Nam từ những năm 50, đặc biệt là tại Sài Gòn.',
+  introduce:
+    'Hủ tiếu còn được viết là hủ tíu là món ăn dùng chế phẩm gạo dạng sợi của người Triều Châu và người Mân Nam được truyền nhập tới nhiều vùng ở trong và ngoài nước Trung Quốc, trở thành món ăn thường gặp ở vùng Đông Nam Á như ở miền Nam Việt Nam, Campuchia, Lào, Thái Lan. Hủ tiếu phát triển rất mạnh ở miền Nam Việt Nam từ những năm 50, đặc biệt là tại Sài Gòn.',
   ingredientList: [
     '1 tim heo',
     '1 miếng gan heo',
@@ -672,7 +663,6 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Hủ tiếu'), {
       content:
         'Khi trộn, đầu tiên bạn cho 1 muỗng canh dầu tỏi vào hủ tiếu, trộn đều lên. Sau đó bạn cho khoảng 2 muỗng canh xốt trộn hủ tiếu, giá hẹ, tim heo, tôm, gan heo, tóp mỡ, thịt băm, 2 trứng cút và và trộn lên.',
     },
-   
   ],
   videoLink: 'https://www.youtube.com/watch?v=fziqSn-xkws',
 });
@@ -687,8 +677,8 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cá kho tộ'), {
     'https://cdn.tgdd.vn/Files/2019/09/02/1194292/cach-lam-ca-loc-kho-to-ngon-com-chuan-vi-mien-nam-202201041358059116.jpg',
   ],
 
-  introduce: 
-  'Cá kho tộ vốn là món ăn dân dã của người dân vùng sông nước miền tây nam bộ. Thường xuất hiện trong bữa cơm hàng ngày của nhiều gia đình, những niêu cá kho chinh phục người ăn bằng hương vị đậm đà, béo ngậy, thơm ngon và đặc biệt “tốn cơm”.',
+  introduce:
+    'Cá kho tộ vốn là món ăn dân dã của người dân vùng sông nước miền tây nam bộ. Thường xuất hiện trong bữa cơm hàng ngày của nhiều gia đình, những niêu cá kho chinh phục người ăn bằng hương vị đậm đà, béo ngậy, thơm ngon và đặc biệt “tốn cơm”.',
   ingredientList: [
     '1kg cá basa tươi (hoặc cá basa đã khúc sẵn)',
     '250g thịt ba rọi',
@@ -719,7 +709,7 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cá kho tộ'), {
       title: 'Bước 4: Thành phẩm',
       content:
         'Trước khi tắt bếp thì bạn cho hành lá và thì là lên phía trên bề mặt rồi nhấc xuống bếp là có thể thưởng thức ngay với cơm nóng.',
-    }, 
+    },
   ],
   videoLink: 'https://www.youtube.com/watch?v=BfD1KwGwkqA',
 });
@@ -732,11 +722,11 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Kho quẹt'), {
     'https://cdn.tgdd.vn/2021/05/CookRecipe/GalleryStep/thanh-pham-861.jpg',
     'https://nguyenkim.com/images/companies/_1/Content/tin-tuc/nha-bep/vao-bep/cach-lam-kho-quet-chuan-vi-nam-bo-ngon-ngat-ngay-06.jpg',
     'https://cdn.nguyenkimmall.com/images/companies/_1/tin-tuc/kinh-nghiem-meo-hay/n%E1%BA%A5u%20%C4%83n/FB_IMG_1610688892549.jpg.jpg',
-    'https://cdn.nguyenkimmall.com/images/companies/_1/tin-tuc/kinh-nghiem-meo-hay/n%E1%BA%A5u%20%C4%83n/nhung-tieu-chi-tien-quyet-de-co-mon-kho-quet-sieu-ngon-cho-bua-com-gia-dinh%204.jpg.jpg'
+    'https://cdn.nguyenkimmall.com/images/companies/_1/tin-tuc/kinh-nghiem-meo-hay/n%E1%BA%A5u%20%C4%83n/nhung-tieu-chi-tien-quyet-de-co-mon-kho-quet-sieu-ngon-cho-bua-com-gia-dinh%204.jpg.jpg',
   ],
 
-  introduce: 
-  'Kho quẹt được xuất phát và chế biến những lần đầu tiên bởi thói quen ăn uống "đại khái" của người dân miền tây sông nước, cụ thể là những người làm nông. Vào những ngày mưa dai dẳng, không thể ra đồng, nên người dân dùng đại những thứ có trong nhà như tóp mỡ, tôm tép khô, cùng với gia vị là nước mắm, muối, bột ngọt,… nấu thành một hỗn hợp sền sệt, rồi ra vườn hái vội một hai nắm rau luộc lên ăn với cơm trắng.',
+  introduce:
+    'Kho quẹt được xuất phát và chế biến những lần đầu tiên bởi thói quen ăn uống "đại khái" của người dân miền tây sông nước, cụ thể là những người làm nông. Vào những ngày mưa dai dẳng, không thể ra đồng, nên người dân dùng đại những thứ có trong nhà như tóp mỡ, tôm tép khô, cùng với gia vị là nước mắm, muối, bột ngọt,… nấu thành một hỗn hợp sền sệt, rồi ra vườn hái vội một hai nắm rau luộc lên ăn với cơm trắng.',
   ingredientList: [
     '150g thịt ba chỉ',
     '50g tôm khô',
@@ -763,7 +753,7 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Kho quẹt'), {
       title: 'Bước 4: Thành phẩm',
       content:
         'Món thịt kho quẹt này có đặc trưng là phần nước sốt keo đặc lại, có vị mặn ngọt đậm đà và ấm nồng của tiêu ớt. Tôm khô thì thấm vị, thịt mỡ được rang vàng giòn. Món ăn này ăn cùng với rau luộc và cơm nóng thì tốn cơm vô cùng luôn đấy.',
-    }, 
+    },
   ],
   videoLink: 'https://www.youtube.com/watch?v=bXBg1bf9gj0',
 });
@@ -777,11 +767,11 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cháo cá lóc'), {
     'https://cdn.hellobacsi.com/wp-content/uploads/2021/10/cach-nau-chao-ca-loc-2.jpg',
     'https://cdn.hellobacsi.com/wp-content/uploads/2021/10/chao-ca-loc.jpg',
     'https://statics.vinpearl.com/chao-ca-loc--_1628433517.jpg',
-    'https://statics.vinpearl.com/Hinh-anh-mem-thom-chao-ca-loc-can-tho-tinh-tuy-am-thuc-mien-tay4_1628428268.jpg'
+    'https://statics.vinpearl.com/Hinh-anh-mem-thom-chao-ca-loc-can-tho-tinh-tuy-am-thuc-mien-tay4_1628428268.jpg',
   ],
 
-  introduce: 
-  'Cá lóc là loại cá phổ biến với người miền Tây, các món ngon từ cá lóc luôn mang một nét mộc mạc và quen thuộc của người xứ này như canh chua cá lóc, cá lóc nướng trui, cá lóc kho tộ,... Nhưng có một món mà gia đình người dân miền Tây đều thân thuộc dù cách chế biến đơn giản nhưng mang hương vị rất riêng đó chính là cháo cá lóc rau đắng - món ăn chứa đựng cái chân chất, thật thà hệt người miền Tây.',
+  introduce:
+    'Cá lóc là loại cá phổ biến với người miền Tây, các món ngon từ cá lóc luôn mang một nét mộc mạc và quen thuộc của người xứ này như canh chua cá lóc, cá lóc nướng trui, cá lóc kho tộ,... Nhưng có một món mà gia đình người dân miền Tây đều thân thuộc dù cách chế biến đơn giản nhưng mang hương vị rất riêng đó chính là cháo cá lóc rau đắng - món ăn chứa đựng cái chân chất, thật thà hệt người miền Tây.',
   ingredientList: [
     '100g gạo',
     '300g cá lóc đồng (nếu không có thì dùng cá lóc thường)',
@@ -790,7 +780,7 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cháo cá lóc'), {
     '50g nấm rơm',
     '20g góc hành',
     '200g rau đắng',
-    'Gia vị: 1 muỗng canh hạt nêm, 1 muỗng canh đường, 1 muỗng canh nước mắm'
+    'Gia vị: 1 muỗng canh hạt nêm, 1 muỗng canh đường, 1 muỗng canh nước mắm',
   ],
   steps: [
     {
@@ -812,7 +802,7 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cháo cá lóc'), {
       title: 'Bước 4: Hoàn thành cháo cá lóc rau đắng',
       content:
         'Khi cháo đã mềm thì cho nấm rơm vào nấu cùng, nêm gia vị với lượng hạt nêm, đường và nước mắm đã chuẩn bị sẵn. Sau đó, cho thêm đầu hành vào để nồi cháo cá lóc thêm phần thơm ngon và hấp dẫn nhé.',
-    }, 
+    },
   ],
   videoLink: 'https://www.youtube.com/watch?v=3eY5Rdv7j2w',
 });
@@ -826,11 +816,11 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Canh chua cá lóc'), {
     'https://www.disneycooking.com/wp-content/uploads/2020/04/cach-nau-canh-chua-ca-loc-mien-trung.jpg',
     'https://cdn.tgdd.vn/Files/2021/02/26/1330794/10-cach-nau-canh-chua-thom-ngon-de-lam-an-bao-nhieu-com-cung-het-202102261456401680.jpg',
     'https://cdn.tgdd.vn/2021/05/CookRecipe/GalleryStep/2.9(3).jpg',
-    'https://cdn.tgdd.vn/2021/05/CookRecipe/Avatar/canh-chua-ca-loc-cong-thuc-duoc-chia-se-tu-nguoi-dung-thumbnail-1.jpg'
+    'https://cdn.tgdd.vn/2021/05/CookRecipe/Avatar/canh-chua-ca-loc-cong-thuc-duoc-chia-se-tu-nguoi-dung-thumbnail-1.jpg',
   ],
 
-  introduce: 
-  'Món canh chua cá lóc là một món ăn dân dã, phổ biến và đậm đà trong ẩm thực Việt Nam, đặc biệt là ở vùng Tây Nam Bộ. Món canh này thường được người dân ưa thích vào những ngày hè nóng bức để giúp giảm nhiệt độ và khát khao trong mùa hè oi bức. Nó được gọi là "canh chua" vì có vị chua thanh mát đặc trưng từ dưa chua hoặc có thể có vị ngọt đậm đà từ nước dừa.',
+  introduce:
+    'Món canh chua cá lóc là một món ăn dân dã, phổ biến và đậm đà trong ẩm thực Việt Nam, đặc biệt là ở vùng Tây Nam Bộ. Món canh này thường được người dân ưa thích vào những ngày hè nóng bức để giúp giảm nhiệt độ và khát khao trong mùa hè oi bức. Nó được gọi là "canh chua" vì có vị chua thanh mát đặc trưng từ dưa chua hoặc có thể có vị ngọt đậm đà từ nước dừa.',
   ingredientList: [
     'Cá lóc: 1 con 800g',
     'Bạc hà (dọc mùng): 2 cây',
@@ -841,7 +831,7 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Canh chua cá lóc'), {
     '2 quả ớt sừng đỏ',
     'Giá đỗ: 150g',
     'Tỏi băm, hành tím phi, ngò gai, rau om',
-    'Gia vị: đường, muối, hạt nêm, nước mắm, bột ngọt, dầu ăn'
+    'Gia vị: đường, muối, hạt nêm, nước mắm, bột ngọt, dầu ăn',
   ],
   steps: [
     {
@@ -873,8 +863,8 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Cơm cháy chà bông'), {
     'https://cdn.tgdd.vn/Files/2017/07/04/999480/cach-lam-com-chay-cha-bong-thom-cay-gion-rum-202202282314547434.jpg',
   ],
 
-  introduce: 
-  'Cơm cháy Ninh Bình là một trong những món ăn đặc sản ẩm thực nổi tiếng của Ninh Bình. Cơm cháy được cho là đã tồn tại hơn 100 năm. Tương truyền vào thời Pháp thuộc, có chàng thanh niên tên Đinh Hoàng Thăng đã sáng tạo ra món ăn này dựa trên những kinh nghiệm có được sau nhiều năm làm công cho quán ăn của người Hoa. Qua thời gian, người dân địa phương lại chắt lọc thêm những bí quyết riêng để đặc sản quê hương ngày càng thơm ngon.',
+  introduce:
+    'Cơm cháy Ninh Bình là một trong những món ăn đặc sản ẩm thực nổi tiếng của Ninh Bình. Cơm cháy được cho là đã tồn tại hơn 100 năm. Tương truyền vào thời Pháp thuộc, có chàng thanh niên tên Đinh Hoàng Thăng đã sáng tạo ra món ăn này dựa trên những kinh nghiệm có được sau nhiều năm làm công cho quán ăn của người Hoa. Qua thời gian, người dân địa phương lại chắt lọc thêm những bí quyết riêng để đặc sản quê hương ngày càng thơm ngon.',
   ingredientList: [
     'Gạo nếp: 125g',
     'Gạo tẻ: 125g',
@@ -911,11 +901,11 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Bánh căn'), {
     'https://cdn.tgdd.vn/Files/2022/05/31/1436004/cach-lam-banh-can-mien-trung-don-gian-chuan-vi-que-huong-202205310707582924.jpg',
     'https://cdn.tgdd.vn/2021/04/content/phanthietbanh-can-phan-thiet-03(1)-800x540.jpg',
     'https://cdn.tgdd.vn/2021/04/content/bc6-800x450-1.jpg',
-    'https://cdn.tgdd.vn/2021/04/content/bancan-8-800x450.jpgs'
+    'https://cdn.tgdd.vn/2021/04/content/bancan-8-800x450.jpgs',
   ],
 
-  introduce: 
-  'Cơm cháy Ninh Bình là một trong những món ăn đặc sản ẩm thực nổi tiếng của Ninh Bình. Cơm cháy được cho là đã tồn tại hơn 100 năm. Tương truyền vào thời Pháp thuộc, có chàng thanh niên tên Đinh Hoàng Thăng đã sáng tạo ra món ăn này dựa trên những kinh nghiệm có được sau nhiều năm làm công cho quán ăn của người Hoa. Qua thời gian, người dân địa phương lại chắt lọc thêm những bí quyết riêng để đặc sản quê hương ngày càng thơm ngon.',
+  introduce:
+    'Cơm cháy Ninh Bình là một trong những món ăn đặc sản ẩm thực nổi tiếng của Ninh Bình. Cơm cháy được cho là đã tồn tại hơn 100 năm. Tương truyền vào thời Pháp thuộc, có chàng thanh niên tên Đinh Hoàng Thăng đã sáng tạo ra món ăn này dựa trên những kinh nghiệm có được sau nhiều năm làm công cho quán ăn của người Hoa. Qua thời gian, người dân địa phương lại chắt lọc thêm những bí quyết riêng để đặc sản quê hương ngày càng thơm ngon.',
   ingredientList: [
     '200g tôm',
     '200g bột gạo',
@@ -925,7 +915,7 @@ await setDoc(doc(FIREBASE_DB, 'foods', 'Bánh căn'), {
     '20g hành lá cắt nhuyễn',
     'Tỏi băm, hành tím băm, ớt băm',
     'Gia vị: Bột nghệ, giấm, nước mắm, dầu ăn, muối, đường, tiêu, hạt nêm, giấm trắng, nước cốt chanh',
-    'Dụng cụ: Chảo khuôn đổ bánh căn (khuôn đổ bánh khọt), tô, dĩa, dao, muỗng, đũa, giấy thấm dầu..'
+    'Dụng cụ: Chảo khuôn đổ bánh căn (khuôn đổ bánh khọt), tô, dĩa, dao, muỗng, đũa, giấy thấm dầu..',
   ],
   steps: [
     {

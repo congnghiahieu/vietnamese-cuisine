@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { memo, useCallback, useState } from 'react';
+import { ListRenderItem, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles, normalize } from '@rneui/themed';
 import StyledText from '@/components/Styled/StyledText';
@@ -105,90 +105,95 @@ const Home = () => {
           keyExtractor={({ title }) => title}
           numColumns={2}
           columnWrapperStyle={styles.foodListColumn}
-          data={data}
           initialNumToRender={data?.length}
-          renderItem={({ item }) => <FoodCard {...item} />}
+          data={data}
+          renderItem={RenderItem}
         />
       )}
     </View>
   );
 };
 
-const FoodCard = ({ title, imageUrlList, loved }: Food) => {
-  const { user } = useAuth();
-  const styles = useStyles();
-  const router = useRouter();
-  const [love, setLove] = useState(loved || false);
-  const { playSound } = useSound(require('../../../assets/sound/love-sound.mp3'));
-  const queryClient = useQueryClient();
+const RenderItem: ListRenderItem<Food> = ({ item }) => <FoodCard {...item} />;
 
-  const loveMutation = useMutation({
-    mutationFn: async () => {
-      if (!user || !user?.email) {
-        StyledToast.show({
-          type: 'warning',
-          text1: i18n.t('home.toast.warning'),
+const FoodCard = memo(
+  ({ title, imageUrlList, loved }: Food) => {
+    const { user } = useAuth();
+    const styles = useStyles();
+    const router = useRouter();
+    const [love, setLove] = useState(loved || false);
+    const { playSound } = useSound(require('../../../assets/sound/love-sound.mp3'));
+    const queryClient = useQueryClient();
+
+    const loveMutation = useMutation({
+      mutationFn: async () => {
+        if (!user || !user?.email) {
+          StyledToast.show({
+            type: 'warning',
+            text1: i18n.t('home.toast.warning'),
+          });
+          router.push('/login');
+          return;
+        }
+        setLove(prev => !prev);
+        if (!love) {
+          playSound();
+        }
+        const docRef = doc(FIREBASE_DB, 'users', user.email);
+        await updateDoc(docRef, {
+          favouritedFoods: love ? arrayRemove(title) : arrayUnion(title),
         });
-        router.push('/login');
-        return;
-      }
-      setLove(prev => !prev);
-      if (!love) {
-        playSound();
-      }
-      const docRef = doc(FIREBASE_DB, 'users', user.email);
-      await updateDoc(docRef, {
-        favouritedFoods: love ? arrayRemove(title) : arrayUnion(title),
-      });
-    },
-    onSuccess: () => {
-      queryClient.resetQueries({
-        queryKey: ['favourites'],
-      });
-      queryClient.resetQueries({
-        queryKey: ['food', title],
-      });
-    },
-    onError: err => {
-      setLove(prev => !prev);
-      console.log(err);
-      StyledToast.show({
-        type: 'error',
-        text1: i18n.t('home.toast.error.text1', { title }),
-        text2: i18n.t('home.toast.error.text2'),
-      });
-    },
-  });
-
-  const navigateToInformation = () =>
-    router.push({
-      pathname: '/(app)/information/[title]',
-      params: { title },
+      },
+      onSuccess: () => {
+        queryClient.resetQueries({
+          queryKey: ['favourites'],
+        });
+        queryClient.resetQueries({
+          queryKey: ['food', title],
+        });
+      },
+      onError: err => {
+        setLove(prev => !prev);
+        console.log(err);
+        StyledToast.show({
+          type: 'error',
+          text1: i18n.t('home.toast.error.text1', { title }),
+          text2: i18n.t('home.toast.error.text2'),
+        });
+      },
     });
 
-  return (
-    <View style={styles.card}>
-      <StyledImage
-        source={{
-          uri: imageUrlList[0],
-        }}
-        style={styles.cardImage}
-        onPress={navigateToInformation}
-      />
-      <StyledPressable onPress={() => loveMutation.mutate()} style={styles.cardLoveButton}>
-        <HeartIcon active={love} />
-      </StyledPressable>
-      <View style={styles.cardFooter}>
-        <StyledText type='Heading_5' color='white' lengthLimit={12}>
-          {title}
-        </StyledText>
-        <StyledPressable style={styles.redirectButton} onPress={navigateToInformation}>
-          <ChevronRightIcon />
+    const navigateToInformation = () =>
+      router.push({
+        pathname: '/(app)/information/[title]',
+        params: { title },
+      });
+
+    return (
+      <View style={styles.card}>
+        <StyledImage
+          source={{
+            uri: imageUrlList[0],
+          }}
+          style={styles.cardImage}
+          onPress={navigateToInformation}
+        />
+        <StyledPressable onPress={() => loveMutation.mutate()} style={styles.cardLoveButton}>
+          <HeartIcon active={love} />
         </StyledPressable>
+        <View style={styles.cardFooter}>
+          <StyledText type='Heading_5' color='white' lengthLimit={12}>
+            {title}
+          </StyledText>
+          <StyledPressable style={styles.redirectButton} onPress={navigateToInformation}>
+            <ChevronRightIcon />
+          </StyledPressable>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+  (prev, next) => prev.title === next.title && prev.loved === next.loved,
+);
 
 const useStyles = makeStyles(theme => {
   const dT = theme.mode === 'dark';

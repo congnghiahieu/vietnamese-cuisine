@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect, useRef, memo } from 'react';
-import { View, Image, FlatList } from 'react-native';
+import { View, Image, FlatList, ListRenderItem } from 'react-native';
 import { Redirect, useFocusEffect, useRouter } from 'expo-router';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { SolidButton, OutlineButton } from '@/components/Styled/StyledButton';
@@ -77,21 +77,22 @@ const MyFeed = () => {
               <WannaPost />
             </View>
           }
-          // removeClippedSubviews
-          initialNumToRender={data?.length}
-          refreshControl={<StyledRefreshControl refreshing={isFetching} onRefresh={refetch} />}
-          keyExtractor={({ postId }) => postId}
-          data={data}
-          renderItem={({ item }) => <PostCard {...item} />}
           contentContainerStyle={{
             paddingHorizontal: 0,
             opacity: isFetching ? 0.4 : 1,
           }}
+          refreshControl={<StyledRefreshControl refreshing={isFetching} onRefresh={refetch} />}
+          keyExtractor={({ postId }) => postId}
+          initialNumToRender={data?.length}
+          data={data!}
+          renderItem={RenderItem}
         />
       )}
     </View>
   );
 };
+
+const RenderItem: ListRenderItem<Post> = ({ item }) => <PostCard {...item} />;
 
 type NavigateButtonProps = {
   page: Page;
@@ -154,89 +155,84 @@ const WannaPost = () => {
   );
 };
 
-const PostCard = ({
-  username,
-  postId,
-  userId,
-  createdAt,
-  content,
-  imageUrlList,
-  comments,
-}: Post) => {
-  const styles = useCardStyles();
-  const [love, setLove] = useState(false);
-  const router = useRouter();
-  const { playSound } = useSound(require('../../../../../assets/sound/love-sound.mp3'));
+const PostCard = memo(
+  ({ username, postId, userId, createdAt, content, imageUrlList, comments }: Post) => {
+    const styles = useCardStyles();
+    const [love, setLove] = useState(false);
+    const router = useRouter();
+    const { playSound } = useSound(require('../../../../../assets/sound/love-sound.mp3'));
 
-  const image =
-    imageUrlList.length === 0 ? (
-      <StyledDivider orientation='horizontal' />
-    ) : imageUrlList.length === 1 ? (
-      <StyledImage
-        source={{
-          uri: imageUrlList[0],
-        }}
-        style={styles.image}
-      />
-    ) : (
-      <ImageList imageUrlList={imageUrlList} />
-    );
-
-  return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <View style={styles.info}>
-          <AvatarIcon />
-          <View style={styles.infoText}>
-            <StyledText type='Heading_4' color='orange'>
-              {username || userId}
-            </StyledText>
-            <StyledText type='Placeholder' color='blackGrey'>
-              {i18n.distanceOfTimeInWords(createdAt, getCurrentTimeISO(), {
-                includeSeconds: true,
-              })}
-            </StyledText>
-          </View>
-        </View>
-        <StyledText type='Body' color='grey'>
-          {content}
-        </StyledText>
-      </View>
-      {image}
-      <View style={styles.footer}>
-        <StyledPressable
-          onPress={() => {
-            if (!love) {
-              playSound();
-            }
-            setLove(prev => !prev);
+    const image =
+      imageUrlList.length === 0 ? (
+        <StyledDivider orientation='horizontal' />
+      ) : imageUrlList.length === 1 ? (
+        <StyledImage
+          source={{
+            uri: imageUrlList[0],
           }}
-          style={styles.button}>
-          <HeartIcon active={love} />
-          {love ? (
-            <Animated.View entering={ReFadeIn}>
-              <StyledText type='Heading_5' color={'redPink'}>
-                {i18n.t('community.wall.love')}
+          style={styles.image}
+        />
+      ) : (
+        <ImageList imageUrlList={imageUrlList} />
+      );
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <View style={styles.info}>
+            <AvatarIcon />
+            <View style={styles.infoText}>
+              <StyledText type='Heading_4' color='orange'>
+                {username || userId}
               </StyledText>
-            </Animated.View>
-          ) : null}
-        </StyledPressable>
-        <StyledDivider orientation='vertical' />
-        <StyledPressable
-          style={styles.button}
-          onPress={() =>
-            router.push({
-              pathname: '/(app)/(sidebar)/(protected)/community/comment/[postId]',
-              params: { postId },
-            })
-          }>
-          <CommentIcon />
-          <StyledText>{i18n.t('community.wall.comments')}</StyledText>
-        </StyledPressable>
+              <StyledText type='Placeholder' color='blackGrey'>
+                {i18n.distanceOfTimeInWords(createdAt, getCurrentTimeISO(), {
+                  includeSeconds: true,
+                })}
+              </StyledText>
+            </View>
+          </View>
+          <StyledText type='Body' color='grey'>
+            {content}
+          </StyledText>
+        </View>
+        {image}
+        <View style={styles.footer}>
+          <StyledPressable
+            onPress={() => {
+              if (!love) {
+                playSound();
+              }
+              setLove(prev => !prev);
+            }}
+            style={styles.button}>
+            <HeartIcon active={love} />
+            {love ? (
+              <Animated.View entering={ReFadeIn}>
+                <StyledText type='Heading_5' color={'redPink'}>
+                  {i18n.t('community.wall.love')}
+                </StyledText>
+              </Animated.View>
+            ) : null}
+          </StyledPressable>
+          <StyledDivider orientation='vertical' />
+          <StyledPressable
+            style={styles.button}
+            onPress={() =>
+              router.push({
+                pathname: '/(app)/(sidebar)/(protected)/community/comment/[postId]',
+                params: { postId },
+              })
+            }>
+            <CommentIcon />
+            <StyledText>{i18n.t('community.wall.comments')}</StyledText>
+          </StyledPressable>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+  (prev, next) => prev.postId === next.postId,
+);
 
 const ImageList = ({ imageUrlList }: { imageUrlList: string[] }) => {
   const carouselWidth = wp(100);
