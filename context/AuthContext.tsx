@@ -36,7 +36,7 @@ export const useProtectedRoute = (user: AuthUser | null) => {
     // console.log(from);
     // setHasNavigated(true);
     if (!user?.uid && inProtectedGroup) {
-      router.replace('/(app)/login');
+      router.replace('/(app)/auth/login');
     }
     //   setHasNavigated(true);
     // } else if (user?.uid && !inProtectedGroup) {

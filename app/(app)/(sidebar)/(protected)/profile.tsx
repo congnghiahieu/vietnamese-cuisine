@@ -47,7 +47,7 @@ const Profile = () => {
         text1: i18n.t('profile.toast.success'),
         visibilityTime: 1000,
         onHide: () => {
-          router.push('/login');
+          router.push('/(app)/auth/login');
         },
       }),
     onError: () =>

@@ -221,7 +221,7 @@ const InformationBottomSheetBody = ({
           type: 'warning',
           text1: i18n.t('home.toast.warning'),
         });
-        router.push('/login');
+        router.push('/(app)/auth/login');
         return;
       }
       setLove(prev => !prev);

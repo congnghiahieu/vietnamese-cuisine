@@ -29,7 +29,7 @@ const IMAGES: ImageSourcePropType[] = [
   require('../../../../assets/images/match-food/bun-cha-3.jpg'),
   require('../../../../assets/images/match-food/ca-kho-to.jpg'),
   require('../../../../assets/images/match-food/canh-chua-ca-loc.jpg'),
-  require('../../../../assets/images/match-food/com-chay.jpeg'),
+  require('../../../../assets/images/match-food/com-chay.jpg'),
   require('../../../../assets/images/match-food/com-tam.jpg'),
   require('../../../../assets/images/match-food/chao-ca-loc.jpg'),
   require('../../../../assets/images/match-food/cha-ruoi.jpg'),
