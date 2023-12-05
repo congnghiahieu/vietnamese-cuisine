@@ -20,16 +20,28 @@ const COLS = 4;
 const FACE_UP_LIMIT = 2;
 const MAX_LIFE = 30;
 const IMAGES: ImageSourcePropType[] = [
+  require('../../../../assets/images/match-food/banh-can.jpg'),
+  require('../../../../assets/images/match-food/banh-da-cua.jpg'),
   require('../../../../assets/images/match-food/banh-mi.jpeg'),
+  require('../../../../assets/images/match-food/banh-xeo.jpg'),
   require('../../../../assets/images/match-food/bun-cha-1.jpg'),
   require('../../../../assets/images/match-food/bun-cha-2.webp'),
   require('../../../../assets/images/match-food/bun-cha-3.jpg'),
+  require('../../../../assets/images/match-food/ca-kho-to.jpg'),
+  require('../../../../assets/images/match-food/canh-chua-ca-loc.jpg'),
+  require('../../../../assets/images/match-food/com-chay.jpeg'),
+  require('../../../../assets/images/match-food/com-tam.jpg'),
+  require('../../../../assets/images/match-food/chao-ca-loc.jpg'),
+  require('../../../../assets/images/match-food/cha-ruoi.jpg'),
   require('../../../../assets/images/match-food/goi-cuon.jpg'),
+  require('../../../../assets/images/match-food/hu-tieu.jpg'),
+  require('../../../../assets/images/match-food/kho-quet.jpg'),
   require('../../../../assets/images/match-food/pho-1.webp'),
   require('../../../../assets/images/match-food/pho-2.webp'),
   require('../../../../assets/images/match-food/pho-3.jpg'),
   require('../../../../assets/images/match-food/spring-roll-1.webp'),
   require('../../../../assets/images/match-food/spring-roll-2.jpg'),
+  require('../../../../assets/images/match-food/sui-din.jpg'),
 ];
 
 type RowColProps = {
