@@ -47,15 +47,11 @@ const QUESTIONS: Question[] = [
     foodImage: require('../../../../assets/images/pick-ingredients/pho.jpg'),
     choices: [
       {
-        imageSource: require('../../../../assets/images/pick-ingredients/dinh-huong.jpg'),
+        imageSource: require('../../../../assets/images/pick-ingredients/banh-pho.jpg'),
         isCorrectChoice: false,
       },
       {
-        imageSource: require('../../../../assets/images/pick-ingredients/hanh-tay.jpg'),
-        isCorrectChoice: true,
-      },
-      {
-        imageSource: require('../../../../assets/images/pick-ingredients/que.jpg'),
+        imageSource: require('../../../../assets/images/pick-ingredients/gao.jpg'),
         isCorrectChoice: false,
       },
       {
@@ -63,19 +59,175 @@ const QUESTIONS: Question[] = [
         isCorrectChoice: true,
       },
       {
-        imageSource: require('../../../../assets/images/pick-ingredients/duong-cat.webp'),
+        imageSource: require('../../../../assets/images/pick-ingredients/dau-xanh.jpg'),
         isCorrectChoice: false,
       },
       {
-        imageSource: require('../../../../assets/images/pick-ingredients/gung.webp'),
+        imageSource: require('../../../../assets/images/pick-ingredients/la-rong.webp'),
         isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/trung.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/thit-bo.webp'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/xuong-lon.webp'),
+        isCorrectChoice: true,
+      },
+    ],
+  },
+  {
+    food: 'Cơm tấm',
+    foodImage: require('../../../../assets/images/pick-ingredients/com-tam.jpg'),
+    choices: [
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/banh-pho.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/gao.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/moc-nhi.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/bi-heo-tron-thinh.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/que.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/trung.jpg'),
+        isCorrectChoice: true,
       },
       {
         imageSource: require('../../../../assets/images/pick-ingredients/thit-bo.webp'),
         isCorrectChoice: false,
       },
       {
+        imageSource: require('../../../../assets/images/pick-ingredients/suon.jpg'),
+        isCorrectChoice: true,
+      },
+    ],
+  },
+  {
+    food: 'Nem',
+    foodImage: require('../../../../assets/images/pick-ingredients/nem.jpg'),
+    choices: [
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/thit-xay-heo-1.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/gao.jpg'),
+        isCorrectChoice: false,
+      },
+      {
         imageSource: require('../../../../assets/images/pick-ingredients/xuong-lon.webp'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/que.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/moc-nhi.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/trung.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/thao-qua.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/gung.webp'),
+        isCorrectChoice: false,
+      },
+    ],
+  },
+  {
+    food: 'Bánh chưng',
+    foodImage: require('../../../../assets/images/pick-ingredients/banh-chung.jpg'),
+    choices: [
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/thit-xay-heo-1.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/thit-ba-chi.png'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/xuong-lon.webp'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/gao.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/moc-nhi.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/dau-xanh.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/thao-qua.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/la-rong.webp'),
+        isCorrectChoice: true,
+      },
+    ],
+  },
+  {
+    food: 'Chả lá lốt',
+    foodImage: require('../../../../assets/images/pick-ingredients/cha-la-lot.webp'),
+    choices: [
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/la-lot.png'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/bi-heo-tron-thinh.png'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/xuong-lon.webp'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/thit-xay-heo-1.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/moc-nhi.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/trung.jpg'),
+        isCorrectChoice: true,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/banh-pho.jpg'),
+        isCorrectChoice: false,
+      },
+      {
+        imageSource: require('../../../../assets/images/pick-ingredients/gung.webp'),
         isCorrectChoice: false,
       },
     ],
