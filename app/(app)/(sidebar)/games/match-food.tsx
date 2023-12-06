@@ -13,12 +13,11 @@ import StyledPressable from '@/components/Styled/StyledPressable';
 import { v4 as uuid } from 'uuid';
 import { useSound } from '@/hooks/useSound';
 import { i18n } from '@/lib/i18n';
-import Animated, { CurvedTransition } from 'react-native-reanimated';
 
 const ROWS = 5;
 const COLS = 4;
 const FACE_UP_LIMIT = 2;
-const MAX_LIFE = 30;
+const MAX_LIFE = 20;
 const IMAGES: ImageSourcePropType[] = [
   require('../../../../assets/images/match-food/banh-can.jpg'),
   require('../../../../assets/images/match-food/banh-da-cua.jpg'),

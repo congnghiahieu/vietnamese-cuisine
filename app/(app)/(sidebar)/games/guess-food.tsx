@@ -15,7 +15,7 @@ import { useSound } from '@/hooks/useSound';
 import StyledDivider from '@/components/Styled/StyledDivider';
 
 const MAX_LIFE = 3;
-const THROTTLE_TIME = 1500;
+const THROTTLE_TIME = 1000;
 type Question = {
   image: ImageSourcePropType;
   question: string;
@@ -56,10 +56,10 @@ const QUESTIONS: Question[] = [
     image: require('../../../../assets/images/guess-food/bun-cha.jpg'),
     question: "What's dish",
     answers: {
-      'Bún chả': false,
+      'Bún chả': true,
       'Bún cá': false,
       'Canh chua cá lóc': false,
-      'Bún đậu mắm tôm': true,
+      'Bún đậu mắm tôm': false,
     },
   },
   {
@@ -89,7 +89,7 @@ const QUESTIONS: Question[] = [
       'Bún chả': false,
       'Bánh cá': false,
       'Bánh bò Huế': false,
-      'Bánh đậu mắm tôm': true,
+      'Bún đậu mắm tôm': true,
     },
   },
   {
@@ -98,8 +98,8 @@ const QUESTIONS: Question[] = [
     answers: {
       'Phở': false,
       'Bánh mì': false,
+      'Bột chiên': true,
       'Bánh cuốn': false,
-      'Bánh khọt': true,
     },
   },
   {
@@ -187,9 +187,9 @@ const QUESTIONS: Question[] = [
     question: "What's dish",
     answers: {
       'Bún cá': false,
-      'Bún bò': false,
+      'Bún bò Nam Bộ': true,
       'Bún trộn': false,
-      'Bún bò Huế': true,
+      'Bún bò Huế': false,
     },
   },
   {
@@ -227,9 +227,9 @@ const QUESTIONS: Question[] = [
     question: "What's dish",
     answers: {
       'Bún cá': false,
-      'Bún bò Huế': false,
+      'Bún bò Huế': true,
       'Bún trộn': false,
-      'Bún mọc': true,
+      'Bún mọc': false,
     },
   },
   {
@@ -435,7 +435,12 @@ const GuessFood = () => {
                   previousAnswerTime.current = Date.now();
                   handleAnswer(questions[currentQuestion].answers[item]);
                 }}>
-                <StyledText type='Heading_4' color='white'>
+                <StyledText
+                  type='Heading_4'
+                  color='white'
+                  style={{
+                    letterSpacing: item.length >= 15 ? -1 : 0,
+                  }}>
                   {item}
                 </StyledText>
               </StyledPressable>
@@ -490,6 +495,7 @@ const useStyles = makeStyles(theme => {
       justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: STYLES.PADDING.PADDING_16,
+      paddingHorizontal: 0,
       backgroundColor: theme.colors.orange,
       borderRadius: STYLES.RADIUS.RADIUS_20,
     },

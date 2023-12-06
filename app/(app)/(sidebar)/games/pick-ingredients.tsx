@@ -19,7 +19,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { CircleCheckIcon, LifeIcon } from '@/components/Icon';
 import { i18n } from '@/lib/i18n';
 
-const MAX_LIFE = 10;
+const MAX_LIFE = 3;
 
 type ChoiceItem = {
   imageSource: ImageSourcePropType;
@@ -203,7 +203,7 @@ const QUESTIONS: Question[] = [
         isCorrectChoice: true,
       },
       {
-        imageSource: require('../../../../assets/images/pick-ingredients/bi-heo-tron-thinh.png'),
+        imageSource: require('../../../../assets/images/pick-ingredients/bi-heo-tron-thinh.jpg'),
         isCorrectChoice: false,
       },
       {
@@ -559,6 +559,7 @@ const useStyles = makeStyles(theme => {
       backgroundColor: '#ffffff99',
       alignItems: 'center',
       justifyContent: 'center',
+      borderRadius: STYLES.RADIUS.RADIUS_20,
     },
     image: {
       width: '100%',
