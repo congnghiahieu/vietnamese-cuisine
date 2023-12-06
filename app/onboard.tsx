@@ -227,7 +227,7 @@ const CustomButton = ({ flatListRef, flatListIndex, dataLength, x }: CustomButto
           flatListRef.current?.scrollToIndex({ index: flatListIndex.value + 1 });
           return;
         }
-        AsyncStorage.setItem('Vietnamese Cuisine Onboard', 'true');
+        // AsyncStorage.setItem('Vietnamese Cuisine Onboard', 'true');
         router.push('/(app)/(sidebar)/');
       }}>
       <Animated.View style={[styles.buttonContainer, buttonAnimationStyle, animatedColor]}>
